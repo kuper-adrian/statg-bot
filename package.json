@@ -1,0 +1,11 @@
+{
+    "name": "stat-g-bot",
+    "version": "1.0.0",
+    "description": "Discord bot for PUBG stats",
+    "main": "bot.js",
+    "author": "Adrian Kuper",
+    "dependencies": {
+        "discord.io": "github:woor/discord.io#gateway_v6",
+        "winston": "^2.4.2"
+    }
+}
