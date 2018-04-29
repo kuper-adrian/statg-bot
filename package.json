@@ -7,5 +7,9 @@
     "dependencies": {
         "discord.io": "github:woor/discord.io#gateway_v6",
         "winston": "^2.4.2"
+    },
+    "scripts": {
+        "start": "node bot.js",
+        "debug": "nodemon --inspect bot.js"
     }
 }
