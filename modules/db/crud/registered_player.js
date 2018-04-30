@@ -8,3 +8,8 @@ exports.create = function (db, discord_id, discord_name, pubg_id, pubg_name) {
         stmt.finalize();
     });
 }
+
+exports.read = function (db, where, callback) {
+    var sql = "SELECT id, discord_id, discord_name, pubg_id, pubg_name FROM registered_player WHERE " + where;
+    db.all(sql, [], callback);
+}

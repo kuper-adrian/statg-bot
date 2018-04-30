@@ -42,7 +42,11 @@ var registered_player = {
         registedPlayerCrud.create(db, discord_id, discord_name, pubg_id, pubg_name);
         db.close();
     },
-    read: null,
+    read: function (where, callback) {
+        var db = new sqlite3.Database(DB_FILE_NAME);
+        registedPlayerCrud.read(db, where, callback);
+        db.close();
+    },
     update: null,
     delete: null
 }

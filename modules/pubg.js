@@ -35,7 +35,8 @@ function apiRequest(options, success, error) {
         resp.on('end', () => {
             var apiData  = JSON.parse(data);
 
-            if (data.errors !== undefined && data.errors.length !== 0) {
+
+            if (apiData.errors !== undefined && apiData.errors.length > 0) {
                             
                 error(new ApiError(null, apiData.errors));
                 return;
@@ -66,6 +67,17 @@ exports.playerById = function (config) {
     var success = config.success;
     var error = config.error;
 
-    var options = getOptions('/shards/pc-eu/players/' + id);
+    var options = getApiOptions('/shards/pc-eu/players/' + id);
     return apiRequest(options, success, error);
 };
+
+exports.status = function (config) {
+
+    var success = config.success;
+    var error = config.error;
+
+    var options = getApiOptions('/status');
+    return apiRequest(options, success, error);
+}
+
+exports.match
