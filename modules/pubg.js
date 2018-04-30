@@ -4,6 +4,11 @@ var https = require('https');
 const PUBG_API_HOST_NAME = "api.playbattlegrounds.com";
 const PUBG_API_KEY = auth.pubgApiKey;
 
+function ApiError(exception, apiErrors) {
+    this.exception = exception;
+    this.apiErrors = apiErrors;
+}
+
 function getApiOptions(path) {
     return {
         hostname: PUBG_API_HOST_NAME,
@@ -16,7 +21,7 @@ function getApiOptions(path) {
     }
 }
 
-function apiRequest(options, onFinished, onError) {
+function apiRequest(options, success, error) {
 
     https.get(options, (resp) => {
         let data = '';
@@ -28,12 +33,20 @@ function apiRequest(options, onFinished, onError) {
 
         // The whole response has been received. Print out the result.
         resp.on('end', () => {
-            onFinished(JSON.parse(data));
-        });
+            var apiData  = JSON.parse(data);
 
+            if (data.errors !== undefined && data.errors.length !== 0) {
+                            
+                error(new ApiError(null, apiData.errors));
+                return;
+            }
+            success(apiData);
+            return;
+        });
     }).on("error", (err) => {
-        // console.log("Error: " + err.message);
-        logger.warn("Error: " + err.message);
+        
+        error(err, null);
+        return;
     });
 }
 

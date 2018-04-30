@@ -1,15 +1,15 @@
 var Discord = require('discord.io');
 var logger = require('winston');
-var auth = require('./auth.json');
 var https = require('https');
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
+
+var auth = require('./auth.json');
 var package = require('./package.json');
-var pubg = require('./pubg')
+var pubg = require('./modules/pubg');
+var db = require('./modules/db');
 
 const BASE_CMD = '!statg';
-const DB_FILE_NAME = 'stat-g-db.db';
-
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -29,31 +29,7 @@ bot.on('ready', function (evt) {
     logger.info('Logged in as: ');
     logger.info(bot.username + ' - (' + bot.id + ')');
 
-    // falls keine Datenbank-Datei vorhanden ist
-    if (!fs.existsSync(DB_FILE_NAME)) {
-
-        logger.info('No database file found. Create new database...');
-        var db = new sqlite3.Database(DB_FILE_NAME);
-
-        try {
-            // Datenmodell erstellen
-            db.serialize(function () {
-                logger.info('Creating table \"registered_player\"...')
-                db.run("CREATE TABLE registered_player (id INTEGER PRIMARY KEY, discord_name TEXT, discord_id TEXT, pubg_name TEXT, pubg_id TEXT)");
-            });
-
-            logger.info('Database created!');
-
-        } catch (err) {
-
-            logger.info('Database creation failed!')
-        } finally {
-
-            db.close();
-        }
-    }
-
-    // TODO get max id of tables
+    
 });
 
 bot.on('message', function (user, userID, channelID, message, evt) {
