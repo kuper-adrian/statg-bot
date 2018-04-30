@@ -1,4 +1,4 @@
-var auth = require('./auth.json');
+var auth = require('../auth.json');
 var https = require('https');
 
 const PUBG_API_HOST_NAME = "api.playbattlegrounds.com";
