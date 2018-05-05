@@ -6,6 +6,7 @@
     "author": "Adrian Kuper",
     "dependencies": {
         "discord.io": "github:woor/discord.io#gateway_v6",
+        "knex": "^0.14.6",
         "sqlite3": "^4.0.0",
         "winston": "^2.4.2"
     },

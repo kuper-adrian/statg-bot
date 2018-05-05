@@ -21,36 +21,42 @@ exports.handle = function (cmd, bot, db, pubg) {
 
             var pubgPlayerData = data.data[0];
 
-            var create = true;
-            db.registered_player.read("discord_name = '" + cmd.discordUser.name + "'", (err, rows) => {
-                if (err) {
-                    bot.sendMessage({
-                        to: channelId,
-                        message: 'Error on registering player \"' + playerName + '\"'
-                    });
-                    create = false;
-                }
-                
-                if (rows.length > 0) {
-                    bot.sendMessage({
-                        to: channelId,
-                        message: 'Error on registering player \"' + playerName + '\". There is already a pubg name registered for your discord account.'
-                    });
-                    create = false;
-                } else {
+            db.knex(db.TABLES.registeredPlayer).where('discord_id', cmd.discordUser.id)
+                .then(players => {
 
-                    db.registered_player.create(
-                        cmd.discordUser.id, 
-                        cmd.discordUser.name, 
-                        pubgPlayerData.id, 
-                        pubgPlayerData.attributes.name);
+                    if (players.length == 0) {
+
+                        return db.knex(db.TABLES.registeredPlayer).insert({
+                            discord_id: cmd.discordUser.id,
+                            discord_name: cmd.discordUser.name,
+                            pubg_id: pubgPlayerData.id,
+                            pubg_name: pubgPlayerData.attributes.name
+                        });
+                    } else {
+
+                        return db.knex(db.TABLES.registeredPlayer)
+                            .where('discord_id', cmd.discordUser.id)
+                            .update({
+                                discord_name: cmd.disordUser.name,
+                                pubg_id: pubgPlayerData.id,
+                                pubg_name: pubgPlayerData.attributes.name
+                            });
+                    }
+                })
+                .then(players => {
         
                     bot.sendMessage({
                         to: channelId,
                         message: 'Player \"' + playerName + '\" registered!'
                     });
-                }
-            });
+                })
+                .catch(error => {
+
+                    bot.sendMessage({
+                        to: channelId,
+                        message: 'Error on registering player \"' + playerName + '\"'
+                    });
+                }); 
         },
         error: function (err) {
             logger.warn(err);

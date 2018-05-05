@@ -5,7 +5,7 @@ var fs = require('fs');
 var auth = require('./auth.json');
 var package = require('./package.json');
 var pubg = require('./modules/pubg');
-var statgDb = require('./modules/db/db');
+var statgDb = require('./modules/db');
 var logger = require('./modules/log').getLogger();
 var cmder = require('./modules/cmd/cmder');
 
@@ -21,7 +21,7 @@ bot.on('ready', function (evt) {
     logger.info('Logged in as: ');
     logger.info(bot.username + ' - (' + bot.id + ')');
 
-    statgDb.createDb();
+    statgDb.init();
 
     logger.info("start listening for messages...");
 });
