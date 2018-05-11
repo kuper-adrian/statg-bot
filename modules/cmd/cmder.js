@@ -4,7 +4,7 @@ const BASE_CMD = '!statg';
 const AVAILABLE_COMMANDS = [
     //"default",
     "register",
-    //"stats",
+    "stats",
     "version",
     "status",
     //"region",
@@ -37,6 +37,8 @@ function Command(cmd, args, discordUser) {
 
 exports.processMessage = function (bot, db, pubg, username, userID, channelID, message, evt) {
     
+    if (message.length < BASE_CMD.length) return;
+
     // if message starts with "!statg"
     if (message.substring(0, BASE_CMD.length) === BASE_CMD) {
         
@@ -57,8 +59,17 @@ exports.processMessage = function (bot, db, pubg, username, userID, channelID, m
         logger.info('Got command \"' + cmd + '\" by \"' + username + '\". Args: ' + args);
         logger.debug('user: ' + username + ', userId: ' + userID + ', channelId: ' + channelID + ', evt: ' + evt);
 
-        var commandInfo = new Command(cmd, args, user);
 
-        handler[commandInfo.command].handle(commandInfo, bot, db, pubg)
+        if (AVAILABLE_COMMANDS.includes(cmd)) {
+            var commandInfo = new Command(cmd, args, user);
+            handler[commandInfo.command].handle(commandInfo, bot, db, pubg)
+        } else {
+
+            bot.sendMessage({
+                to: channelID,
+                message: 'Unknown command. Type "!statg help" to get more infos about all commands.'
+            });
+        }
+        
     }
 }

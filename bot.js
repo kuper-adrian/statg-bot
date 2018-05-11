@@ -9,7 +9,6 @@ var statgDb = require('./modules/db');
 var logger = require('./modules/log').getLogger();
 var cmder = require('./modules/cmd/cmder');
 
-
 // Initialize Discord Bot
 var bot = new Discord.Client({
     token: auth.discordToken,
@@ -27,10 +26,18 @@ bot.on('ready', function (evt) {
 });
 
 bot.on('message', function (user, userID, channelID, message, evt) {
-
     try {
         cmder.processMessage(bot, statgDb, pubg, user, userID, channelID, message, evt);
     } catch (err) {
         logger.error(err);
     }
+});
+
+bot.on('error', function (error) {
+    logger.error(error);
+});
+
+bot.on('disconnect', function (event) {
+    logger.info('Disconnected');
+    logger.warn(event);
 });

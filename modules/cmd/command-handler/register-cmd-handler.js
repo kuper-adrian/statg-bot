@@ -1,8 +1,8 @@
-var logger = require('../../log').getLogger();
+let logger = require('../../log').getLogger();
 
 exports.handle = function (cmd, bot, db, pubg) {
 
-    var channelId = cmd.discordUser.channelId;
+    let channelId = cmd.discordUser.channelId;
 
     if (cmd.arguments.length !== 1) {
 
@@ -13,18 +13,23 @@ exports.handle = function (cmd, bot, db, pubg) {
         return;
     }
 
-    var playerName = cmd.arguments[0];
+    let playerName = cmd.arguments[0];
 
     pubg.playerByName({
         name: playerName,
         success: function (data) {
 
-            var pubgPlayerData = data.data[0];
+            let pubgPlayerData = data.data[0];
 
             db.knex(db.TABLES.registeredPlayer).where('discord_id', cmd.discordUser.id)
                 .then(players => {
 
+                    console.log(players)
+                    console.log(db.TABLES.registeredPlayer)
+
                     if (players.length == 0) {
+
+                        logger.debug("Adding player...")
 
                         return db.knex(db.TABLES.registeredPlayer).insert({
                             discord_id: cmd.discordUser.id,
@@ -33,6 +38,8 @@ exports.handle = function (cmd, bot, db, pubg) {
                             pubg_name: pubgPlayerData.attributes.name
                         });
                     } else {
+
+                        logger.debug("Updating player...")
 
                         return db.knex(db.TABLES.registeredPlayer)
                             .where('discord_id', cmd.discordUser.id)
@@ -54,7 +61,7 @@ exports.handle = function (cmd, bot, db, pubg) {
 
                     bot.sendMessage({
                         to: channelId,
-                        message: 'Error on registering player \"' + playerName + '\"'
+                        message: 'Error on registering player \"' + playerName + '\" ' + error.toString()
                     });
                 }); 
         },
@@ -63,7 +70,7 @@ exports.handle = function (cmd, bot, db, pubg) {
             
             if (err.apiErrors !== undefined && err.apiErrors !== null && err.apiErrors.length > 0) {
                 
-                var errorInfo = err.apiErrors[0].detail;           
+                let errorInfo = err.apiErrors[0].detail;           
                 bot.sendMessage({
                     to: channelId,
                     message: 'Error on registering player \"' + playerName + '\"! ' + errorInfo

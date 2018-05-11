@@ -21,7 +21,13 @@ function getApiOptions(path) {
     }
 }
 
-function apiRequest(options, success, error) {
+/**
+ * 
+ * @param {Object} options Request options object
+ * @param {Function} resolve Callback that is called, when the api request succeeded
+ * @param {Function} reject Callback that is called, when an error occures
+ */
+function apiRequest(options, resolve, reject) {
 
     https.get(options, (resp) => {
         let data = '';
@@ -38,15 +44,15 @@ function apiRequest(options, success, error) {
 
             if (apiData.errors !== undefined && apiData.errors.length > 0) {
                             
-                error(new ApiError(null, apiData.errors));
+                reject(new ApiError(null, apiData.errors));
                 return;
             }
-            success(apiData);
+            resolve(apiData);
             return;
         });
     }).on("error", (err) => {
         
-        error(err, null);
+        reject(err, null);
         return;
     });
 }
@@ -80,4 +86,27 @@ exports.status = function (config) {
     return apiRequest(options, success, error);
 }
 
-exports.match
+/**
+ * Creates a promise to get all seasons.
+ */
+exports.seasons = function () {
+
+    return new Promise((resolve, reject) => {
+        var options = getApiOptions('/seasons');
+        return apiRequest(options, resolve, reject);
+    }); 
+}
+
+/**
+ * Creates a promise to get the lifetime stats of a player during the given season.
+ * 
+ * @param {String} pubgId PUBG API Id of player
+ * @param {String} seasonId PUBG API Id of season
+ */
+exports.playerStats = function (pubgId, seasonId) {
+
+    return new Promise((resolve, reject) => {
+        var options = getApiOptions('/players/' + playerId + '/seasons/' + seasonId);
+        apiRequest(options, resolve, reject);
+    });
+}

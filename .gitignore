@@ -2,3 +2,4 @@ node_modules/
 auth.json
 stat-g-db.db
 logs/
+notes.md
