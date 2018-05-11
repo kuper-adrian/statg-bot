@@ -59,36 +59,37 @@ function apiRequest(options, resolve, reject) {
 }
 
 /**
+ * Creates a promise to get PUBG API info about player
  * 
- * @param {Object} config 
+ * @param {string} name pubg player name
  */
-exports.playerByName = function (config) {
+exports.playerByName = function (name) {
 
-    var name = config.name;
-    var success = config.success;
-    var error = config.error;
-
-    var options = getApiOptions('/shards/pc-eu/players?filter[playerNames]=' + name);
-    return apiRequest(options, success, error);
+    return new Promise((resolve, reject) => {
+        var options = getApiOptions('/shards/pc-eu/players?filter[playerNames]=' + name);
+        return apiRequest(options, resolve, reject);
+    })
 };
 
-exports.playerById = function (config) {
-
-    var id = config.id;
-    var success = config.success;
-    var error = config.error;
-
-    var options = getApiOptions('/shards/pc-eu/players/' + id);
-    return apiRequest(options, success, error);
+/**
+ * Creates a promise to get PUBG api info about player
+ * 
+ * @param {string} id pubg id of player 
+ */
+exports.playerById = function (id) {
+ 
+    return new Promise((resolve, reject) => {
+        var options = getApiOptions('/shards/pc-eu/players/' + id);
+        return apiRequest(options, resolve, reject);
+    });
 };
 
 exports.status = function (config) {
 
-    var success = config.success;
-    var error = config.error;
-
-    var options = getApiOptions('/status');
-    return apiRequest(options, success, error);
+    return new Promise((resolve, reject) => {
+        var options = getApiOptions('/status');
+        return apiRequest(options, resolve, reject);
+    });
 }
 
 /**

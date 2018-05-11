@@ -16,9 +16,9 @@ const AVAILABLE_ARGS = [
  * @param {String} detailMessage Details about why the command failed
  */
 function onError(bot, channelId, detailMessage) {
-    
+
     let errorMessage = 'Error on fetching stats. Details: ' + detailMessage;
-    
+
     logger.warn(errorMessage)
     bot.sendMessage({
         to: channelId,
@@ -62,15 +62,15 @@ function getAverageStats(gameModeStats) {
 
 function round(number, precision) {
     var shift = function (number, precision) {
-      var numArray = ("" + number).split("e");
-      return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
+        var numArray = ("" + number).split("e");
+        return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
     };
     return shift(Math.round(shift(number, +precision)), -precision);
-  }
+}
 
 function getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats) {
 
-    let result = 
+    let result =
 `Season stats for player **${pubgPlayerName}** (game mode: **${gameMode}**):
 \`\`\`markdown
 - Kills:           ${avgStats.kills} (avg. ${round(avgStats.avgKills, 2)})
@@ -84,7 +84,7 @@ function getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats) {
 }
 
 exports.handle = function (cmd, bot, db, pubg) {
-    
+
     logger.info("Handling stats command!");
 
     let channelId = cmd.discordUser.channelId;
@@ -154,7 +154,7 @@ exports.handle = function (cmd, bot, db, pubg) {
                 let filteredStats = {};
 
                 filteredStats[gameMode] = stats.data.attributes.gameModeStats[gameMode];
-                
+
                 avgStats = getAverageStats(filteredStats)
                 message = getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats);
 
