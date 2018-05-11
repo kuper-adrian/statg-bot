@@ -35,6 +35,17 @@ function Command(cmd, args, discordUser) {
     return this;
 }
 
+/**
+ * 
+ * @param {Object} bot 
+ * @param {Object} db 
+ * @param {Object} pubg 
+ * @param {string} username 
+ * @param {string} userID 
+ * @param {string} channelID 
+ * @param {string} message 
+ * @param {Object} evt 
+ */
 exports.processMessage = function (bot, db, pubg, username, userID, channelID, message, evt) {
     
     if (message.length < BASE_CMD.length) return;

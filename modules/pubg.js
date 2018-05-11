@@ -1,3 +1,7 @@
+/**
+ * @module PubgApi
+ */
+
 var auth = require('../auth.json');
 var https = require('https');
 
@@ -29,6 +33,7 @@ function getApiOptions(path) {
  */
 function apiRequest(options, resolve, reject) {
 
+
     https.get(options, (resp) => {
         let data = '';
 
@@ -42,21 +47,21 @@ function apiRequest(options, resolve, reject) {
             var apiData  = JSON.parse(data);
 
 
-            if (apiData.errors !== undefined && apiData.errors.length > 0) {
-                            
+            if (apiData.errors !== undefined && apiData.errors.length > 0) {               
                 reject(new ApiError(null, apiData.errors));
-                return;
             }
             resolve(apiData);
-            return;
         });
     }).on("error", (err) => {
         
-        reject(err, null);
-        return;
+        reject(new ApiError(err, null));
     });
 }
 
+/**
+ * 
+ * @param {Object} config 
+ */
 exports.playerByName = function (config) {
 
     var name = config.name;
@@ -92,7 +97,7 @@ exports.status = function (config) {
 exports.seasons = function () {
 
     return new Promise((resolve, reject) => {
-        var options = getApiOptions('/seasons');
+        var options = getApiOptions('/shards/pc-eu/seasons');
         return apiRequest(options, resolve, reject);
     }); 
 }
@@ -100,13 +105,13 @@ exports.seasons = function () {
 /**
  * Creates a promise to get the lifetime stats of a player during the given season.
  * 
- * @param {String} pubgId PUBG API Id of player
- * @param {String} seasonId PUBG API Id of season
+ * @param {string} pubgId PUBG API Id of player
+ * @param {string} seasonId PUBG API Id of season
  */
 exports.playerStats = function (pubgId, seasonId) {
 
     return new Promise((resolve, reject) => {
-        var options = getApiOptions('/players/' + playerId + '/seasons/' + seasonId);
+        var options = getApiOptions('/shards/pc-eu/players/' + pubgId + '/seasons/' + seasonId);
         apiRequest(options, resolve, reject);
     });
 }

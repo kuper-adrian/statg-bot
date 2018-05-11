@@ -17,6 +17,63 @@ function onError(bot, channelId, detailMessage) {
     });
 }
 
+function getAverageStats(gameModeStats) {
+
+    let result = {
+        kills: 0,
+        assists: 0,
+        damageDealt: 0.0,
+        wins: 0,
+        winPoints: 0.0,
+        roundsPlayed: 0
+    };
+
+    let gameModeCount = 0;
+    for (let key in gameModeStats) {
+        let gameMode = gameModeStats[key];
+
+        result.kills += gameMode.kills;
+        result.assists += gameMode.assists;
+        result.damageDealt += gameMode.damageDealt;
+        result.wins += gameMode.wins;
+        result.winPoints += gameMode.winPoints;
+        result.roundsPlayed += gameMode.roundsPlayed;
+
+        gameModeCount++;
+    }
+
+    result.avgKills = result.kills / result.roundsPlayed;
+    result.avgAssists = result.assists / result.roundsPlayed;
+    result.avgDamageDealt = result.damageDealt / result.roundsPlayed;
+    result.avgWins = result.wins / result.roundsPlayed;
+    result.avgWinPoints = result.winPoints / gameModeCount;
+
+    return result;
+}
+
+function round(number, precision) {
+    var shift = function (number, precision) {
+      var numArray = ("" + number).split("e");
+      return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
+    };
+    return shift(Math.round(shift(number, +precision)), -precision);
+  }
+
+function getStatsAsDiscordFormattedString(pubgPlayerName, avgStats) {
+
+    let result = 
+`**Season stats for player "${pubgPlayerName}": **
+\`\`\`markdown
+- Kills:           ${avgStats.kills} (avg. ${round(avgStats.avgKills, 2)})
+- Assists:         ${avgStats.assists} (avg. ${round(avgStats.avgAssists, 2)})
+- Damage:          ${round(avgStats.damageDealt, 2)} (avg. ${round(avgStats.avgDamageDealt, 2)})
+- Wins:            ${avgStats.wins} (avg. ${round(avgStats.avgWins, 4)})
+- Rounds Played:   ${avgStats.roundsPlayed}
+\`\`\``
+
+    return result;
+}
+
 exports.handle = function (cmd, bot, db, pubg) {
     
     logger.info("Handling stats command!");
@@ -24,37 +81,33 @@ exports.handle = function (cmd, bot, db, pubg) {
     let channelId = cmd.discordUser.channelId;
     let discordId = cmd.discordUser.id;
     let pubgId;
+    let pubgPlayerName;
 
     logger.debug("checking if player is registered");
 
-    db.knex(db.TABLES.registeredPlayer)
-        .select('pubg_id')
+    db.knex.select()
+        .from(db.TABLES.registeredPlayer)
         .where({
             discord_id: discordId
         })
+
         .then(rows => {
 
             if (rows.length === 0) {
-                onError(bot, channelId, 'Player not registered. Try register command first');
-                return;
+                return Promise.reject('Player not registered. Try register command first');
             } else if (rows.length > 1) {
-                logger.error("this should not happen.")
-                return;
+                return Promise.reject('Something really weird happened.');
             }
 
-            pubgId = rows[0];
+            pubgId = rows[0].pubg_id;
+            pubgPlayerName = rows[0].pubg_name;
+            return pubgId;
         })
-        .catch(err => {
-            onError(bot, channelId, err);
-        });
 
-    // aktuelle Season von api holen
-    // TODO: Wert cachen!
+        .then(pubgId => {
+            return pubg.seasons();
+        })
 
-    // TODO mit then an datenbank zugriff packen
-    
-    logger.debug("Fetching seasons data...")
-    pubg.seasons()
         .then(seasons => {
 
             logger.debug("Successfully fetched seasons data!");
@@ -62,26 +115,32 @@ exports.handle = function (cmd, bot, db, pubg) {
             seasons = seasons.data;
             let currentSeason = seasons.filter(s => {
                 return s.attributes.isCurrentSeason;
-            });
+            })[0];
 
+            logger.debug('Id of current season: ' + currentSeason.id);
             return currentSeason.id;
         })
+
         .then(seasonId => {
 
             logger.debug("Fetching stats...")
-            pubg.playerStats(pubgId, seasonId);
+            return pubg.playerStats(pubgId, seasonId);
         })
+
         .then(stats => {
 
             logger.debug("Successfully fetched stats!");
 
+            let avgStats = getAverageStats(stats.data.attributes.gameModeStats);
+            let message = getStatsAsDiscordFormattedString(pubgPlayerName, avgStats);
+
             bot.sendMessage({
                 to: channelId,
-                message: stats.toString()
+                message: message
             });
         })
-        .catch(error => {
 
-            onError(bot, channelId, error);
+        .catch(err => {
+            onError(bot, channelId, err);
         });
 }

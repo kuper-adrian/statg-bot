@@ -21,7 +21,9 @@ exports.handle = function (cmd, bot, db, pubg) {
 
             let pubgPlayerData = data.data[0];
 
-            db.knex(db.TABLES.registeredPlayer).where('discord_id', cmd.discordUser.id)
+            db.knex.select()
+                .from(db.TABLES.registeredPlayer)
+                .where('discord_id', cmd.discordUser.id)
                 .then(players => {
 
                     console.log(players)
@@ -54,7 +56,7 @@ exports.handle = function (cmd, bot, db, pubg) {
         
                     bot.sendMessage({
                         to: channelId,
-                        message: 'Player \"' + playerName + '\" registered!'
+                        message: 'Player \"' + playerName + '\" registered! Try the "stats" next.'
                     });
                 })
                 .catch(error => {

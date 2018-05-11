@@ -3,7 +3,6 @@ var fs = require('fs');
 var logger = require('./log').getLogger();
 var knex = require('knex');
 
-
 const DB_FILE_NAME = 'stat-g-db.db';
 
 const TABLES = {
@@ -11,16 +10,16 @@ const TABLES = {
 }
 
 
-exports.knex = knex;
+
 exports.TABLES = TABLES;
 
 exports.init = function () {
 
-    var dbFilePath = './' + DB_FILE_NAME;
+    const dbFilePath = './' + DB_FILE_NAME;
 
     // create db file if it doesnt already exist
     if (fs.existsSync(dbFilePath)) {
-        logger.info('database already exists.');
+        logger.info('database at path"' + dbFilePath + '" already exists.');
     } else {
         logger.info('creating database...');
         var db = new sqlite3.Database(dbFilePath);
@@ -51,4 +50,6 @@ exports.init = function () {
             });
         }
     });
+
+    exports.knex = knex;
 }

@@ -16,6 +16,8 @@ var bot = new Discord.Client({
 });
 
 bot.on('ready', function (evt) {
+    logger.info('bot.on("ready")')
+
     logger.info('Connected');
     logger.info('Logged in as: ');
     logger.info(bot.username + ' - (' + bot.id + ')');
@@ -25,7 +27,9 @@ bot.on('ready', function (evt) {
     logger.info("start listening for messages...");
 });
 
-bot.on('message', function (user, userID, channelID, message, evt) {
+bot.on('message', (user, userID, channelID, message, evt) => {
+
+    logger.info('bot.on("message")')
     try {
         cmder.processMessage(bot, statgDb, pubg, user, userID, channelID, message, evt);
     } catch (err) {
@@ -33,11 +37,14 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     }
 });
 
-bot.on('error', function (error) {
+bot.on('error', error => {
+
+    logger.info('bot.on("error")')
     logger.error(error);
 });
 
-bot.on('disconnect', function (event) {
-    logger.info('Disconnected');
+bot.on('disconnect', event => {
+
+    logger.info('bot.on("disconnect")')
     logger.warn(event);
 });
