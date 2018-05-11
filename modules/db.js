@@ -6,7 +6,8 @@ var knex = require('knex');
 const DB_FILE_NAME = 'stat-g-db.db';
 
 const TABLES = {
-    registeredPlayer: 'registered_player'
+    registeredPlayer: 'registered_player',
+    region: 'region'
 }
 
 
@@ -38,18 +39,54 @@ exports.init = function () {
 
     logger.info('making sure all tables are there')
     // create tables if they dont exist
-    knex.schema.hasTable(TABLES.registeredPlayer).then(exists => {
+    knex.schema.hasTable(TABLES.registeredPlayer)
+        .then(exists => {
 
-        if (!exists) {
-          return knex.schema.createTable(TABLES.registeredPlayer, function(t) {
-                t.increments('id').primary();
-                t.text('discord_id');
-                t.text('discord_name');
-                t.text('pubg_id');
-                t.text('pubg_name');                
-            });
-        }
-    });
+            if (!exists) {
+            return knex.schema.createTable(TABLES.registeredPlayer, function(t) {
+                    t.increments('id').primary();
+                    t.text('discord_id');
+                    t.text('discord_name');
+                    t.text('pubg_id');
+                    t.text('pubg_name');                
+                });
+            }
+        })
+        .catch(error => {
+            logger.error(error);
+        });
+
+    knex.schema.hasTable(TABLES.region)
+        .then(exists => {
+
+            if (!exists) {
+                return knex.schema.createTable(TABLES.region, t => {
+                    t.increments('id').primary();
+                    t.text('region_name');
+                })
+            }
+        })
+        .then(o => {
+            return knex(TABLES.region).insert([
+                { region_name: 'pc-na' },
+                { region_name: 'pc-eu' },
+                { region_name: 'pc-ru' },
+                { region_name: 'pc-oc' },
+                { region_name: 'pc-kakao' },
+                { region_name: 'pc-sea' },
+                { region_name: 'pc-sa' },
+                { region_name: 'pc-as' },
+                { region_name: 'pc-jp' },
+                { region_name: 'pc-krjp' },
+                { region_name: 'xbox-as' },
+                { region_name: 'xbox-eu' },
+                { region_name: 'xbox-na' },
+                { region_name: 'xbox-oc' }
+            ])
+        })
+        .catch(error => {
+            logger.error(error);
+        });
 
     exports.knex = knex;
 }

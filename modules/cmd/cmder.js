@@ -80,7 +80,6 @@ exports.processMessage = function (bot, db, pubg, username, userID, channelID, m
                 to: channelID,
                 message: 'Unknown command. Type "!statg help" to get more infos about all commands.'
             });
-        }
-        
+        } 
     }
 }

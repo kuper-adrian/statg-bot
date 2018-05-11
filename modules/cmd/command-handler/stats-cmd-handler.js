@@ -1,5 +1,14 @@
 var logger = require('../../log').getLogger();
 
+const AVAILABLE_ARGS = [
+    "solo",
+    "solo-fpp",
+    "duo",
+    "duo-fpp",
+    "squad",
+    "squad-fpp"
+]
+
 /**
  * Called when this command could not successfully executed.
  * 
@@ -59,10 +68,10 @@ function round(number, precision) {
     return shift(Math.round(shift(number, +precision)), -precision);
   }
 
-function getStatsAsDiscordFormattedString(pubgPlayerName, avgStats) {
+function getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats) {
 
     let result = 
-`**Season stats for player "${pubgPlayerName}": **
+`Season stats for player **${pubgPlayerName}** (game mode: **${gameMode}**):
 \`\`\`markdown
 - Kills:           ${avgStats.kills} (avg. ${round(avgStats.avgKills, 2)})
 - Assists:         ${avgStats.assists} (avg. ${round(avgStats.avgAssists, 2)})
@@ -131,8 +140,35 @@ exports.handle = function (cmd, bot, db, pubg) {
 
             logger.debug("Successfully fetched stats!");
 
-            let avgStats = getAverageStats(stats.data.attributes.gameModeStats);
-            let message = getStatsAsDiscordFormattedString(pubgPlayerName, avgStats);
+            let avgStats;
+            let message;
+
+            if (cmd.arguments.length === 0) {
+
+                avgStats = getAverageStats(stats.data.attributes.gameModeStats)
+                message = getStatsAsDiscordFormattedString(pubgPlayerName, "all", avgStats);
+
+            } else if (AVAILABLE_ARGS.includes(cmd.arguments[0])) {
+
+                let gameMode = cmd.arguments[0];
+                let filteredStats = {};
+
+                filteredStats[gameMode] = stats.data.attributes.gameModeStats[gameMode];
+                
+                avgStats = getAverageStats(filteredStats)
+                message = getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats);
+
+
+            } else if (cmd.arguments.length > 1) {
+
+                onError(bot, channelId, `Invalid amount of arguments.`);
+                return;
+
+            } else {
+
+                onError(bot, channelId, `Unknown argument: "${cmd.arguments[0]}"`);
+                return;
+            }
 
             bot.sendMessage({
                 to: channelId,

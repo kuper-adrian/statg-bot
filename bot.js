@@ -29,7 +29,6 @@ bot.on('ready', function (evt) {
 
 bot.on('message', (user, userID, channelID, message, evt) => {
 
-    logger.info('bot.on("message")')
     try {
         cmder.processMessage(bot, statgDb, pubg, user, userID, channelID, message, evt);
     } catch (err) {
