@@ -4,6 +4,7 @@
 
 var auth = require('../auth.json');
 var https = require('https');
+var logger = require('./log').getLogger();
 
 const PUBG_API_HOST_NAME = "api.playbattlegrounds.com";
 const PUBG_API_KEY = auth.pubgApiKey;
@@ -33,6 +34,7 @@ function getApiOptions(path) {
  */
 function apiRequest(options, resolve, reject) {
 
+    logger.info(`starting api request for path "${options.path}"...`)
 
     https.get(options, (resp) => {
         let data = '';
@@ -44,6 +46,9 @@ function apiRequest(options, resolve, reject) {
 
         // The whole response has been received. Print out the result.
         resp.on('end', () => {
+
+            logger.info('Request finished!');
+            
             var apiData  = JSON.parse(data);
 
 
@@ -66,7 +71,7 @@ function apiRequest(options, resolve, reject) {
 exports.playerByName = function (name) {
 
     return new Promise((resolve, reject) => {
-        var options = getApiOptions('/shards/pc-eu/players?filter[playerNames]=' + name);
+        var options = getApiOptions(`/shards/pc-eu/players?filter[playerNames]=${name}`);
         return apiRequest(options, resolve, reject);
     })
 };
@@ -79,7 +84,7 @@ exports.playerByName = function (name) {
 exports.playerById = function (id) {
  
     return new Promise((resolve, reject) => {
-        var options = getApiOptions('/shards/pc-eu/players/' + id);
+        var options = getApiOptions(`/shards/pc-eu/players/${id}`);
         return apiRequest(options, resolve, reject);
     });
 };
@@ -112,7 +117,15 @@ exports.seasons = function () {
 exports.playerStats = function (pubgId, seasonId) {
 
     return new Promise((resolve, reject) => {
-        var options = getApiOptions('/shards/pc-eu/players/' + pubgId + '/seasons/' + seasonId);
+        var options = getApiOptions(`/shards/pc-eu/players/${pubgId}/seasons/${seasonId}`);
+        apiRequest(options, resolve, reject);
+    });
+}
+
+exports.matchById = function (matchId) {
+
+    return new Promise((resolve, reject) => {
+        var options = getApiOptions(`/shards/pc-eu/matches/${matchId}`);
         apiRequest(options, resolve, reject);
     });
 }

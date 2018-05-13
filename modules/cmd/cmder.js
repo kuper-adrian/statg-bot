@@ -8,7 +8,8 @@ const AVAILABLE_COMMANDS = [
     "version",
     "status",
     //"region",
-    "help"
+    "help",
+    "match"
 ];
 
 var handler = {}

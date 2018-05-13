@@ -1,4 +1,5 @@
 var logger = require('../../log').getLogger();
+var _ = require('lodash');
 
 const AVAILABLE_ARGS = [
     "solo",
@@ -60,23 +61,15 @@ function getAverageStats(gameModeStats) {
     return result;
 }
 
-function round(number, precision) {
-    var shift = function (number, precision) {
-        var numArray = ("" + number).split("e");
-        return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
-    };
-    return shift(Math.round(shift(number, +precision)), -precision);
-}
-
 function getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats) {
 
     let result =
 `Season stats for player **${pubgPlayerName}** (game mode: **${gameMode}**):
 \`\`\`markdown
-- Kills:           ${avgStats.kills} (avg. ${round(avgStats.avgKills, 2)})
-- Assists:         ${avgStats.assists} (avg. ${round(avgStats.avgAssists, 2)})
-- Damage:          ${round(avgStats.damageDealt, 2)} (avg. ${round(avgStats.avgDamageDealt, 2)})
-- Wins:            ${avgStats.wins} (avg. ${round(avgStats.avgWins, 4)})
+- Kills:           ${avgStats.kills} (avg. ${_.round(avgStats.avgKills, 2)})
+- Assists:         ${avgStats.assists} (avg. ${_.round(avgStats.avgAssists, 2)})
+- Damage:          ${_.round(avgStats.damageDealt, 2)} (avg. ${_.round(avgStats.avgDamageDealt, 2)})
+- Wins:            ${avgStats.wins} (avg. ${_.round(avgStats.avgWins, 4)})
 - Rounds Played:   ${avgStats.roundsPlayed}
 \`\`\``
 

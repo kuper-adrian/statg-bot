@@ -8,7 +8,8 @@
         "discord.io": "github:woor/discord.io#gateway_v6",
         "knex": "^0.14.6",
         "sqlite3": "^4.0.0",
-        "winston": "^2.4.2"
+        "winston": "^2.4.2",
+        "lodash": "4.17.10"
     },
     "scripts": {
         "start": "node bot.js",
