@@ -4,6 +4,11 @@
     "description": "Discord bot for PUBG stats",
     "main": "bot.js",
     "author": "Adrian Kuper",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "bitbucket.org:Blooby/stat-g.git"
+    },  
     "dependencies": {
         "discord.io": "github:woor/discord.io#gateway_v6",
         "knex": "^0.14.6",
