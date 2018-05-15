@@ -23,6 +23,7 @@
     },
     "scripts": {
         "start": "node src/bot.js",
-        "debug": "nodemon --inspect src/bot.js"
+        "debug": "nodemon --inspect src/bot.js",
+        "test": "mocha test/ --recursive"
     }
 }
