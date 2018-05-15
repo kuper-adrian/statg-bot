@@ -18,6 +18,7 @@ exports.handle = function (cmd, bot, db, pubg) {
     }
 
     let mode = cmd.arguments[0];
+    let selectedMode;
 
     db.knex
         .select()
@@ -32,11 +33,29 @@ exports.handle = function (cmd, bot, db, pubg) {
                 // TODO error
             }
 
-            // TODO
+            selectedMode = rows[0];
+
+            return knex(db.TABLES.settings)
+                .update({
+                    mode_id: selectedMode.id
+                })
+                .where({
+                    id: 1
+                });
         })
 
-    bot.sendMessage({
-        to: cmd.discordUser.channelId,
-        message: 'TODO: display help'
-    });
+        .then(o => {
+
+            bot.sendMessage({
+                to: cmd.discordUser.channelId,
+                message: `Bot mode successfully changed to "${selectedMode.mode_name}"!`
+            });
+        })
+
+        .catch(error => {
+
+            // TODO error
+        })
+
+    
 }

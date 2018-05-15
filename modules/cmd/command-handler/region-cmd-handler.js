@@ -28,7 +28,7 @@ exports.handle = function (cmd, bot, db, pubg) {
 
         newRegion = cmd.arguments[0];
 
-        if (!REGIONS.includes(argument)) {
+        if (!REGIONS.includes(newRegion)) {
             // TODO error
             return;
         }
@@ -37,7 +37,7 @@ exports.handle = function (cmd, bot, db, pubg) {
             .select()
             .from(db.TABLES.region)
             .where({
-                region_name: argument
+                region_name: newRegion
             })
 
             .then(rows => {

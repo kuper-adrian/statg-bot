@@ -2,12 +2,20 @@
  * @module PubgApi
  */
 
-var auth = require('../auth.json');
-var https = require('https');
-var logger = require('./log').getLogger();
+let auth = require('../auth.json');
+let https = require('https');
+let logger = require('./log').getLogger();
+let Cache = require('./cache').Cache;
 
 const PUBG_API_HOST_NAME = "api.playbattlegrounds.com";
 const PUBG_API_KEY = auth.pubgApiKey;
+
+let playerByIdCache = new Cache(600);
+let playerByNameCache = new Cache(600);
+let statusCache = new Cache(60);
+let seasonsCache = new Cache(3600);
+let playerStatsCache = new Cache(600);
+let matchByIdCache = new Cache(300);
 
 function ApiError(exception, apiErrors) {
     this.exception = exception;
@@ -31,8 +39,9 @@ function getApiOptions(path) {
  * @param {Object} options Request options object
  * @param {Function} resolve Callback that is called, when the api request succeeded
  * @param {Function} reject Callback that is called, when an error occures
+ * @param {Cache} cache Cache to store results in.
  */
-function apiRequest(options, resolve, reject) {
+function apiRequest(options, resolve, reject, cache) {
 
     logger.info(`starting api request for path "${options.path}"...`)
 
@@ -72,7 +81,7 @@ exports.playerByName = function (name) {
 
     return new Promise((resolve, reject) => {
         var options = getApiOptions(`/shards/pc-eu/players?filter[playerNames]=${name}`);
-        return apiRequest(options, resolve, reject);
+        return apiRequest(options, resolve, reject, playerByNameCache);
     })
 };
 
@@ -85,7 +94,7 @@ exports.playerById = function (id) {
  
     return new Promise((resolve, reject) => {
         var options = getApiOptions(`/shards/pc-eu/players/${id}`);
-        return apiRequest(options, resolve, reject);
+        return apiRequest(options, resolve, reject, playerByIdCache);
     });
 };
 
@@ -93,7 +102,7 @@ exports.status = function (config) {
 
     return new Promise((resolve, reject) => {
         var options = getApiOptions('/status');
-        return apiRequest(options, resolve, reject);
+        return apiRequest(options, resolve, reject, statusCache);
     });
 }
 
@@ -104,7 +113,7 @@ exports.seasons = function () {
 
     return new Promise((resolve, reject) => {
         var options = getApiOptions('/shards/pc-eu/seasons');
-        return apiRequest(options, resolve, reject);
+        return apiRequest(options, resolve, reject, seasonsCache);
     }); 
 }
 
@@ -118,7 +127,7 @@ exports.playerStats = function (pubgId, seasonId) {
 
     return new Promise((resolve, reject) => {
         var options = getApiOptions(`/shards/pc-eu/players/${pubgId}/seasons/${seasonId}`);
-        apiRequest(options, resolve, reject);
+        apiRequest(options, resolve, reject, playerStatsCache);
     });
 }
 
@@ -126,6 +135,6 @@ exports.matchById = function (matchId) {
 
     return new Promise((resolve, reject) => {
         var options = getApiOptions(`/shards/pc-eu/matches/${matchId}`);
-        apiRequest(options, resolve, reject);
+        apiRequest(options, resolve, reject, matchByIdCache);
     });
 }

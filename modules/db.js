@@ -39,6 +39,46 @@ exports.init = function () {
 
     logger.info('making sure all tables are there')
     // create tables if they dont exist
+
+    knex.schema.hasTable(TABLES.region)
+        .then(exists => {
+
+            if (!exists) {
+                return knex.schema.createTable(TABLES.region, t => {
+                    t.increments('id').primary();
+                    t.text('region_name');
+                    t.integer('is_global_region');
+                })
+            }
+        })
+        .then(o => {
+            return knex(TABLES.region).insert([
+                { region_name: 'pc-na', is_global_region: 0 },
+                { region_name: 'pc-eu', is_global_region: 1 },
+                { region_name: 'pc-ru', is_global_region: 0 },
+                { region_name: 'pc-oc', is_global_region: 0 },
+                { region_name: 'pc-kakao', is_global_region: 0 },
+                { region_name: 'pc-sea', is_global_region: 0 },
+                { region_name: 'pc-sa', is_global_region: 0 },
+                { region_name: 'pc-as', is_global_region: 0 },
+                { region_name: 'pc-jp', is_global_region: 0 },
+                { region_name: 'pc-krjp', is_global_region: 0 },
+                { region_name: 'xbox-as', is_global_region: 0 },
+                { region_name: 'xbox-eu', is_global_region: 0 },
+                { region_name: 'xbox-na', is_global_region: 0 },
+                { region_name: 'xbox-oc', is_global_region: 0 }
+            ])
+        })
+
+        .then(o => {
+            logger.info(`Table "${TABLES.region}" created!`)
+        })
+
+        .catch(error => {
+            logger.error(error);
+        });
+
+
     knex.schema.hasTable(TABLES.registeredPlayer)
         .then(exists => {
 
@@ -48,7 +88,8 @@ exports.init = function () {
                         t.text('discord_id');
                         t.text('discord_name');
                         t.text('pubg_id');
-                        t.text('pubg_name');                
+                        t.text('pubg_name');
+                        t.foreign('region_id').references('id').inTable(TABLES.region);
                     });
             }
         })
@@ -93,7 +134,7 @@ exports.init = function () {
             if (!exists) {
                 return knex.schema.createTable(TABLES.settings, t => {
                     t.increments('id').primary();
-                    t.integer('mode_id'); // TODO check if method exists and how to do foreign keys
+                    t.foreign('mode_id').references('id').inTable(TABLES.mode);
                 })
             }
         })
@@ -113,43 +154,7 @@ exports.init = function () {
             logger.error(error);
         })
 
-    knex.schema.hasTable(TABLES.region)
-        .then(exists => {
-
-            if (!exists) {
-                return knex.schema.createTable(TABLES.region, t => {
-                    t.increments('id').primary();
-                    t.text('region_name');
-                    // TODO: add is_global_region field
-                })
-            }
-        })
-        .then(o => {
-            return knex(TABLES.region).insert([
-                { region_name: 'pc-na' },
-                { region_name: 'pc-eu' },
-                { region_name: 'pc-ru' },
-                { region_name: 'pc-oc' },
-                { region_name: 'pc-kakao' },
-                { region_name: 'pc-sea' },
-                { region_name: 'pc-sa' },
-                { region_name: 'pc-as' },
-                { region_name: 'pc-jp' },
-                { region_name: 'pc-krjp' },
-                { region_name: 'xbox-as' },
-                { region_name: 'xbox-eu' },
-                { region_name: 'xbox-na' },
-                { region_name: 'xbox-oc' }
-            ])
-        })
-
-        .then(o => {
-            logger.info(`Table "${TABLES.region}" created!`)
-        })
-
-        .catch(error => {
-            logger.error(error);
-        });
+    
 
     exports.knex = knex;
 }
