@@ -2,7 +2,7 @@
     "name": "stat-g-bot",
     "version": "1.0.0",
     "description": "Discord bot for PUBG stats",
-    "main": "bot.js",
+    "main": "src/bot.js",
     "author": "Adrian Kuper",
     "license": "MIT",
     "repository": {
@@ -22,7 +22,7 @@
         "mocha": "^5.1.1"
     },
     "scripts": {
-        "start": "node bot.js",
-        "debug": "nodemon --inspect bot.js"
+        "start": "node src/bot.js",
+        "debug": "nodemon --inspect src/bot.js"
     }
 }

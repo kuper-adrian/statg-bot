@@ -4,8 +4,8 @@
  * Shows info about version and author of the bot.
  */
 
-const version = require('../../../package.json').version;
-const author = require('../../../package.json').author;
+const version = require('../../../../package.json').version;
+const author = require('../../../../package.json').author;
 
 exports.handle = function (cmd, bot, db, pubg) {
     bot.sendMessage({

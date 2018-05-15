@@ -3,7 +3,7 @@ var https = require('https');
 var fs = require('fs');
 
 var auth = require('./auth.json');
-var package = require('./package.json');
+var package = require('../package.json');
 var pubg = require('./modules/pubg');
 var statgDb = require('./modules/db');
 var logger = require('./modules/log').getLogger();
