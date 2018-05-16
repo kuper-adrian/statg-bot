@@ -13,7 +13,7 @@ class Cache {
      * @param {Number} cacheTime Time an item remains in cache (in s)
      */
     constructor(cacheTime = 300) {
-        this.items = [];
+        this.items = {};
         this.cacheTime = cacheTime;
     }
 
@@ -27,15 +27,26 @@ class Cache {
      */
     add(key, value) {
 
-        // TODO check if item can be undefined
-        if (items[key] !== null) {
+        if (key === null) {
+            throw new Error("Can't add object under key 'null'")
+        } else if (key === undefined) {
+            throw new Error("Can't add object under key 'undefined'")
+        }
 
-            if (secondsBetween(items[key].createdAt, moment()) > this.cacheTime) {
-                // add
+        if (value === null) {
+            throw new Error("Can't add 'null' to cache")
+        } else if (value === undefined) {
+            throw new Error("Can't add 'undefined' to cache")
+        }
+
+        if (this.items[key] !== undefined && this.items[key] !== null) {
+
+            // if the item in cache exceeded the cache item, it is invalid and can be replaced
+            if (this._isItemInvalid(this.items[key])) {
+                // add item to cache
                 this.items[key] = new CacheItem(value);
-
             } else {
-                throw new Error(`There is already cached for the key "${key}"!`);
+                throw new Error(`There already is an object stored under the key '${key}'`);
             }
         } else {
             this.items[key] = new CacheItem(value);
@@ -49,8 +60,8 @@ class Cache {
      * @param {String} key Key of object to retrieve.
      */
     retrieve(key) {
-        if (items[key] !== null) {
-            if (secondsBetween(items[key].createdAt, moment()) > this.cacheTime) {
+        if (this.items[key] !== null) {
+            if (this._isItemInvalid(this.items[key])) {
                 return null;
             } else {
                 return this.items[key].value;
@@ -64,10 +75,14 @@ class Cache {
      */
     tidy() {
         _.forOwn(this.items, (value, key) => {
-            if (!_isItemInvalid(item)) {
+            if (this._isItemInvalid(value)) {
                 delete this.items[key]; // remove item from cache
             }
         })
+    }
+
+    count() {
+        return Object.keys(this.items).length;
     }
 
     /**
@@ -77,8 +92,15 @@ class Cache {
      * @param {CacheItem} item 
      */
     _isItemInvalid(item) {
+
+        if (item === null) {
+            throw new Error("Invalid parameter 'null'")
+        } else if (item === undefined) {
+            throw new Error("Invalid parameter 'undefined'")
+        }
+
         let duration = moment.duration(moment().diff(item.createdAt));
-        return duration.asSeconds() <= this.cacheTime;
+        return duration.asSeconds() > this.cacheTime;
     }
 }
 
@@ -91,3 +113,4 @@ class CacheItem {
 }
 
 exports.Cache = Cache;
+exports.CacheItem = CacheItem;
