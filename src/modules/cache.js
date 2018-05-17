@@ -60,7 +60,15 @@ class Cache {
      * @param {String} key Key of object to retrieve.
      */
     retrieve(key) {
-        if (this.items[key] !== null) {
+
+        if (key === null) {
+            throw new Error("Invalid argument 'null'")
+        } else if (key === undefined) {
+            throw new Error("Invalid argument 'undefined'")
+        }
+        // maybe TOOD check i fkey is sstring
+
+        if (this.items[key] !== undefined && this.items[key] !== null) {
             if (this._isItemInvalid(this.items[key])) {
                 return null;
             } else {
@@ -82,7 +90,13 @@ class Cache {
     }
 
     count() {
-        return Object.keys(this.items).length;
+        let count = 0;
+        _.forOwn(this.items, (value, key) => {
+            if (!this._isItemInvalid(value)) {
+                count++;
+            }
+        })
+        return count;
     }
 
     /**
@@ -105,7 +119,6 @@ class Cache {
 }
 
 class CacheItem {
-
     constructor(value) {
         this.value = value;
         this.createdAt = moment();
