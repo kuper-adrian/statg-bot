@@ -45,31 +45,49 @@ function apiRequest(options, resolve, reject, cache) {
 
     logger.info(`starting api request for path "${options.path}"...`)
 
-    https.get(options, (resp) => {
-        let data = '';
+    let cachedObject = cache.retrieve(options.path);
+    if (cachedObject !== null) {
+        if (cachedObject === typeof(new ApiError)) {
+            reject(cachedObject);
+        } else {
+            resolve(cachedObject);
+        }
+    } else {
 
-        // A chunk of data has been recieved.
-        resp.on('data', (chunk) => {
-            data += chunk;
-        });
+        https.get(options, (resp) => {
+            let data = '';
+    
+            // A chunk of data has been recieved.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
+    
+            // The whole response has been received. Print out the result.
+            resp.on('end', () => {
+    
+                logger.info('Request finished!');
+                
+                var apiData  = JSON.parse(data);
+    
+                if (apiData.errors !== undefined && apiData.errors.length > 0) {
+                    
+                    let apiError = new ApiError(null, apiData.errors);
+                    cache.add(options.path, apiError);
 
-        // The whole response has been received. Print out the result.
-        resp.on('end', () => {
+                    reject(apiError);
+                }
 
-            logger.info('Request finished!');
+                cache.add(options.path, apiData);
+                resolve(apiData);
+            });
+        }).on("error", (err) => {
             
-            var apiData  = JSON.parse(data);
+            let apiError = new ApiError(err, null);
+            cache.add(options.path, apiError);
 
-
-            if (apiData.errors !== undefined && apiData.errors.length > 0) {               
-                reject(new ApiError(null, apiData.errors));
-            }
-            resolve(apiData);
+            reject(apiError);
         });
-    }).on("error", (err) => {
-        
-        reject(new ApiError(err, null));
-    });
+    }
 }
 
 /**
