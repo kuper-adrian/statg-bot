@@ -1,30 +1,37 @@
-var logger = require('../../log').getLogger();
+const CommandHandler = require('./cmd-handler.js').CommandHandler;
 
-exports.handle = function (cmd, bot, db, pubg) {
-    
-    var channelId = cmd.discordUser.channelId;
+class StatusCommandHandler extends CommandHandler {
 
-    pubg.status({
-        success: function (data) {
-            
-            var data = data.data;
+    constructor() {
+        super();
+    }
 
-            var id = data.id;
-            var releaseDate = data.attributes.releasedAt;
-            var apiVersion = data.attributes.version;
+    handle(cmd, bot, db, pubg) {
 
-            bot.sendMessage({
-                to: channelId,
-                message: 'ID: ' + id + ', Version: ' + apiVersion + ', Released At: ' + releaseDate
-            });
-        },
-        error: function (err) {
+        let channelId = cmd.discordUser.channelId;
 
-            logger.warn(err);
-            bot.sendMessage({
-                to: channelId,
-                message: 'Error on getting api status.'
-            });
-        }
-    });
+        pubg.status()
+            .then(data => {
+
+                let data = data.data;
+
+                let id = data.id;
+                let releaseDate = data.attributes.releasedAt;
+                let apiVersion = data.attributes.version;
+
+                bot.sendMessage({
+                    to: channelId,
+                    message: 'ID: ' + id + ', Version: ' + apiVersion + ', Released At: ' + releaseDate
+                });
+            })
+
+            .catch(error => {
+
+                this._onError(bot, channelId, error.message);
+            })
+    }
+}
+
+exports.getHandler = function() {
+    return new StatusCommandHandler();
 }

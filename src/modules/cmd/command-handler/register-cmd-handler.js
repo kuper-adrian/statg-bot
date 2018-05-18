@@ -1,89 +1,91 @@
-let logger = require('../../log').getLogger();
+const CommandHandler = require('./cmd-handler.js').CommandHandler;
 
-exports.handle = function (cmd, bot, db, pubg) {
+class RegisterCommandHandler extends CommandHandler {
 
-    let channelId = cmd.discordUser.channelId;
-
-    if (cmd.arguments.length !== 1) {
-
-        bot.sendMessage({
-            to: channelId,
-            message: 'This command only accepts a single argument.'
-        });
-        return;
+    constructor() {
+        super();
     }
 
-    let playerName = cmd.arguments[0];
-    let pubgPlayerData;
+    handle(cmd, bot, db, pubg) {
 
-    pubg.playerByName(playerName)
-        .then(data => {
+        let channelId = cmd.discordUser.channelId;
 
-            pubgPlayerData = data.data[0];
+        if (cmd.arguments.length !== 1) {
+            this._onError(bot, channelId, "This command only accepts a single argument");
+            return;
+        }
 
-            return db.knex
-                .select()
-                .from(db.TABLES.registeredPlayer)
-                .where('discord_id', cmd.discordUser.id)
-        })
+        let playerName = cmd.arguments[0];
+        let pubgPlayerData;
 
-        .then(rows => {
+        pubg.playerByName(playerName)
+            .then(data => {
 
-            logger.info('adasd')
+                pubgPlayerData = data.data[0];
 
-            if (rows.length === 0) {
+                return db.knex
+                    .select()
+                    .from(db.TABLES.registeredPlayer)
+                    .where('discord_id', cmd.discordUser.id)
+            })
 
-                logger.debug("Adding new player...")
+            .then(rows => {
 
-                return db.knex(db.TABLES.registeredPlayer)
-                    .insert({
-                        discord_id: cmd.discordUser.id,
-                        discord_name: cmd.discordUser.name,
-                        pubg_id: pubgPlayerData.id,
-                        pubg_name: pubgPlayerData.attributes.name
-                });
+                this.logger.info('adasd')
 
-            } else {
+                if (rows.length === 0) {
 
-                logger.debug("Updating player...")
+                    logger.debug("Adding new player...")
 
-                return db.knex(db.TABLES.registeredPlayer)
-                    .where({
-                        discord_id: cmd.discordUser.id
-                    })
-                    .update({
-                        discord_name: cmd.disordUser.name,
-                        pubg_id: pubgPlayerData.id,
-                        pubg_name: pubgPlayerData.attributes.name
+                    return db.knex(db.TABLES.registeredPlayer)
+                        .insert({
+                            discord_id: cmd.discordUser.id,
+                            discord_name: cmd.discordUser.name,
+                            pubg_id: pubgPlayerData.id,
+                            pubg_name: pubgPlayerData.attributes.name
                     });
-            }
-        })
 
-        .then(o => {
+                } else {
 
-            bot.sendMessage({
-                to: channelId,
-                message: `Player "${pubgPlayerData.attributes.name}" successfully registered!"`
-            });
-        })
+                    this.logger.debug("Updating player...")
 
-        .catch(error => {
+                    return db.knex(db.TABLES.registeredPlayer)
+                        .where({
+                            discord_id: cmd.discordUser.id
+                        })
+                        .update({
+                            discord_name: cmd.disordUser.name,
+                            pubg_id: pubgPlayerData.id,
+                            pubg_name: pubgPlayerData.attributes.name
+                        });
+                }
+            })
 
-            logger.error(error);
+            .then(o => {
 
-            let errorInfo;
+                bot.sendMessage({
+                    to: channelId,
+                    message: `Player "${pubgPlayerData.attributes.name}" successfully registered!"`
+                });
+            })
 
-            if (error.apiErrors !== undefined && error.apiErrors !== null && error.apiErrors.length > 0) {
-                
-                errorInfo = error.apiErrors[0].detail;                         
-            } else {
+            .catch(error => {
 
-                errorInfo = error.message;
-            }
+                let errorInfo = '';
 
-            bot.sendMessage({
-                to: channelId,
-                message: 'Error on registering player \"' + playerName + '\"! ' + errorInfo
-            });
-        })
+                if (error.apiErrors !== undefined && error.apiErrors !== null && error.apiErrors.length > 0) {
+                    
+                    errorInfo = error.apiErrors[0].detail;                         
+                } else {
+
+                    errorInfo = error.message;
+                }
+
+                this._onError(bot, channelId, `Error on registering player "${playerName}". ${errorInfo}`);
+            })
+    }
+}
+
+exports.getHandler = function() {
+    return new RegisterCommandHandler();
 }

@@ -1,5 +1,8 @@
 var logger = require('../log').getLogger();
 
+const DiscordUser = require('./discord-user.js').DiscordUser;
+const Command = require('./command.js').Command;
+
 const BASE_CMD = '!statg';
 const AVAILABLE_COMMANDS = [
     //"default",
@@ -7,7 +10,7 @@ const AVAILABLE_COMMANDS = [
     "stats",
     "version",
     "status",
-    //"region",
+    "region",
     "help",
     "match"
 ];
@@ -19,21 +22,7 @@ for (var i = 0; i < AVAILABLE_COMMANDS.length; i++) {
     var currentCommand = AVAILABLE_COMMANDS[i];
     var requirePath = './command-handler/' + currentCommand + '-cmd-handler';
 
-    handler[currentCommand] = require(requirePath)
-}
-
-function DiscordUser(id, name, channelId) {
-    this.id = id;
-    this.name = name;
-    this.channelId = channelId;
-    return this;
-}
-
-function Command(cmd, args, discordUser) {
-    this.command = cmd;
-    this.arguments = args;
-    this.discordUser = discordUser;
-    return this;
+    handler[currentCommand] = require(requirePath).getHandler();
 }
 
 /**

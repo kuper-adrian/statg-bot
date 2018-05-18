@@ -1,5 +1,5 @@
-var logger = require('../../log').getLogger();
-var _ = require('lodash');
+const CommandHandler = require('./cmd-handler.js').CommandHandler;
+const _ = require('lodash');
 
 const AVAILABLE_ARGS = [
     "solo",
@@ -10,60 +10,147 @@ const AVAILABLE_ARGS = [
     "squad-fpp"
 ]
 
-/**
- * Called when this command could not successfully executed.
- * 
- * @param {String} channelId Id of the channel
- * @param {String} detailMessage Details about why the command failed
- */
-function onError(bot, channelId, detailMessage) {
+class StatsCommandHandler extends CommandHandler {
 
-    let errorMessage = 'Error on fetching stats. Details: ' + detailMessage;
-
-    logger.warn(errorMessage)
-    bot.sendMessage({
-        to: channelId,
-        message: errorMessage
-    });
-}
-
-function getAverageStats(gameModeStats) {
-
-    let result = {
-        kills: 0,
-        assists: 0,
-        damageDealt: 0.0,
-        wins: 0,
-        winPoints: 0.0,
-        roundsPlayed: 0
-    };
-
-    let gameModeCount = 0;
-    for (let key in gameModeStats) {
-        let gameMode = gameModeStats[key];
-
-        result.kills += gameMode.kills;
-        result.assists += gameMode.assists;
-        result.damageDealt += gameMode.damageDealt;
-        result.wins += gameMode.wins;
-        result.winPoints += gameMode.winPoints;
-        result.roundsPlayed += gameMode.roundsPlayed;
-
-        gameModeCount++;
+    constructor() {
+        super();
     }
 
-    result.avgKills = result.kills / result.roundsPlayed;
-    result.avgAssists = result.assists / result.roundsPlayed;
-    result.avgDamageDealt = result.damageDealt / result.roundsPlayed;
-    result.avgWins = result.wins / result.roundsPlayed;
-    result.avgWinPoints = result.winPoints / gameModeCount;
+    handle(cmd, bot, db, pubg) {
 
-    return result;
-}
+        this.logger.info("Handling stats command!");
 
-function getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats) {
+        let channelId = cmd.discordUser.channelId;
+        let discordId = cmd.discordUser.id;
+        let pubgId;
+        let pubgPlayerName;
 
-    let result =
+        this.logger.debug("checking if player is registered");
+
+        db.knex.select()
+            .from(db.TABLES.registeredPlayer)
+            .where({
+                discord_id: discordId
+            })
+
+            .then(rows => {
+
+                if (rows.length === 0) {
+                    return Promise.reject('Player not registered. Try register command first');
+                } else if (rows.length > 1) {
+                    return Promise.reject('Something really weird happened.');
+                }
+
+                pubgId = rows[0].pubg_id;
+                pubgPlayerName = rows[0].pubg_name;
+                return pubgId;
+            })
+
+            .then(pubgId => {
+                return pubg.seasons();
+            })
+
+            .then(seasons => {
+
+                this.logger.debug("Successfully fetched seasons data!");
+
+                seasons = seasons.data;
+                let currentSeason = seasons.filter(s => {
+                    return s.attributes.isCurrentSeason;
+                })[0];
+
+                this.logger.debug('Id of current season: ' + currentSeason.id);
+                return currentSeason.id;
+            })
+
+            .then(seasonId => {
+
+                this.logger.debug("Fetching stats...")
+                return pubg.playerStats(pubgId, seasonId);
+            })
+
+            .then(stats => {
+
+                this.logger.debug("Successfully fetched stats!");
+
+                let avgStats;
+                let message;
+
+                if (cmd.arguments.length === 0) {
+
+                    avgStats = this._getAverageStats(stats.data.attributes.gameModeStats)
+                    message = this._getStatsAsDiscordFormattedString(pubgPlayerName, "all", avgStats);
+
+                } else if (AVAILABLE_ARGS.includes(cmd.arguments[0])) {
+
+                    let gameMode = cmd.arguments[0];
+                    let filteredStats = {};
+
+                    filteredStats[gameMode] = stats.data.attributes.gameModeStats[gameMode];
+
+                    avgStats = this._getAverageStats(filteredStats)
+                    message = this._getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats);
+
+
+                } else if (cmd.arguments.length > 1) {
+
+                    this_onError(bot, channelId, `Invalid amount of arguments.`);
+                    return;
+
+                } else {
+
+                    this._onError(bot, channelId, `Unknown argument: "${cmd.arguments[0]}"`);
+                    return;
+                }
+
+                bot.sendMessage({
+                    to: channelId,
+                    message: message
+                });
+            })
+
+            .catch(err => {
+                this._onError(bot, channelId, err);
+            });
+    }
+
+    _getAverageStats(gameModeStats) {
+
+        let result = {
+            kills: 0,
+            assists: 0,
+            damageDealt: 0.0,
+            wins: 0,
+            winPoints: 0.0,
+            roundsPlayed: 0
+        };
+    
+        let gameModeCount = 0;
+        for (let key in gameModeStats) {
+            let gameMode = gameModeStats[key];
+    
+            result.kills += gameMode.kills;
+            result.assists += gameMode.assists;
+            result.damageDealt += gameMode.damageDealt;
+            result.wins += gameMode.wins;
+            result.winPoints += gameMode.winPoints;
+            result.roundsPlayed += gameMode.roundsPlayed;
+    
+            gameModeCount++;
+        }
+    
+        result.avgKills = result.kills / result.roundsPlayed;
+        result.avgAssists = result.assists / result.roundsPlayed;
+        result.avgDamageDealt = result.damageDealt / result.roundsPlayed;
+        result.avgWins = result.wins / result.roundsPlayed;
+        result.avgWinPoints = result.winPoints / gameModeCount;
+    
+        return result;
+    }
+
+    _getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats) {
+
+        let result =
 `Season stats for player **${pubgPlayerName}** (game mode: **${gameMode}**):
 \`\`\`markdown
 - Kills:           ${avgStats.kills} (avg. ${_.round(avgStats.avgKills, 2)})
@@ -73,103 +160,10 @@ function getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats) {
 - Rounds Played:   ${avgStats.roundsPlayed}
 \`\`\``
 
-    return result;
+        return result;
+    }
 }
 
-exports.handle = function (cmd, bot, db, pubg) {
-
-    logger.info("Handling stats command!");
-
-    let channelId = cmd.discordUser.channelId;
-    let discordId = cmd.discordUser.id;
-    let pubgId;
-    let pubgPlayerName;
-
-    logger.debug("checking if player is registered");
-
-    db.knex.select()
-        .from(db.TABLES.registeredPlayer)
-        .where({
-            discord_id: discordId
-        })
-
-        .then(rows => {
-
-            if (rows.length === 0) {
-                return Promise.reject('Player not registered. Try register command first');
-            } else if (rows.length > 1) {
-                return Promise.reject('Something really weird happened.');
-            }
-
-            pubgId = rows[0].pubg_id;
-            pubgPlayerName = rows[0].pubg_name;
-            return pubgId;
-        })
-
-        .then(pubgId => {
-            return pubg.seasons();
-        })
-
-        .then(seasons => {
-
-            logger.debug("Successfully fetched seasons data!");
-
-            seasons = seasons.data;
-            let currentSeason = seasons.filter(s => {
-                return s.attributes.isCurrentSeason;
-            })[0];
-
-            logger.debug('Id of current season: ' + currentSeason.id);
-            return currentSeason.id;
-        })
-
-        .then(seasonId => {
-
-            logger.debug("Fetching stats...")
-            return pubg.playerStats(pubgId, seasonId);
-        })
-
-        .then(stats => {
-
-            logger.debug("Successfully fetched stats!");
-
-            let avgStats;
-            let message;
-
-            if (cmd.arguments.length === 0) {
-
-                avgStats = getAverageStats(stats.data.attributes.gameModeStats)
-                message = getStatsAsDiscordFormattedString(pubgPlayerName, "all", avgStats);
-
-            } else if (AVAILABLE_ARGS.includes(cmd.arguments[0])) {
-
-                let gameMode = cmd.arguments[0];
-                let filteredStats = {};
-
-                filteredStats[gameMode] = stats.data.attributes.gameModeStats[gameMode];
-
-                avgStats = getAverageStats(filteredStats)
-                message = getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats);
-
-
-            } else if (cmd.arguments.length > 1) {
-
-                onError(bot, channelId, `Invalid amount of arguments.`);
-                return;
-
-            } else {
-
-                onError(bot, channelId, `Unknown argument: "${cmd.arguments[0]}"`);
-                return;
-            }
-
-            bot.sendMessage({
-                to: channelId,
-                message: message
-            });
-        })
-
-        .catch(err => {
-            onError(bot, channelId, err);
-        });
+exports.getHandler = function() {
+    return new StatsCommandHandler();
 }
