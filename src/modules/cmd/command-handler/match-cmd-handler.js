@@ -67,7 +67,7 @@ class MatchCommandHandler extends CommandHandler {
                 })
 
 
-                let message = craftDiscordMessage(matchData, teammates);
+                let message = this._craftDiscordMessage(matchData, teammates);
                 bot.sendMessage({
                     to: channelId,
                     message: message
@@ -95,7 +95,7 @@ class MatchCommandHandler extends CommandHandler {
 \`\`\`markdown
 - Kills:      ${stats.kills} (${stats.headshotKills})
 - Assists:    ${stats.assists}
-- Damage:     ${_round(stats.damageDealt, 2)}
+- Damage:     ${_.round(stats.damageDealt, 2)}
 - Heals:      ${stats.heals}
 - Revives:    ${stats.revives}
 
@@ -130,7 +130,7 @@ WINNER WINNER CHICKEN DINNER
         }
     
         _.forEach(teammates, t => {
-            result += getPlayerStatsString(t);
+            result += this._getPlayerStatsString(t);
         })
     
         return result;

@@ -12,7 +12,8 @@ const AVAILABLE_COMMANDS = [
     "status",
     "region",
     "help",
-    "match"
+    "match",
+    "ping"
 ];
 
 var handler = {}

@@ -11,7 +11,7 @@ class Command {
      */
     constructor (cmd, args, discordUser) {
         this.command = cmd;
-        this.args = args;
+        this.arguments = args;
         this.discordUser = discordUser;
     }
 }

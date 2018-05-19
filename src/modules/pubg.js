@@ -43,10 +43,13 @@ function getApiOptions(path) {
  */
 function apiRequest(options, resolve, reject, cache) {
 
-    logger.info(`starting api request for path "${options.path}"...`)
+    logger.debug(`starting api request for path "${options.path}"...`)
 
     let cachedObject = cache.retrieve(options.path);
     if (cachedObject !== null) {
+
+        logger.debug("retrieved pubg api data from cache");
+
         if (cachedObject === typeof(new ApiError)) {
             reject(cachedObject);
         } else {
@@ -65,7 +68,7 @@ function apiRequest(options, resolve, reject, cache) {
             // The whole response has been received. Print out the result.
             resp.on('end', () => {
     
-                logger.info('Request finished!');
+                logger.debug('Request finished!');
                 
                 var apiData  = JSON.parse(data);
     

@@ -76,6 +76,7 @@ class StatsCommandHandler extends CommandHandler {
                 let avgStats;
                 let message;
 
+         
                 if (cmd.arguments.length === 0) {
 
                     avgStats = this._getAverageStats(stats.data.attributes.gameModeStats)

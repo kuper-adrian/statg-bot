@@ -16,11 +16,10 @@ var bot = new Discord.Client({
 });
 
 bot.on('ready', function (evt) {
-    logger.info('bot.on("ready")')
 
-    logger.info('Connected');
-    logger.info('Logged in as: ');
-    logger.info(bot.username + ' - (' + bot.id + ')');
+    logger.info('Connected!');
+    logger.debug('Logged in as: ');
+    logger.debug(bot.username + ' - (' + bot.id + ')');
 
     statgDb.init();
 

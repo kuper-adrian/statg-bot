@@ -11,9 +11,10 @@ class PingCommandHandler extends CommandHandler {
     }
 
     handle(cmd, bot, db, pubg) {
+
         bot.sendMessage({
             to: cmd.discordUser.channelId,
-            message: 'pong!'
+            message: 'pong'
         });
     }
 }

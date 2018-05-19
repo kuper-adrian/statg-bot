@@ -6,10 +6,12 @@
             "request": "launch",
             "name": "Launch via NPM",
             "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "run-script",
-                "start"
+            "args": [
+                "run",
+                "debug"
             ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
             "port": 9229
         },
         {
