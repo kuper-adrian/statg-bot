@@ -13,11 +13,11 @@ class StatusCommandHandler extends CommandHandler {
         pubg.status()
             .then(data => {
 
-                let data = data.data;
+                let statusData = data.data;
 
-                let id = data.id;
-                let releaseDate = data.attributes.releasedAt;
-                let apiVersion = data.attributes.version;
+                let id = statusData.id;
+                let releaseDate = statusData.attributes.releasedAt;
+                let apiVersion = statusData.attributes.version;
 
                 bot.sendMessage({
                     to: channelId,
