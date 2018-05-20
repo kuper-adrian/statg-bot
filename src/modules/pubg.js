@@ -10,8 +10,8 @@ let Cache = require('./cache').Cache;
 const PUBG_API_HOST_NAME = "api.playbattlegrounds.com";
 const PUBG_API_KEY = auth.pubgApiKey;
 
-let playerByIdCache = new Cache(600);
-let playerByNameCache = new Cache(600);
+let playerByIdCache = new Cache(120);
+let playerByNameCache = new Cache(1200);
 let statusCache = new Cache(60);
 let seasonsCache = new Cache(3600);
 let playerStatsCache = new Cache(600);
