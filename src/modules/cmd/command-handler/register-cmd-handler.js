@@ -31,11 +31,9 @@ class RegisterCommandHandler extends CommandHandler {
 
             .then(rows => {
 
-                this.logger.info('adasd')
-
                 if (rows.length === 0) {
 
-                    logger.debug("Adding new player...")
+                    this.logger.debug("Adding new player...")
 
                     return db.knex(db.TABLES.registeredPlayer)
                         .insert({
@@ -43,7 +41,7 @@ class RegisterCommandHandler extends CommandHandler {
                             discord_name: cmd.discordUser.name,
                             pubg_id: pubgPlayerData.id,
                             pubg_name: pubgPlayerData.attributes.name
-                    });
+                        });
 
                 } else {
 
@@ -65,7 +63,7 @@ class RegisterCommandHandler extends CommandHandler {
 
                 bot.sendMessage({
                     to: channelId,
-                    message: `Player "${pubgPlayerData.attributes.name}" successfully registered!"`
+                    message: `Player "${pubgPlayerData.attributes.name}" successfully registered!`
                 });
             })
 
