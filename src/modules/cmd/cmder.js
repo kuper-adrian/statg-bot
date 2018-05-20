@@ -5,15 +5,15 @@ const Command = require('./command.js').Command;
 
 const BASE_CMD = '!statg';
 const AVAILABLE_COMMANDS = [
-    //"default",
     "register",
     "stats",
     "version",
     "status",
-    "region",
     "help",
     "match",
     "ping"
+    // TODO "region"
+    // TODO "mode"
 ];
 
 var handler = {}
@@ -43,6 +43,8 @@ exports.processMessage = function (bot, db, pubg, username, userID, channelID, m
 
     // if message starts with "!statg"
     if (message.substring(0, BASE_CMD.length) === BASE_CMD) {
+
+        logger.debug("---------------------------------");
         
         var user = new DiscordUser(userID, username, channelID);
         var args = message.substring(BASE_CMD.length).split(' ');
