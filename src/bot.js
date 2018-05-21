@@ -1,19 +1,17 @@
-var Discord = require('discord.io');
-var https = require('https');
-var fs = require('fs');
-
-var auth = require('./auth.json');
-var package = require('../package.json');
-var pubg = require('./modules/pubg');
-var statgDb = require('./modules/db');
-var logger = require('./modules/log').getLogger();
-var cmder = require('./modules/cmd/cmder');
+const Discord = require('discord.io');
+const auth = require('./auth.json');
+const pubg = require('./modules/pubg');
+const statgDb = require('./modules/db');
+const logger = require('./modules/log').getLogger();
+const cmder = require('./modules/cmd/cmder');
 
 // Initialize Discord Bot
-var bot = new Discord.Client({
+const bot = new Discord.Client({
     token: auth.discordToken,
     autorun: true
 });
+
+let initialized = false;
 
 bot.on('ready', function (evt) {
 
@@ -21,12 +19,21 @@ bot.on('ready', function (evt) {
     logger.debug('Logged in as: ');
     logger.debug(bot.username + ' - (' + bot.id + ')');
 
-    statgDb.init();
+    statgDb.init()
+        .then(() => {
+            logger.info("start listening for messages...");
+            initialized = true;
+        })
 
-    logger.info("start listening for messages...");
+        .catch(error => {
+
+        })
 });
 
 bot.on('message', (user, userID, channelID, message, evt) => {
+
+    // dont do anything if not everything was initialized in the background
+    if (!initialized) return;
 
     try {
         cmder.processMessage(bot, statgDb, pubg, user, userID, channelID, message, evt);
