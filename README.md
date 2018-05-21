@@ -1,16 +1,30 @@
 # stat-g
 
-stat-g is a bot who posts PUBG statistics in your discord channel!
+stat-g is a discord bot that can post PUBG statistics in your discord channel!
 
 ## Commands
 
 * `!statg register [pubg player name]` 
-  For registering your PUBG player name. Enables you to get your stats with the stat-g bot.
+  Links your PUBG player name to your Discord account. Enables you to fetch your stats.
 * `!statg stats`
-  Shows your stats (if you have registered yourself)
-* `!statg region`
-  Set region of the bot.
+  Shows your current season stats (if you have registered yourself).
+  **arguments**
+  * `solo` Stats from third-person solo matches only.
+  * `solo-fpp` Stats from first-person solo matches only.
+  * `duo` Stats from third-person duo matches only.
+  * `duo-fpp` Stats from first-person duo matches only.
+  * `squad` Stats from third-person squad matches only.
+  * `squad-fpp` Stats from first-person squad matches only.
+* `!statg match`
+  Shows your and your squads latest match info (all game modes combined).
 * `!statg help`
   Displays help about commands.
-* `!statg setmode [mode]`
-  Sets command mode of the bot. Possible modes: "default" or "immediate"
+* `!statg version`
+  Displays version of the stat-g bot.
+* `!statg status`
+  Displays the current status of the PUBG api.
+* `!statg ping`
+  Pong!
+
+## License
+MIT
