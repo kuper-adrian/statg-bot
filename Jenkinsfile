@@ -1,9 +1,11 @@
 pipeline {
-  agent any
+  agent {
+    docker { image 'node:8.11.1-slim' }
+  }
   stages {
     stage('test') {
       steps {
-        echo 'hello world'
+        sh 'node --version'
       }
     }
   }
