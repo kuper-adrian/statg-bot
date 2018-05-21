@@ -8,7 +8,7 @@ const _ = require('lodash')
 class Cache {
 
     /**
-     * Constructor for the Cache-class.
+     * Class for caching objects based on a key for a given amount of "cache time".
      * 
      * @param {Number} cacheTime Time an item remains in cache (in s)
      */

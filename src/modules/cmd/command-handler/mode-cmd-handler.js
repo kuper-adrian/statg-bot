@@ -1,5 +1,10 @@
 const CommandHandler = require('./cmd-handler.js').CommandHandler;
 
+const MODES = [
+    "default",
+    "immediate"
+]
+
 /**
  * Handler for the "mode" command.
  * 

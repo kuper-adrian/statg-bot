@@ -1,21 +1,17 @@
-/**
- * @module PubgApi
- */
-
-let auth = require('../auth.json');
-let https = require('https');
-let logger = require('./log').getLogger();
-let Cache = require('./cache').Cache;
+const auth = require('../auth.json');
+const https = require('https');
+const logger = require('./log').getLogger();
+const Cache = require('./cache').Cache;
 
 const PUBG_API_HOST_NAME = "api.playbattlegrounds.com";
 const PUBG_API_KEY = auth.pubgApiKey;
 
-let playerByIdCache = new Cache(120);
-let playerByNameCache = new Cache(1200);
-let statusCache = new Cache(60);
-let seasonsCache = new Cache(3600);
-let playerStatsCache = new Cache(600);
-let matchByIdCache = new Cache(300);
+const playerByIdCache = new Cache(120);
+const playerByNameCache = new Cache(1200);
+const statusCache = new Cache(60);
+const seasonsCache = new Cache(3600);
+const playerStatsCache = new Cache(600);
+const matchByIdCache = new Cache(300);
 
 function ApiError(exception, apiErrors) {
     this.exception = exception;
@@ -65,16 +61,16 @@ function apiRequest(options, resolve, reject, cache) {
                 data += chunk;
             });
     
-            // The whole response has been received. Print out the result.
+            // The whole response has been received.
             resp.on('end', () => {
     
                 logger.debug('Request finished!');
                 
-                var apiData  = JSON.parse(data);
+                const apiData  = JSON.parse(data);
     
                 if (apiData.errors !== undefined && apiData.errors.length > 0) {
                     
-                    let apiError = new ApiError(null, apiData.errors);
+                    const apiError = new ApiError(null, apiData.errors);
                     cache.add(options.path, apiError);
 
                     reject(apiError);
@@ -85,7 +81,7 @@ function apiRequest(options, resolve, reject, cache) {
             });
         }).on("error", (err) => {
             
-            let apiError = new ApiError(err, null);
+            const apiError = new ApiError(err, null);
             cache.add(options.path, apiError);
 
             reject(apiError);
@@ -119,7 +115,10 @@ exports.playerById = function (id) {
     });
 };
 
-exports.status = function (config) {
+/**
+ * Creates a promise to get the current status of the pubg api
+ */
+exports.status = function () {
 
     return new Promise((resolve, reject) => {
         var options = getApiOptions('/status');
@@ -152,6 +151,12 @@ exports.playerStats = function (pubgId, seasonId) {
     });
 }
 
+/**
+ * Creates a promise to get infos about match identified by the 
+ * given id.
+ * 
+ * @param {string} matchId the match id
+ */
 exports.matchById = function (matchId) {
 
     return new Promise((resolve, reject) => {

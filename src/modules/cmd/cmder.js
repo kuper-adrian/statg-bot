@@ -1,4 +1,4 @@
-var logger = require('../log').getLogger();
+const logger = require('../log').getLogger();
 
 const DiscordUser = require('./discord-user.js').DiscordUser;
 const Command = require('./command.js').Command;
@@ -16,8 +16,9 @@ const AVAILABLE_COMMANDS = [
     // TODO "mode"
 ];
 
-var handler = {}
-
+// dictionary containing handler for all commands
+const handler = {}
+// fill dictionary
 for (var i = 0; i < AVAILABLE_COMMANDS.length; i++) {
         
     var currentCommand = AVAILABLE_COMMANDS[i];
@@ -27,6 +28,8 @@ for (var i = 0; i < AVAILABLE_COMMANDS.length; i++) {
 }
 
 /**
+ * Processes the message of a discord user and handles statg commands
+ * using the respective handler.
  * 
  * @param {Object} bot 
  * @param {Object} db 
@@ -37,7 +40,7 @@ for (var i = 0; i < AVAILABLE_COMMANDS.length; i++) {
  * @param {string} message 
  * @param {Object} evt 
  */
-exports.processMessage = function (bot, db, pubg, username, userID, channelID, message, evt) {
+exports.processMessage = function (bot, db, pubg, username, userId, channelId, message, evt) {
     
     if (message.length < BASE_CMD.length) return;
 
@@ -46,31 +49,26 @@ exports.processMessage = function (bot, db, pubg, username, userID, channelID, m
 
         logger.debug("---------------------------------");
         
-        var user = new DiscordUser(userID, username, channelID);
-        var args = message.substring(BASE_CMD.length).split(' ');
+        const user = new DiscordUser(userId, username, channelId);
+        const args = message.substring(BASE_CMD.length).split(' ');
 
         // if no command was given, do nothing
-        if (args.length === 0) {
-            return null;
-        }        
-        if (args.length === 1) {           
-            return new Command(AVAILABLE_COMMANDS.default, [], user);
-        } 
+        if (args.length < 2) {
+            return;
+        }
 
-        var cmd = args[1];
+        const cmd = args[1];
         args = args.splice(2);
 
         logger.info('Got command \"' + cmd + '\" by \"' + username + '\". Args: ' + args);
-        logger.debug('user: ' + username + ', userId: ' + userID + ', channelId: ' + channelID + ', evt: ' + evt);
-
+        logger.debug('user: ' + username + ', userId: ' + userId + ', channelId: ' + channelId + ', evt: ' + evt);
 
         if (AVAILABLE_COMMANDS.includes(cmd)) {
-            var commandInfo = new Command(cmd, args, user);
+            const commandInfo = new Command(cmd, args, user);
             handler[commandInfo.command].handle(commandInfo, bot, db, pubg)
         } else {
-
             bot.sendMessage({
-                to: channelID,
+                to: channelId,
                 message: 'Unknown command. Type "!statg help" to get more infos about all commands.'
             });
         } 
