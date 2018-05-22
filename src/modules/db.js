@@ -1,7 +1,7 @@
-var sqlite3 = require('sqlite3').verbose();
-var fs = require('fs');
-var logger = require('./log').getLogger();
-var knex = require('knex');
+const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
+const logger = require('./log').getLogger();
+const knex = require('knex');
 
 const DB_FILE_NAME = 'stat-g-db.db';
 
