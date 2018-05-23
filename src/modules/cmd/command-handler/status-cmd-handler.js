@@ -10,7 +10,7 @@ class StatusCommandHandler extends CommandHandler {
 
         let channelId = cmd.discordUser.channelId;
 
-        pubg.status()
+        return pubg.status()
             .then(data => {
 
                 let statusData = data.data;
@@ -23,6 +23,8 @@ class StatusCommandHandler extends CommandHandler {
                     to: channelId,
                     message: 'ID: ' + id + ', Version: ' + apiVersion + ', Released At: ' + releaseDate
                 });
+
+                return Promise.resolve();
             })
 
             .catch(error => {
