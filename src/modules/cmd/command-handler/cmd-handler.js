@@ -23,9 +23,9 @@ class CommandHandler {
 
     _onError(bot, channelId, detailMessage) {
 
-        let errorMessage = 'Error on fetching stats. Details: ' + detailMessage;
+        let errorMessage = 'Error on handling command. Details: ' + detailMessage;
 
-        this.logger.warn(errorMessage)
+        this.logger.error(errorMessage)
         bot.sendMessage({
             to: channelId,
             message: errorMessage
