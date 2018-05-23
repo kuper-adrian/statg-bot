@@ -2,7 +2,7 @@ let expect = require('chai').expect;
 let Cache = require('../../src/modules/cache').Cache;
 let CacheItem = require('../../src/modules/cache').CacheItem;
 
-describe('add()', () => {
+describe('Cache.add()', () => {
     it('should add objects to the cache', () => {
         // PREPARE
         let c = new Cache(600);
@@ -124,7 +124,7 @@ describe('add()', () => {
     })
 })
 
-describe('retrieve', () => {
+describe('Cache.retrieve()', () => {
     it('should return the objects added with add()', () => {
         // PREPARE
         let c = new Cache(600);
@@ -192,7 +192,7 @@ describe('retrieve', () => {
     });
 })
 
-describe('count()', () => {
+describe('Cache.count()', () => {
 
     it('should return 0 if empty', () => {
         // PREPARE
@@ -293,7 +293,7 @@ describe('count()', () => {
     });
 })
 
-describe('tidy()', () => {
+describe('Cache.tidy()', () => {
     it('should remove invalid items from cache', () => {
         // PREPARE
         let c = new Cache(600);
@@ -359,7 +359,7 @@ describe('tidy()', () => {
     })
 })
 
-describe('_isItemInvalid()', () => {
+describe('Cache._isItemInvalid()', () => {
 
     it('should throw an error if null was passed', () => {
         // PREPARE
