@@ -16,8 +16,16 @@ class VersionCommandHandler extends CommandHandler {
     }
 
     handle(cmd, bot, db, pubg) {
+
+        const channelId = cmd.discordUser.channelId;
+
+        if (cmd.arguments.length !== 0) {
+            this._onError(bot, channelId, "invalid amount of arguments");
+            return;
+        }
+
         bot.sendMessage({
-            to: cmd.discordUser.channelId,
+            to: channelId,
             message: `\`\`\`statg-bot v${version} by ${author}\`\`\``
         });
 
@@ -43,8 +51,6 @@ class VersionCommandHandler extends CommandHandler {
         //     }
         // })
     }
-
-
 }
 
 exports.getHandler = function () {
