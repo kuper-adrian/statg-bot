@@ -26,7 +26,7 @@ describe('StatusCommandHandler.handle()', () => {
         errorStub = sinon.stub(logger, "error").callsFake((message) => {
             // do nothing
         });
-    })
+    });
 
     afterEach(() => {
         
@@ -34,7 +34,7 @@ describe('StatusCommandHandler.handle()', () => {
         infoStub.restore();
         warnStub.restore();
         errorStub.restore();
-    })
+    });
 
     it('should call the pubg api', () => {
         
