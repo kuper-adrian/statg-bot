@@ -10,6 +10,11 @@ class StatusCommandHandler extends CommandHandler {
 
         let channelId = cmd.discordUser.channelId;
 
+        if (cmd.arguments.length !== 0) {
+            this._onError(bot, channelId, "invalid amount of arguments");
+            return;
+        }
+
         return pubg.status()
             .then(data => {
 
