@@ -65,7 +65,7 @@ describe('VersionCommandHandler.handle()', () => {
     });
 
     it('should send a error message if there is a single argument given', () => {
-        // TODO
+
         const handler = VersionCommandHandler.getHandler();
 
         let passedMessage = '';
@@ -98,7 +98,7 @@ describe('VersionCommandHandler.handle()', () => {
     });
 
     it('should send a error message if there are multiple arguments given', () => {
-        // TODO
+
         const handler = VersionCommandHandler.getHandler();
 
         let passedMessage = '';
@@ -132,8 +132,7 @@ describe('VersionCommandHandler.handle()', () => {
         sendMessageSpy.restore();
     });
 
-    it('should send a message containing the version of the bot', () => {
-        
+    it('should send a message containing the version of the bot', () => {       
         // TODO
     });
 
