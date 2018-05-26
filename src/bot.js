@@ -26,7 +26,7 @@ bot.on('ready', function (evt) {
         })
 
         .catch(error => {
-
+            logger.error(error.message);
         })
 });
 
