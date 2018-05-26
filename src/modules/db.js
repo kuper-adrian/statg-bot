@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const logger = require('./log').getLogger();
-const knex = require('knex');
+let knex = require('knex');
 
 const DB_FILE_NAME = 'stat-g-db.db';
 
@@ -18,7 +18,7 @@ exports.init = function () {
 
     return new Promise((resolve, reject) => {
 
-        const dbFilePath = './' + DB_FILE_NAME;
+        const dbFilePath = './data/' + DB_FILE_NAME;
 
         // create db file if it doesnt already exist
         if (fs.existsSync(dbFilePath)) {
