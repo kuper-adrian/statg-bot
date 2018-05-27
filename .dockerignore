@@ -1,0 +1,7 @@
+notes.md
+Dockerfile
+README.md
+Jenkinsfile
+test/
+data/
+logs/

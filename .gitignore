@@ -1,5 +1,6 @@
 node_modules/
-auth.json
-stat-g-db.db
+data/
 logs/
+
+auth.json
 notes.md

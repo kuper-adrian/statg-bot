@@ -49,8 +49,8 @@ exports.processMessage = function (bot, db, pubg, username, userId, channelId, m
 
         logger.debug("---------------------------------");
         
-        const user = new DiscordUser(userId, username, channelId);
-        const args = message.substring(BASE_CMD.length).split(' ');
+        let user = new DiscordUser(userId, username, channelId);
+        let args = message.substring(BASE_CMD.length).split(' ');
 
         // if no command was given, do nothing
         if (args.length < 2) {
