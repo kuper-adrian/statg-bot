@@ -1,9 +1,21 @@
 const Discord = require('discord.io');
-const auth = require('./auth.json');
 const pubg = require('./modules/pubg');
 const statgDb = require('./modules/db');
 const logger = require('./modules/log').getLogger();
 const cmder = require('./modules/cmd/cmder');
+
+const auth = require('./auth');
+
+let initialized = false;
+
+try {
+    process.argv.splice(0, 2);
+    auth.init(process.argv);
+} catch (error) {
+    logger.error(error);
+    process.exit();
+}
+
 
 // Initialize Discord Bot
 const bot = new Discord.Client({
@@ -11,7 +23,6 @@ const bot = new Discord.Client({
     autorun: true
 });
 
-let initialized = false;
 
 bot.on('ready', function (evt) {
 

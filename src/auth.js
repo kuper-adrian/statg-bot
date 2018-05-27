@@ -10,6 +10,7 @@
  */
 
 const fs = require('fs');
+const logger = require('./modules/log').getLogger();
 
 const BUILD_CONFIG_ARG_NAME = "buildConfig="
 const DISCORD_TOKEN_ARG_NAME = "discordToken="
@@ -21,7 +22,9 @@ const BUILD_CONFIGS = [
 ]
 
 function readAuthJson(path) {
-    const authJson = fs.readFileSync("./auth.json");
+    logger.warn("trying to read secrets from local json file!")
+
+    const authJson = fs.readFileSync(__dirname + "/auth.json");
     return JSON.parse(authJson);
 }
 
@@ -31,6 +34,7 @@ function setExports(values) {
 }
 
 function getCommandLineArgument(name, cmdLineArgs) {
+
     let cmdLineArg = cmdLineArgs.filter((arg) => {
         return arg.includes(name);
     });
@@ -79,9 +83,10 @@ exports.init = function(cmdLineArgs) {
     const pubgApiKey = getCommandLineArgument(PUBG_API_KEY_ARG_NAME, cmdLineArgs);
 
     if (discordToken === null || pubgApiKey === null) {
-        throw new Error(`when using "release" build config both "discordToken" and "pubgApiKey" have to set`);
+        throw new Error(`when using "release" build config both "discordToken" and "pubgApiKey" have to be specified`);
     }
 
+    logger.info("using secrets passed by command line")
     setExports({
         discordToken: discordToken,
         pubgApiKey: pubgApiKey

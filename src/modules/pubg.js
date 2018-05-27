@@ -1,4 +1,4 @@
-const auth = require('../auth.json');
+const auth = require('../auth.js');
 const https = require('https');
 const logger = require('./log').getLogger();
 const Cache = require('./cache').Cache;
