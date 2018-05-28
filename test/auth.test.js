@@ -42,7 +42,7 @@ describe('auth.init()', () => {
         errorStub.restore();
     });
 
-    it('should use the auth.json file if no command line parameters were given', () => {
+    it('should throw an error if no command line parameters were given', () => {
         
         const cmdLineArguments = [];
 
@@ -54,18 +54,24 @@ describe('auth.init()', () => {
                 discordToken: discordToken,
                 pubgApiKey: pubgApiKey
             });
-        })
+        });
 
-        auth.init(cmdLineArguments);
+        let errorMessage = '';
 
-        sinon.assert.calledOnce(readFileSyncStub);
+        try {
+            auth.init(cmdLineArguments);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+        
+
+        sinon.assert.notCalled(readFileSyncStub);
         fs.readFileSync.restore();
 
-        expect(auth.discordToken).to.be.equal(discordToken);
-        expect(auth.pubgApiKey).to.be.equal(pubgApiKey);
+        expect(errorMessage).to.contain("no command arguments given");
     });
 
-    it('should use the auth.json if the cmdLineArguments parameter is null', () => {
+    it('should throw an error if the cmdLineArguments parameter is null', () => {
 
         const cmdLineArguments = null;
 
@@ -79,16 +85,19 @@ describe('auth.init()', () => {
             });
         });
 
-        auth.init(cmdLineArguments);
-
-        sinon.assert.calledOnce(readFileSyncStub);
+        try {
+            auth.init(cmdLineArguments);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+        
+        sinon.assert.notCalled(readFileSyncStub);
         fs.readFileSync.restore();
 
-        expect(auth.discordToken).to.be.equal(discordToken);
-        expect(auth.pubgApiKey).to.be.equal(pubgApiKey);
+        expect(errorMessage).to.contain("no command arguments given");
     });
 
-    it('should use the auth.json if the cmdLineArguments parameter is undefined', () => {
+    it('should throw an error if the cmdLineArguments parameter is undefined', () => {
         
         const discordToken = "some-test-token";
         const pubgApiKey = "some-test-api-key";
@@ -100,13 +109,16 @@ describe('auth.init()', () => {
             });
         })
 
-        auth.init();
+        try {
+            auth.init(undefined);
+        } catch (error) {
+            errorMessage = error.message;
+        }   
 
-        sinon.assert.calledOnce(readFileSyncStub);
+        sinon.assert.notCalled(readFileSyncStub);
         fs.readFileSync.restore();
 
-        expect(auth.discordToken).to.be.equal(discordToken);
-        expect(auth.pubgApiKey).to.be.equal(pubgApiKey);
+        expect(errorMessage).to.contain("no command arguments given");
     });
 
     it('should not contain any values for discord token and the api key before init() is called', () => {
@@ -390,5 +402,33 @@ describe('auth.init()', () => {
         expect(errorMessage).to.contain(`have to be specified`)
         expect(auth.discordToken).to.be.undefined;
         expect(auth.pubgApiKey).to.be.undefined;
-    })
+    });
+
+    it('should use arguments passed by command line if runConfig was omitted', () => {
+
+
+        const discordToken = "some-test-token";
+        const pubgApiKey = "some-test-api-key";
+
+        const cmdLineArguments = [
+            `discordToken=${discordToken}`,
+            `pubgApiKey=${pubgApiKey}`
+        ];
+
+        
+        const readFileSyncStub = sinon.stub(fs, "readFileSync").callsFake((path) => {
+            return JSON.stringify({
+                discordToken: "some-other-token",
+                pubgApiKey: "some-other-key"
+            });
+        })
+
+        auth.init(cmdLineArguments);
+
+        sinon.assert.notCalled(readFileSyncStub);
+        fs.readFileSync.restore();
+
+        expect(auth.discordToken).to.be.equal(discordToken);
+        expect(auth.pubgApiKey).to.be.equal(pubgApiKey);
+    });
 });

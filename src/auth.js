@@ -54,13 +54,11 @@ function getCommandLineArgument(name, cmdLineArgs) {
 exports.init = function(cmdLineArgs) {
 
     if (cmdLineArgs === undefined || cmdLineArgs === null) {
-        setExports(readAuthJson());
-        return;
+        throw new Error("no command arguments given");
     }
 
     if (cmdLineArgs.length === 0) {
-        setExports(readAuthJson());
-        return;
+        throw new Error("no command arguments given");
     }
 
     const invalidArgs = cmdLineArgs.filter((arg) => {
@@ -77,20 +75,14 @@ exports.init = function(cmdLineArgs) {
     const discordToken = getCommandLineArgument(DISCORD_TOKEN_ARG_NAME, cmdLineArgs);
     const pubgApiKey = getCommandLineArgument(PUBG_API_KEY_ARG_NAME, cmdLineArgs);
 
-
-    if (runConfig === null) {
-        setExports(readAuthJson());
-        return;
-    }
-
-    if (!RUN_CONFIGS.includes(runConfig)) {
+    // if runConfig is null, it will be handled as "release"
+    if (!RUN_CONFIGS.includes(runConfig) && runConfig !== null) {
         throw new Error(`invalid run config "${runConfig}"`)
     }
 
     if (runConfig === "debug") {
         setExports(readAuthJson());
         return;
-
     } 
     
     if (discordToken === null || pubgApiKey === null) {
