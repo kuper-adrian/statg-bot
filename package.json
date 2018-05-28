@@ -24,8 +24,7 @@
         "mocha": "^5.1.1"
     },
     "scripts": {
-        "start": "node src/bot.js",
-        "debug": "nodemon --inspect src/bot.js",
+        "debug": "nodemon --inspect src/bot.js runConfig=debug",
         "test": "mocha test/ --recursive"
     }
 }
