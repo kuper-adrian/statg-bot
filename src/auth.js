@@ -63,7 +63,20 @@ exports.init = function(cmdLineArgs) {
         return;
     }
 
+    const invalidArgs = cmdLineArgs.filter((arg) => {
+        return !(arg.includes(BUILD_CONFIG_ARG_NAME) || 
+            arg.includes(DISCORD_TOKEN_ARG_NAME) ||
+            arg.includes(PUBG_API_KEY_ARG_NAME));
+    });
+
+    if (invalidArgs.length > 0) {
+        throw new Error(`invalid argument "${invalidArgs[0]}"`)
+    }
+
     const buildConfig = getCommandLineArgument(BUILD_CONFIG_ARG_NAME, cmdLineArgs);
+    const discordToken = getCommandLineArgument(DISCORD_TOKEN_ARG_NAME, cmdLineArgs);
+    const pubgApiKey = getCommandLineArgument(PUBG_API_KEY_ARG_NAME, cmdLineArgs);
+
 
     if (buildConfig === null) {
         setExports(readAuthJson());
@@ -77,13 +90,18 @@ exports.init = function(cmdLineArgs) {
     if (buildConfig === "debug") {
         setExports(readAuthJson());
         return;
-    }
 
-    const discordToken = getCommandLineArgument(DISCORD_TOKEN_ARG_NAME, cmdLineArgs);
-    const pubgApiKey = getCommandLineArgument(PUBG_API_KEY_ARG_NAME, cmdLineArgs);
-
+    } 
+    
     if (discordToken === null || pubgApiKey === null) {
         throw new Error(`when using "release" build config both "discordToken" and "pubgApiKey" have to be specified`);
+    }
+
+    if (discordToken === "") {
+        throw new Error(`invalid value "" for argument "discordToken"`)
+    }
+    if (pubgApiKey === "") {
+        throw new Error(`invalid value "" for argument "pubgApiKey"`)
     }
 
     logger.info("using secrets passed by command line")

@@ -1,6 +1,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const fs = require('fs');
+const logger = require('../src/modules/log').getLogger();
 
 let auth = {};
 
@@ -11,8 +12,34 @@ function requireUncached(m){
 
 describe('auth.init()', () => {
 
+    let debugStub = {};
+    let infoStub = {};
+    let warnStub = {};
+    let errorStub = {};
+
     beforeEach(() => {
         auth = requireUncached('../src/auth');
+
+        // stub all log functions
+        debugStub = sinon.stub(logger, "debug").callsFake((message) => {
+            // do nothing
+        });
+        infoStub = sinon.stub(logger, "info").callsFake((message) => {
+            // do nothing
+        });
+        warnStub = sinon.stub(logger, "warn").callsFake((message) => {
+            // do nothing
+        });
+        errorStub = sinon.stub(logger, "error").callsFake((message) => {
+            // do nothing
+        });
+    });
+
+    afterEach(() => {       
+        debugStub.restore();
+        infoStub.restore();
+        warnStub.restore();
+        errorStub.restore();
     });
 
     it('should use the auth.json file if no command line parameters were given', () => {
@@ -185,7 +212,27 @@ describe('auth.init()', () => {
             "invalid"
         ];
 
-        // TODO
+        const readFileSyncStub = sinon.stub(fs, "readFileSync").callsFake((path) => {
+            return JSON.stringify({
+                discordToken: "some-other-token",
+                pubgApiKey: "some-other-key"
+            });
+        })
+
+        let errorMessage = '';
+
+        try {
+            auth.init(cmdLineArguments);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+
+        sinon.assert.notCalled(readFileSyncStub);
+        fs.readFileSync.restore();
+
+        expect(errorMessage).to.contain(`invalid argument "invalid"`)
+        expect(auth.discordToken).to.be.undefined;
+        expect(auth.pubgApiKey).to.be.undefined;
     })
 
     it('should throw an error if the "buildConfig" argument was passed without value', () => {
@@ -196,7 +243,27 @@ describe('auth.init()', () => {
             "pubgApiKey=asd"
         ];
 
-        // TODO
+        const readFileSyncStub = sinon.stub(fs, "readFileSync").callsFake((path) => {
+            return JSON.stringify({
+                discordToken: "some-other-token",
+                pubgApiKey: "some-other-key"
+            });
+        })
+
+        let errorMessage = '';
+
+        try {
+            auth.init(cmdLineArguments);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+
+        sinon.assert.notCalled(readFileSyncStub);
+        fs.readFileSync.restore();
+
+        expect(errorMessage).to.contain(`invalid build config ""`)
+        expect(auth.discordToken).to.be.undefined;
+        expect(auth.pubgApiKey).to.be.undefined;
     })
 
     it('should throw an error if the "discordToken" argument was without value', () => {
@@ -207,7 +274,27 @@ describe('auth.init()', () => {
             "pubgApiKey=asd"
         ];
 
-        // TODO
+        const readFileSyncStub = sinon.stub(fs, "readFileSync").callsFake((path) => {
+            return JSON.stringify({
+                discordToken: "some-other-token",
+                pubgApiKey: "some-other-key"
+            });
+        })
+
+        let errorMessage = '';
+
+        try {
+            auth.init(cmdLineArguments);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+
+        sinon.assert.notCalled(readFileSyncStub);
+        fs.readFileSync.restore();
+
+        expect(errorMessage).to.contain(`invalid value "" for argument "discordToken"`)
+        expect(auth.discordToken).to.be.undefined;
+        expect(auth.pubgApiKey).to.be.undefined;
     })
 
     it('should throw an error if the "pubgApiKey" argument was passed without value', () => {
@@ -218,7 +305,27 @@ describe('auth.init()', () => {
             "pubgApiKey="
         ];
 
-        // TODO
+        const readFileSyncStub = sinon.stub(fs, "readFileSync").callsFake((path) => {
+            return JSON.stringify({
+                discordToken: "some-other-token",
+                pubgApiKey: "some-other-key"
+            });
+        })
+
+        let errorMessage = '';
+
+        try {
+            auth.init(cmdLineArguments);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+
+        sinon.assert.notCalled(readFileSyncStub);
+        fs.readFileSync.restore();
+
+        expect(errorMessage).to.contain(`invalid value "" for argument "pubgApiKey"`)
+        expect(auth.discordToken).to.be.undefined;
+        expect(auth.pubgApiKey).to.be.undefined;
     })
 
     it('should throw an error if the "discordToken" argument was passed without the "pubgApiKey" argument', () => {
@@ -228,7 +335,29 @@ describe('auth.init()', () => {
             "discordToken=123"
         ];
 
-        // TODO
+        const readFileSyncStub = sinon.stub(fs, "readFileSync").callsFake((path) => {
+            return JSON.stringify({
+                discordToken: "some-other-token",
+                pubgApiKey: "some-other-key"
+            });
+        })
+
+        let errorMessage = '';
+
+        try {
+            auth.init(cmdLineArguments);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+
+        sinon.assert.notCalled(readFileSyncStub);
+        fs.readFileSync.restore();
+
+        expect(errorMessage).to.contain(`discordToken`)
+        expect(errorMessage).to.contain(`pubgApiKey`)
+        expect(errorMessage).to.contain(`have to be specified`)
+        expect(auth.discordToken).to.be.undefined;
+        expect(auth.pubgApiKey).to.be.undefined;
     })
 
     it('should throw an error if the "pubgApiKey" argument was passed without the "discordToken" argument', () => {
@@ -238,6 +367,28 @@ describe('auth.init()', () => {
             "pubgApiKey=asd"
         ];
 
-        // TODO
+        const readFileSyncStub = sinon.stub(fs, "readFileSync").callsFake((path) => {
+            return JSON.stringify({
+                discordToken: "some-other-token",
+                pubgApiKey: "some-other-key"
+            });
+        })
+
+        let errorMessage = '';
+
+        try {
+            auth.init(cmdLineArguments);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+
+        sinon.assert.notCalled(readFileSyncStub);
+        fs.readFileSync.restore();
+
+        expect(errorMessage).to.contain(`discordToken`)
+        expect(errorMessage).to.contain(`pubgApiKey`)
+        expect(errorMessage).to.contain(`have to be specified`)
+        expect(auth.discordToken).to.be.undefined;
+        expect(auth.pubgApiKey).to.be.undefined;
     })
 });
