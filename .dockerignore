@@ -2,6 +2,8 @@ notes.md
 Dockerfile
 README.md
 Jenkinsfile
+auth.json
+
 test/
 data/
 logs/
