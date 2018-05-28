@@ -17,7 +17,8 @@ COPY . .
 RUN mkdir data
 RUN mkdir logs
 
+# TODO check if necessary and what VOLUME command really does
 VOLUME /data
 VOLUME /logs
 
-CMD ["node", "./src/bot.js"]
+ENTRYPOINT ["node", "./src/bot.js"]
