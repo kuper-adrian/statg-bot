@@ -117,10 +117,10 @@ describe('auth.init()', () => {
         expect(auth.pubgApiKey).to.be.undefined;
     });
 
-    it('should use the auth.json if the "buildConfig" parameter is set to "debug"', () => {
+    it('should use the auth.json if the "runConfig" parameter is set to "debug"', () => {
         
         const cmdLineArguments = [
-            "buildConfig=debug",
+            "runConfig=debug",
             "discordToken=123",
             "pubgApiKey=asd"
         ];
@@ -144,13 +144,13 @@ describe('auth.init()', () => {
         expect(auth.pubgApiKey).to.be.equal(pubgApiKey);
     });
 
-    it('should use the values passed by argument if "buildConfig" is set to "release"', () => {
+    it('should use the values passed by argument if "runConfig" is set to "release"', () => {
         
         const discordToken = "some-test-token";
         const pubgApiKey = "some-test-api-key";
 
         const cmdLineArguments = [
-            "buildConfig=release",
+            "runConfig=release",
             `discordToken=${discordToken}`,
             `pubgApiKey=${pubgApiKey}`
         ];
@@ -172,10 +172,10 @@ describe('auth.init()', () => {
         expect(auth.pubgApiKey).to.be.equal(pubgApiKey);
     })
 
-    it('should throw an error if the "buildConfig" argument was passed with an invalid value', () => {
+    it('should throw an error if the "runConfig" argument was passed with an invalid value', () => {
         
         const cmdLineArguments = [
-            "buildConfig=asd",
+            "runConfig=asd",
             "discordToken=123",
             "pubgApiKey=asd"
         ];
@@ -198,7 +198,7 @@ describe('auth.init()', () => {
         sinon.assert.notCalled(readFileSyncStub);
         fs.readFileSync.restore();
 
-        expect(errorMessage).to.contain(`invalid build config "asd"`)
+        expect(errorMessage).to.contain(`invalid run config "asd"`)
         expect(auth.discordToken).to.be.undefined;
         expect(auth.pubgApiKey).to.be.undefined;
     })
@@ -206,7 +206,7 @@ describe('auth.init()', () => {
     it('should throw an error if an invalid argument was passed', () => {
         
         const cmdLineArguments = [
-            "buildConfig=release",
+            "runConfig=release",
             "discordToken=123",
             "pubgApiKey=asd",
             "invalid"
@@ -235,10 +235,10 @@ describe('auth.init()', () => {
         expect(auth.pubgApiKey).to.be.undefined;
     })
 
-    it('should throw an error if the "buildConfig" argument was passed without value', () => {
+    it('should throw an error if the "runConfig" argument was passed without value', () => {
         
         const cmdLineArguments = [
-            "buildConfig=",
+            "runConfig=",
             "discordToken=123",
             "pubgApiKey=asd"
         ];
@@ -261,7 +261,7 @@ describe('auth.init()', () => {
         sinon.assert.notCalled(readFileSyncStub);
         fs.readFileSync.restore();
 
-        expect(errorMessage).to.contain(`invalid build config ""`)
+        expect(errorMessage).to.contain(`invalid run config ""`)
         expect(auth.discordToken).to.be.undefined;
         expect(auth.pubgApiKey).to.be.undefined;
     })
@@ -269,7 +269,7 @@ describe('auth.init()', () => {
     it('should throw an error if the "discordToken" argument was without value', () => {
         
         const cmdLineArguments = [
-            "buildConfig=release",
+            "runConfig=release",
             "discordToken=",
             "pubgApiKey=asd"
         ];
@@ -300,7 +300,7 @@ describe('auth.init()', () => {
     it('should throw an error if the "pubgApiKey" argument was passed without value', () => {
         
         const cmdLineArguments = [
-            "buildConfig=release",
+            "runConfig=release",
             "discordToken=123",
             "pubgApiKey="
         ];
@@ -331,7 +331,7 @@ describe('auth.init()', () => {
     it('should throw an error if the "discordToken" argument was passed without the "pubgApiKey" argument', () => {
         
         const cmdLineArguments = [
-            "buildConfig=release",
+            "runConfig=release",
             "discordToken=123"
         ];
 
@@ -363,7 +363,7 @@ describe('auth.init()', () => {
     it('should throw an error if the "pubgApiKey" argument was passed without the "discordToken" argument', () => {
         
         const cmdLineArguments = [
-            "buildConfig=release",
+            "runConfig=release",
             "pubgApiKey=asd"
         ];
 

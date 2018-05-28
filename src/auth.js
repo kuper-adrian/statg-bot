@@ -1,22 +1,22 @@
 /**
  * Module that manages the pubg api key and the discord bot token based on 
- * the "--buildConfig" command line parameter passed to launch the bot.
+ * the "runConfig" command line parameter passed to launch the bot.
  * 
  * No value or the value of "debug" attempts to get the values from a
  * "auth.json" file.
  * 
  * The value of "release" will attempt to get the values from the command
- * line parameters "--discordToken" and "--pubgApiKey".
+ * line parameters "discordToken" and "pubgApiKey".
  */
 
 const fs = require('fs');
 const logger = require('./modules/log').getLogger();
 
-const BUILD_CONFIG_ARG_NAME = "buildConfig="
+const RUN_CONFIG_ARG_NAME = "runConfig="
 const DISCORD_TOKEN_ARG_NAME = "discordToken="
 const PUBG_API_KEY_ARG_NAME = "pubgApiKey="
 
-const BUILD_CONFIGS = [
+const RUN_CONFIGS = [
     "release",
     "debug"
 ]
@@ -43,7 +43,7 @@ function getCommandLineArgument(name, cmdLineArgs) {
         return null;
     }
 
-    // remove "buildConfig=" and return value
+    // remove "runConfig=" and return value
     return cmdLineArg[0].replace(name, "")
 }
 
@@ -64,7 +64,7 @@ exports.init = function(cmdLineArgs) {
     }
 
     const invalidArgs = cmdLineArgs.filter((arg) => {
-        return !(arg.includes(BUILD_CONFIG_ARG_NAME) || 
+        return !(arg.includes(RUN_CONFIG_ARG_NAME) || 
             arg.includes(DISCORD_TOKEN_ARG_NAME) ||
             arg.includes(PUBG_API_KEY_ARG_NAME));
     });
@@ -73,28 +73,28 @@ exports.init = function(cmdLineArgs) {
         throw new Error(`invalid argument "${invalidArgs[0]}"`)
     }
 
-    const buildConfig = getCommandLineArgument(BUILD_CONFIG_ARG_NAME, cmdLineArgs);
+    const runConfig = getCommandLineArgument(RUN_CONFIG_ARG_NAME, cmdLineArgs);
     const discordToken = getCommandLineArgument(DISCORD_TOKEN_ARG_NAME, cmdLineArgs);
     const pubgApiKey = getCommandLineArgument(PUBG_API_KEY_ARG_NAME, cmdLineArgs);
 
 
-    if (buildConfig === null) {
+    if (runConfig === null) {
         setExports(readAuthJson());
         return;
     }
 
-    if (!BUILD_CONFIGS.includes(buildConfig)) {
-        throw new Error(`invalid build config "${buildConfig}"`)
+    if (!RUN_CONFIGS.includes(runConfig)) {
+        throw new Error(`invalid run config "${runConfig}"`)
     }
 
-    if (buildConfig === "debug") {
+    if (runConfig === "debug") {
         setExports(readAuthJson());
         return;
 
     } 
     
     if (discordToken === null || pubgApiKey === null) {
-        throw new Error(`when using "release" build config both "discordToken" and "pubgApiKey" have to be specified`);
+        throw new Error(`when using "release" run config both "discordToken" and "pubgApiKey" have to be specified`);
     }
 
     if (discordToken === "") {
