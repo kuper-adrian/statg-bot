@@ -4,7 +4,6 @@ const logger = require('./log').getLogger();
 const Cache = require('./cache').Cache;
 
 const PUBG_API_HOST_NAME = "api.playbattlegrounds.com";
-const PUBG_API_KEY = auth.pubgApiKey;
 
 const playerByIdCache = new Cache(120);
 const playerByNameCache = new Cache(1200);
@@ -24,7 +23,7 @@ function getApiOptions(path) {
         path: path,
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer ' + PUBG_API_KEY,
+            'Authorization': 'Bearer ' + auth.pubgApiKey,
             'Accept': 'application/vnd.api+json'
         }
     }
@@ -74,12 +73,15 @@ function apiRequest(options, resolve, reject, cache) {
                     cache.add(options.path, apiError);
 
                     reject(apiError);
+                    return;
                 }
 
                 cache.add(options.path, apiData);
                 resolve(apiData);
             });
         }).on("error", (err) => {
+
+            logger.warn("error on making api call", err)
             
             const apiError = new ApiError(err, null);
             cache.add(options.path, apiError);
