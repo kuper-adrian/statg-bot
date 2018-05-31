@@ -1,6 +1,6 @@
-# stat-g
+# StatG
 
-stat-g is a discord bot that can post PUBG statistics in your discord channel!
+StatG is a discord bot that can post PUBG statistics in your discord channel!
 
 ## Commands
 
