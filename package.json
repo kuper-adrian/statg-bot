@@ -1,5 +1,5 @@
 {
-    "name": "stat-g-bot",
+    "name": "statg-bot",
     "version": "1.0.0",
     "description": "Discord bot for PUBG stats",
     "main": "src/bot.js",
@@ -7,7 +7,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "bitbucket.org:Blooby/stat-g.git"
+        "url": "https://github.com/kuper-adrian/statg-bot.git"
     },
     "dependencies": {
         "discord.io": "github:woor/discord.io#gateway_v6",
