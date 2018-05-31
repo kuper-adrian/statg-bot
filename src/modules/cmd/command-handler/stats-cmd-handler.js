@@ -27,7 +27,7 @@ class StatsCommandHandler extends CommandHandler {
 
         this.logger.debug("checking if player is registered");
 
-        db.knex.select()
+        return db.knex.select()
             .from(db.TABLES.registeredPlayer)
             .where({
                 discord_id: discordId
