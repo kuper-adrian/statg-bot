@@ -1,6 +1,6 @@
 const CommandHandler = require('./cmd-handler.js').CommandHandler;
 
-const HELP_MESSAGE = `\`\`\`
+const HELP_MESSAGE = `
 * \`!statg register [pubg player name]\` 
   Links your PUBG player name to your Discord account. Enables you to fetch your stats.
 * \`!statg stats\` Shows your current season stats (if you have registered yourself). **Optional arguments** are:
@@ -14,7 +14,7 @@ const HELP_MESSAGE = `\`\`\`
 * \`!statg help\` Displays help about commands.
 * \`!statg version\` Displays version of the stat-g bot.
 * \`!statg status\` Displays the current status of the PUBG api.
-* \`!statg ping\` Pong!\`\`\``
+* \`!statg ping\` Pong!`
 
 /**
  * Handler for the "help" command
