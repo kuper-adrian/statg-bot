@@ -1,5 +1,7 @@
 # StatG
 
+[![Build Status](https://travis-ci.org/kuper-adrian/statg-bot.svg?branch=master)](https://travis-ci.org/kuper-adrian/statg-bot)
+
 StatG is a discord bot that can post PUBG statistics in your discord channel!
 
 ## Commands
