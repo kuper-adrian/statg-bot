@@ -18,7 +18,7 @@ describe('StatsCommandHandler.handle()', () => {
 
     beforeEach(() => {
 
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
 
         // stub all log functions
         debugStub = sandbox.stub(logger, "debug").callsFake((message) => {
