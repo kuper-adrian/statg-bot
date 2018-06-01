@@ -82,6 +82,11 @@ class StatsCommandHandler extends CommandHandler {
                     avgStats = this._getAverageStats(stats.data.attributes.gameModeStats)
                     message = this._getStatsAsDiscordFormattedString(pubgPlayerName, "all", avgStats);
 
+                } else if (cmd.arguments.length > 1) {
+
+                    this._onError(bot, channelId, `invalid amount of arguments.`);
+                    return;
+
                 } else if (AVAILABLE_ARGS.includes(cmd.arguments[0])) {
 
                     let gameMode = cmd.arguments[0];
@@ -92,15 +97,9 @@ class StatsCommandHandler extends CommandHandler {
                     avgStats = this._getAverageStats(filteredStats)
                     message = this._getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats);
 
-
-                } else if (cmd.arguments.length > 1) {
-
-                    this_onError(bot, channelId, `Invalid amount of arguments.`);
-                    return;
-
                 } else {
 
-                    this._onError(bot, channelId, `Unknown argument: "${cmd.arguments[0]}"`);
+                    this._onError(bot, channelId, `invalid game mode "${cmd.arguments[0]}"`);
                     return;
                 }
 
