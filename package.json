@@ -13,19 +13,21 @@
         "discord.io": "github:woor/discord.io#gateway_v6",
         "knex": "^0.14.6",
         "lodash": "4.17.10",
-        "moment": "^2.22.1",
+        "moment": "^2.22.2",
         "npm": "^6.1.0",
-        "sinon": "^5.0.7",
+        "sinon": "^5.1.1",
         "sqlite3": "^4.0.0",
-        "winston": "^2.4.2"
+        "winston": "^2.4.3"
     },
     "devDependencies": {
         "chai": "^4.1.2",
-        "mocha": "^5.1.1",
-        "istanbul": "^0.4.5"
+        "istanbul": "^0.4.5",
+        "mocha": "^5.2.0",
+        "codecov": "^3.0.2"
     },
     "scripts": {
         "debug": "nodemon --inspect src/bot.js runConfig=debug",
-        "test": "mocha test/ --recursive"
+        "test": "mocha test/ --recursive",
+        "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec"
     }
 }
