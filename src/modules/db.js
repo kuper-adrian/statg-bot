@@ -14,6 +14,12 @@ const TABLES = {
 
 exports.TABLES = TABLES;
 
+// make sure that data folder exists
+const logFolderPath = "./data"
+if (!fs.existsSync(logFolderPath)) {
+    fs.mkdirSync(logFolderPath);
+}
+
 exports.init = function () {
 
     return new Promise((resolve, reject) => {
