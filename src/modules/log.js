@@ -1,4 +1,11 @@
 const logger = require('winston');
+const fs = require('fs');
+
+// make sure that logs folder exists
+const logFolderPath = "./logs"
+if (!fs.existsSync(logFolderPath)) {
+    fs.mkdirSync(logFolderPath);
+}
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
