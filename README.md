@@ -46,8 +46,9 @@ To run the bot locally on your machine, you will need:
 After that, everything else is straightforward:
 1. Clone this repo or download it as `.zip`-file and unpack it to a folder of your liking
 2. Open a terminal and navigate to the project folder
-3. Run the bot with the command
+3. Run the bot with the commands
 ```
+npm install
 node ./src/bot.js discordToken=TOKEN_HERE pubgApiKey=API_KEY_HERE
 ```
 (replace `TOKEN_HERE` and `API_KEY_HERE` with the respective values)
