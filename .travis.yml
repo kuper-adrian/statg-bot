@@ -2,10 +2,7 @@ language:
   node_js
 node_js:
 - "8"
-install:
-  - npm install -g mocha
-  - npm install -g codecov
-  - npm install -g istanbul
 script:
+  - npm install
   - npm run test
   - npm run coverage
