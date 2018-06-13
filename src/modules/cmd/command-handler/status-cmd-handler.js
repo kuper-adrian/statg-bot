@@ -26,7 +26,7 @@ class StatusCommandHandler extends CommandHandler {
 
                 bot.sendMessage({
                     to: channelId,
-                    message: _getStatusMessage(id, apiVersion, releaseDate)
+                    message: this._getStatusMessage(id, apiVersion, releaseDate)
                 });
 
                 return Promise.resolve();
