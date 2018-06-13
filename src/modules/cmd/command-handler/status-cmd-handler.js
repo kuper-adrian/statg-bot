@@ -26,7 +26,7 @@ class StatusCommandHandler extends CommandHandler {
 
                 bot.sendMessage({
                     to: channelId,
-                    message: 'ID: ' + id + ', Version: ' + apiVersion + ', Released At: ' + releaseDate
+                    message: _getStatusMessage(id, apiVersion, releaseDate)
                 });
 
                 return Promise.resolve();
@@ -36,6 +36,15 @@ class StatusCommandHandler extends CommandHandler {
 
                 this._onError(bot, channelId, error.message);
             })
+    }
+
+    _getStatusMessage(id, version, releasedAt) {
+        return `\`\`\`
+PUBG-API online!
+
+ID:          ${id}
+Version:     ${version}
+Released at: ${releasedAt}\`\`\``
     }
 }
 
