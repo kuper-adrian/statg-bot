@@ -28,6 +28,6 @@
     "scripts": {
         "debug": "nodemon --inspect src/bot.js runConfig=debug",
         "test": "mocha test/ --recursive",
-        "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec"
+        "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec & codecov"
     }
 }
