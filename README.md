@@ -36,14 +36,16 @@ To run the bot locally on your machine, you will need:
  - A PUBG API key (obtainable from [here](https://developer.playbattlegrounds.com/))
  - A discord bot token + client id (get them [here](https://discordapp.com/login?redirect_to=/developers/applications/me))
  - Add the bot to your server by opening the following link and logging in
- `https://discordapp.com/oauth2/authorize?&client_id=YOUR_CLIENT_ID&scope=bot&permissions=0`
+ ```
+ https://discordapp.com/oauth2/authorize?&client_id=YOUR_CLIENT_ID&scope=bot&permissions=0
+ ```
  (replace `YOUR_CLIENT_ID` with the client id of your bot)
 
 **IMPORTANT:** Keep the discord token and pubg api key secret.
 
-After that, everything is straightforward:
-1. Clone this repo or download it as `.zip` and unpack it to folder of your liking
-2. Open terminal and navigate to the project folder
+After that, everything else is straightforward:
+1. Clone this repo or download it as `.zip`-file and unpack it to a folder of your liking
+2. Open a terminal and navigate to the project folder
 3. Run the bot with the command
 ```
 node ./src/bot.js discordToken=TOKEN_HERE pubgApiKey=API_KEY_HERE
