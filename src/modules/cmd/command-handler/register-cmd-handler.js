@@ -11,14 +11,14 @@ class RegisterCommandHandler extends CommandHandler {
         let channelId = cmd.discordUser.channelId;
 
         if (cmd.arguments.length !== 1) {
-            this._onError(bot, channelId, "This command only accepts a single argument");
-            return;
+            this._onError(bot, channelId, "invalid amount of arguments");
+            return Promise.resolve();
         }
 
         let playerName = cmd.arguments[0];
         let pubgPlayerData;
 
-        pubg.playerByName(playerName)
+        return pubg.playerByName(playerName)
             .then(data => {
 
                 pubgPlayerData = data.data[0];
