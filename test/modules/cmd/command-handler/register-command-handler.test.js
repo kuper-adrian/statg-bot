@@ -26,10 +26,12 @@ describe('RegisterCommandHandler', () => {
 
         let db = {};
 
+        let insertObject = {};
         let whereObject = {};
         let fromObject = {};
 
         let passedPlayerName = '';
+        let playerByNameData = {};
         let pubg = {};
 
         let sendMessageSpy = {};
@@ -68,13 +70,23 @@ describe('RegisterCommandHandler', () => {
                 }
             };
 
+
+            insertObject = {
+                insert: function() {
+                    return Promise.resolve(1);
+                }
+            }
             db = {
                 knex: function(args) {
+                    return insertObject;
+                },
+                TABLES: {
+                    registeredPlayer: "registered_player"
                 }
             }
             whereObject = {
                 where: function(args) {
-                    return [];
+                    return Promise.resolve([]);
                 }
             }
             fromObject = {
@@ -83,22 +95,23 @@ describe('RegisterCommandHandler', () => {
                 }
             }
             db.knex.select = function() {
-                return Promise.resolve(fromObject);
+                return fromObject;
             }
 
+            playerByNameData = {
+                data: [
+                    {
+                        id: "some-pubg-id",
+                        attributes: {
+                            name: "some-pubg-name"
+                        }
+                    }
+                ]
+            };
             pubg = {
                 playerByName: function(name) {
                     passedPlayerName = name;
-                    return Promise.resolve({
-                        data: [
-                            {
-                                id: "some-pubg-id",
-                                attributes: {
-                                    name: "some-pubg-name"
-                                }
-                            }
-                        ]
-                    });
+                    return Promise.resolve(playerByNameData);
                 }
             };
 
@@ -110,6 +123,9 @@ describe('RegisterCommandHandler', () => {
             sandbox.restore();
         });
 
+        // ----------------------------------------------------------------------------------------
+        // Unit Tests
+        // ----------------------------------------------------------------------------------------
 
         it('should call the pubg api for the player id with the given argument', () => {
             
@@ -127,12 +143,95 @@ describe('RegisterCommandHandler', () => {
             });
         });
 
+        it('should query the db for registered players', () => {
+
+            const handler = RegisterCommandHandler.getHandler();
+
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ]
+            
+            let selectSpy = sandbox.spy(db.knex, "select");
+            let fromSpy = sandbox.spy(fromObject, "from");
+            let whereSpy = sandbox.spy(whereObject, "where");
+
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
+
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(selectSpy);
+                sandbox.assert.calledOnce(fromSpy);
+                sandbox.assert.calledOnce(whereSpy);
+
+                sandbox.assert.calledWith(fromSpy, db.TABLES.registeredPlayer);
+                expect('discord_id').to.be.equal(whereSpy.getCall(0).args[0]);
+                expect(cmd.discordUser.id).to.be.equal(whereSpy.getCall(0).args[1]);
+            })
+        });
+
         it('should create an database entry if player id does not exist yet', () => {
-            // TODO
+            
+            const handler = RegisterCommandHandler.getHandler();
+
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ];
+
+            let knexSpy = sandbox.spy(db, "knex");
+            let insertSpy = sandbox.spy(insertObject, "insert");
+
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
+
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(knexSpy);
+                sandbox.assert.calledOnce(insertSpy);
+
+                sandbox.assert.calledWith(knexSpy, db.TABLES.registeredPlayer);
+                expect(cmd.discordUser.id).to.be.equal(insertSpy.getCall(0).args[0].discord_id);
+                expect(cmd.discordUser.name).to.be.equal(insertSpy.getCall(0).args[0].discord_name);
+                expect(playerByNameData.data[0].id).to.be.equal(insertSpy.getCall(0).args[0].pubg_id);
+                expect(playerByNameData.data[0].attributes.name).to.be.equal(insertSpy.getCall(0).args[0].pubg_name);
+            })
         });
 
         it('should send an success message if player was succesfully registered', () => {
-            // TODO
+            
+            const handler = RegisterCommandHandler.getHandler();
+
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ];
+
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
+
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(sendMessageSpy);
+
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain(playerByNameData.data[0].attributes.name);
+                expect(passedBotMessage).to.contain("successfully registered");
+            });
+        });  
+
+        it('should send an error message if the pubg api request fails', () => {
+
+            const handler = RegisterCommandHandler.getHandler();
+
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ];
+
+            pubg.playerByName = function(args) {
+                return Promise.reject(new Error("whatever"));
+            };
+
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
+
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(sendMessageSpy);
+
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain("whatever");
+            });
         });
         
         it('should send an error message if there already exists an entry for the player', () => {
@@ -143,12 +242,17 @@ describe('RegisterCommandHandler', () => {
                 "to-register-pubg-name"
             ];
 
-            // TODO mock db
+            sandbox.stub(whereObject, "where").callsFake((args) => {
+                return Promise.resolve(["some-already-existing-player-name"]);
+            });
 
             let handlePromise = handler.handle(cmd, bot, db, pubg);
 
             return handlePromise.then(() => {
-                // TODO assertions
+                sinon.assert.calledOnce(sendMessageSpy);
+
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain("already is a player name registered for your discord user");
             });
         });
 

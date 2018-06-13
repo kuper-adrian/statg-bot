@@ -44,18 +44,7 @@ class RegisterCommandHandler extends CommandHandler {
                         });
 
                 } else {
-
-                    this.logger.debug("Updating player...")
-
-                    return db.knex(db.TABLES.registeredPlayer)
-                        .where({
-                            discord_id: cmd.discordUser.id
-                        })
-                        .update({
-                            discord_name: cmd.disordUser.name,
-                            pubg_id: pubgPlayerData.id,
-                            pubg_name: pubgPlayerData.attributes.name
-                        });
+                    return Promise.reject(new Error("There already is a player name registered for your discord user. Try using unregister command first."));
                 }
             })
 
