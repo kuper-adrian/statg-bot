@@ -19,6 +19,8 @@ StatG is a discord bot that can post PUBG statistics in your discord channel!
     * `squad-fpp` Stats from first-person squad matches only.
 * `!statg match`
   Shows your and your squads latest match info (all game modes combined).
+* `!statg unregister`
+  Undoes `register` command.
 * `!statg help`
   Displays help about commands.
 * `!statg version`
