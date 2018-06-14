@@ -114,7 +114,7 @@ class MatchCommandHandler extends CommandHandler {
 - Game Mode: ${matchData.data.attributes.gameMode}
 - Map Name:  ${matchData.data.attributes.mapName}
 - Time:      ${matchData.data.attributes.createdAt}
-- Duration:  ${_.round(matchData.data.attributes.duration, 2)}min
+- Duration:  ${_.round(matchData.data.attributes.duration / 60.0, 2)}min
 
 - Win Place: ${matchPlace}
 \`\`\`
