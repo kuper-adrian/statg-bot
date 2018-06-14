@@ -8,6 +8,8 @@ StatG is a discord bot that can post PUBG statistics in your discord channel!
 
 ## Commands
 
+(At the moment the commands only work properly for EU-PC-players. I intend to change this by adding a `region` command soon that lets everyone change their region)
+
 * `!statg register [pubg player name]` 
   Links your PUBG player name to your Discord account. Enables you to fetch your stats.
 * `!statg stats` Shows your current season stats (if you have registered yourself). **Optional arguments** are:
