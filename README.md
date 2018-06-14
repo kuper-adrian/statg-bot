@@ -55,5 +55,36 @@ node ./src/bot.js discordToken=TOKEN_HERE pubgApiKey=API_KEY_HERE
 ```
 (replace `TOKEN_HERE` and `API_KEY_HERE` with the respective values)
 
+### Running in Docker
+
+Alternatively the bot can be run inside a docker container. For now you will have to build the image by yourself using the `Dockerfile` of this repo. You will also need to get PUBG API key and Discord token as described above.
+
+1. Clone this repo or download it as `.zip`-file and unpack it to a folder of your liking
+2. Open a terminal and navigate to the project folder
+3. Build the image using `docker build -t statg-bot:latest .`
+4. Start the container using the command
+```
+docker run statg-bot discordToken=TOKEN_HERE pubgApiKey=API_KEY_HERE
+```
+(again replace `TOKEN_HERE` and `API_KEY_HERE` with the respective values)
+
+To persist data there are two volumes you can mount to: `/statg/data` (contains SQLite-DB-File) and `/statg/logs` (contains log file). A `docker-compose.yml` file could look like this:
+```yaml
+version: '3'
+services:
+  statg-bot:
+    restart: always
+    image: statg-bot:latest
+    container_name: statg-bot
+    entrypoint: 
+    - "node"
+    - "./src/bot.js"
+    - "discordToken=TOKEN_HERE"
+    - "pubgApiKey=API_KEY_HERE"
+    volumes: 
+    - "YOUR_DATA_VOLUME_HERE:/statg/data"
+    - "YOUR_LOGS_VOLUME_HERE:/statg/logs"
+```
+
 ## License
 MIT
