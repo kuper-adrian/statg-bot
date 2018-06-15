@@ -1,4 +1,4 @@
-# StatG
+# StatG - PUBG statistics Discord Bot
 
 [![Build Status](https://travis-ci.org/kuper-adrian/statg-bot.svg?branch=master)](https://travis-ci.org/kuper-adrian/statg-bot)
 
