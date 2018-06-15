@@ -99,13 +99,7 @@ describe('HelpCommandHandler.handle()', () => {
 
         sinon.assert.calledOnce(sendMessageSpy);
 
-        expect(passedMessage).to.contain('!statg help');
-        expect(passedMessage).to.contain('!statg match');
-        expect(passedMessage).to.contain('!statg ping');
-        expect(passedMessage).to.contain('!statg register');
-        expect(passedMessage).to.contain('!statg stats');
-        expect(passedMessage).to.contain('!statg status');
-        expect(passedMessage).to.contain('!statg version');
+        expect(passedMessage).to.contain('https://github.com/kuper-adrian/statg-bot/blob/master/README.md');
     });
 
     it('should send an error if there is a single argument given', () => {
@@ -143,7 +137,7 @@ describe('HelpCommandHandler.handle()', () => {
         expect(passedMessage).to.contain("invalid amount of arguments")
     });
 
-    it('should send an error if there are multiple arguments given', () => {
+    it('should send an error message if there are multiple arguments given', () => {
 
         const handler = HelpCommandHandler.getHandler();
         
