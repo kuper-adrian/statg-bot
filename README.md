@@ -10,8 +10,9 @@ StatG is a discord bot that can post PUBG statistics in your discord channel!
 
 (At the moment the commands only work properly for EU-PC-players. I intend to change this by adding a `region` command soon that lets everyone change their region)
 
-* `!statg register [pubg player name]` 
+* `!statg register PUBG_PLAYER_NAME [REGION_NAME]` 
   Links your PUBG player name to your Discord account. Enables you to fetch your stats.
+  The optional argument `REGION_NAME` specifies the region of the player. If omitted the default region is used which can be set using the `region` command (see below). For a list of available regions also see `regions` command below.
 * `!statg stats` Shows your current season stats (if you have registered yourself). **Optional arguments** are:
     * `solo` Stats from third-person solo matches only.
     * `solo-fpp` Stats from first-person solo matches only.
@@ -23,6 +24,22 @@ StatG is a discord bot that can post PUBG statistics in your discord channel!
   Shows your and your squads latest match info (all game modes combined).
 * `!statg unregister`
   Undoes `register` command.
+* `!statg region REGION_NAME`
+  Sets the default region used by `register` command. Available regions are:
+    * `pc-na`
+    * `pc-eu`
+    * `pc-ru`
+    * `pc-oc`
+    * `pc-kakao`
+    * `pc-sea`
+    * `pc-sa`
+    * `pc-as`
+    * `pc-jp`
+    * `pc-krjp`
+    * `xbox-as`
+    * `xbox-eu`
+    * `xbox-na`
+    * `xbox-oc`
 * `!statg help`
   Displays help about commands.
 * `!statg version`
