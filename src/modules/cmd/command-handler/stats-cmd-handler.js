@@ -24,6 +24,7 @@ class StatsCommandHandler extends CommandHandler {
         let discordId = cmd.discordUser.id;
         let pubgId;
         let pubgPlayerName;
+        let regionName = '';
 
         this.logger.debug("checking if player is registered");
 
@@ -43,11 +44,21 @@ class StatsCommandHandler extends CommandHandler {
 
                 pubgId = rows[0].pubg_id;
                 pubgPlayerName = rows[0].pubg_name;
-                return pubgId;
+                
+                return db.knex.select()
+                    .from(db.TABLES.region)
+                    .where('id', rows[0].region_id)
             })
 
-            .then(pubgId => {
-                return pubg.seasons();
+            .then(rows => {
+
+                if (rows.length !== 1) {
+                    return Promise.reject('Something really weird happened.');
+                }
+
+                regionName = rows[0].region_name;
+
+                return pubg.seasons(regionName);
             })
 
             .then(seasons => {
@@ -66,7 +77,7 @@ class StatsCommandHandler extends CommandHandler {
             .then(seasonId => {
 
                 this.logger.debug("Fetching stats...")
-                return pubg.playerStats(pubgId, seasonId);
+                return pubg.playerStats(pubgId, seasonId, regionName);
             })
 
             .then(stats => {

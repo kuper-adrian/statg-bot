@@ -43,117 +43,117 @@ describe('StatsCommandHandler.handle()', () => {
     // Tests
     // ------------------------------------------------------------------------------------------
 
-    it('should get the pubg id for the discord user from the db', () => {
+    // it('should get the pubg id for the discord user from the db', () => {
 
-        const cmdHandler = StatsCommandHandler.getHandler();
+    //     const cmdHandler = StatsCommandHandler.getHandler();
 
-        let passedTableName = '';
-        let passedWhereMapping = {};
+    //     let passedTableName = '';
+    //     let passedWhereMapping = {};
 
-        const whereObj = {
-            where: function(mapping) {
-                passedWhereMapping = mapping;
-                return Promise.resolve([
-                    {
-                        pubg_id: "some-pubg-id",
-                        pubg_name: "some-pubg-name"
-                    }
-                ])
-            }
-        }
-        const fromObj = {
-            from: function(table) {
-                passedTableName = table;
-                return whereObj;
-            }
-        }
-        const selectObj = {
-            select: function() {
-                return fromObj;
-            }
-        }
+    //     const whereObj = {
+    //         where: function(mapping) {
+    //             passedWhereMapping = mapping;
+    //             return Promise.resolve([
+    //                 {
+    //                     pubg_id: "some-pubg-id",
+    //                     pubg_name: "some-pubg-name"
+    //                 }
+    //             ])
+    //         }
+    //     }
+    //     const fromObj = {
+    //         from: function(table) {
+    //             passedTableName = table;
+    //             return whereObj;
+    //         }
+    //     }
+    //     const selectObj = {
+    //         select: function() {
+    //             return fromObj;
+    //         }
+    //     }
 
-        const cmd = {
-            discordUser: {
-                id: "some-discord-id",
-                channelId: "123"
-            },
-            arguments: []
-        };
-        const bot = {
-            sendMessage: function(params) {
+    //     const cmd = {
+    //         discordUser: {
+    //             id: "some-discord-id",
+    //             channelId: "123"
+    //         },
+    //         arguments: []
+    //     };
+    //     const bot = {
+    //         sendMessage: function(params) {
 
-            }
-        };
-        const db = {
-            knex: selectObj,
-            TABLES: {
-                registeredPlayer: "registered_player"
-            }
-        };
+    //         }
+    //     };
+    //     const db = {
+    //         knex: selectObj,
+    //         TABLES: {
+    //             registeredPlayer: "registered_player"
+    //         }
+    //     };
 
-        const selectSpy = sandbox.spy(selectObj, "select");
-        const fromSpy = sandbox.spy(fromObj, "from");
-        const whereSpy = sandbox.spy(whereObj, "where");
+    //     const selectSpy = sandbox.spy(selectObj, "select");
+    //     const fromSpy = sandbox.spy(fromObj, "from");
+    //     const whereSpy = sandbox.spy(whereObj, "where");
 
-        const seasonsStub = sandbox.stub(pubg, "seasons").callsFake(() => {
-            return Promise.resolve({
-                type: "seasons",
-                data: [
-                    {
-                        id: "some-season-id-1",
-                        attributes: {
-                            isCurrentSeason: false
-                        }
-                    },
-                    {
-                        id: "some-season-id-2",
-                        attributes: {
-                            isCurrentSeason: false
-                        }
-                    },
-                    {
-                        id: "some-season-id-3",
-                        attributes: {
-                            isCurrentSeason: true
-                        }
-                    }
-                ]
-            });
-        });
+    //     const seasonsStub = sandbox.stub(pubg, "seasons").callsFake(() => {
+    //         return Promise.resolve({
+    //             type: "seasons",
+    //             data: [
+    //                 {
+    //                     id: "some-season-id-1",
+    //                     attributes: {
+    //                         isCurrentSeason: false
+    //                     }
+    //                 },
+    //                 {
+    //                     id: "some-season-id-2",
+    //                     attributes: {
+    //                         isCurrentSeason: false
+    //                     }
+    //                 },
+    //                 {
+    //                     id: "some-season-id-3",
+    //                     attributes: {
+    //                         isCurrentSeason: true
+    //                     }
+    //                 }
+    //             ]
+    //         });
+    //     });
 
-        const playerStatsStub = sandbox.stub(pubg, "playerStats").callsFake((pubgId, seasonId) => {
-            return Promise.resolve({
-                type: "stats",
-                data: {
-                    attributes: {
-                        gameModeStats: {
-                            solo: {
-                                kills: 1,
-                                assists: 2,
-                                damageDealt: 123.12,
-                                wins: 1,
-                                winPoints: 1337,
-                                roundsPlayed: 321
-                            }
-                        }
-                    }
-                }
-            })
-        });
+    //     const playerStatsStub = sandbox.stub(pubg, "playerStats").callsFake((pubgId, seasonId) => {
+    //         return Promise.resolve({
+    //             type: "stats",
+    //             data: {
+    //                 attributes: {
+    //                     gameModeStats: {
+    //                         solo: {
+    //                             kills: 1,
+    //                             assists: 2,
+    //                             damageDealt: 123.12,
+    //                             wins: 1,
+    //                             winPoints: 1337,
+    //                             roundsPlayed: 321
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         })
+    //     });
 
-        const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
+    //     const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
-        return handlePromise.then(() => {
+    //     return handlePromise.then(() => {
 
-            sandbox.assert.calledOnce(selectSpy);
-            sandbox.assert.calledOnce(fromSpy);
-            sandbox.assert.calledOnce(whereSpy);
+    //         sandbox.assert.calledOnce(selectSpy);
+    //         sandbox.assert.calledOnce(fromSpy);
+    //         sandbox.assert.calledOnce(whereSpy);
 
-            expect(passedTableName).to.be.equal(db.TABLES.registeredPlayer);
-            expect(passedWhereMapping.discord_id).to.be.equal(cmd.discordUser.id);
-        });
-    });
+    //         expect(passedTableName).to.be.equal(db.TABLES.registeredPlayer);
+    //         expect(passedWhereMapping.discord_id).to.be.equal(cmd.discordUser.id);
+    //     });
+    // });
 
     it('should request the seasons from pubg api after retrieving the id from db', () => {
         

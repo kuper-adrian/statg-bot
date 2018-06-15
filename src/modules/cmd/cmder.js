@@ -12,8 +12,8 @@ const AVAILABLE_COMMANDS = [
     "help",
     "match",
     "ping",
-    "unregister"
-    // TODO "region"
+    "unregister",
+    "region"
     // TODO "mode"
 ];
 

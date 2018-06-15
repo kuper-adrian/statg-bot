@@ -96,10 +96,10 @@ function apiRequest(options, resolve, reject, cache) {
  * 
  * @param {string} name pubg player name
  */
-exports.playerByName = function (name) {
+exports.playerByName = function (name, region) {
 
     return new Promise((resolve, reject) => {
-        var options = getApiOptions(`/shards/pc-eu/players?filter[playerNames]=${name}`);
+        var options = getApiOptions(`/shards/${region}/players?filter[playerNames]=${name}`);
         return apiRequest(options, resolve, reject, playerByNameCache);
     })
 };
@@ -109,10 +109,10 @@ exports.playerByName = function (name) {
  * 
  * @param {string} id pubg id of player 
  */
-exports.playerById = function (id) {
+exports.playerById = function (id, region) {
  
     return new Promise((resolve, reject) => {
-        var options = getApiOptions(`/shards/pc-eu/players/${id}`);
+        var options = getApiOptions(`/shards/${region}/players/${id}`);
         return apiRequest(options, resolve, reject, playerByIdCache);
     });
 };
@@ -131,10 +131,10 @@ exports.status = function () {
 /**
  * Creates a promise to get all seasons.
  */
-exports.seasons = function () {
+exports.seasons = function (region) {
 
     return new Promise((resolve, reject) => {
-        var options = getApiOptions('/shards/pc-eu/seasons');
+        var options = getApiOptions(`/shards/${region}/seasons`);
         return apiRequest(options, resolve, reject, seasonsCache);
     }); 
 }
@@ -145,10 +145,10 @@ exports.seasons = function () {
  * @param {string} pubgId PUBG API Id of player
  * @param {string} seasonId PUBG API Id of season
  */
-exports.playerStats = function (pubgId, seasonId) {
+exports.playerStats = function (pubgId, seasonId, region) {
 
     return new Promise((resolve, reject) => {
-        var options = getApiOptions(`/shards/pc-eu/players/${pubgId}/seasons/${seasonId}`);
+        var options = getApiOptions(`/shards/${region}/players/${pubgId}/seasons/${seasonId}`);
         apiRequest(options, resolve, reject, playerStatsCache);
     });
 }
@@ -159,10 +159,10 @@ exports.playerStats = function (pubgId, seasonId) {
  * 
  * @param {string} matchId the match id
  */
-exports.matchById = function (matchId) {
+exports.matchById = function (matchId, region) {
 
     return new Promise((resolve, reject) => {
-        var options = getApiOptions(`/shards/pc-eu/matches/${matchId}`);
+        var options = getApiOptions(`/shards/${region}/matches/${matchId}`);
         apiRequest(options, resolve, reject, matchByIdCache);
     });
 }

@@ -12,8 +12,9 @@ class MatchCommandHandler extends CommandHandler {
 
         let channelId = cmd.discordUser.channelId;
         let playerPubgId = '';
+        let regionName = '';
 
-        db.knex.select('pubg_id')
+        db.knex.select()
             .from(db.TABLES.registeredPlayer)
             .where({
                 discord_id: cmd.discordUser.id
@@ -27,8 +28,22 @@ class MatchCommandHandler extends CommandHandler {
                     return Promise.reject('Something really weird happened.');
                 }
 
-                playerPubgId = rows[0].pubg_id; 
-                return pubg.playerById(playerPubgId);
+                let player = rows[0];
+                playerPubgId = player.pubg_id; 
+
+                return db.knex.select()
+                    .from(db.TABLES.region)
+                    .where('id', player.region_id)
+            })
+
+            .then(rows => {
+
+                if (rows.length !== 1) {
+                    return Promise.reject('Something really weird happened.');
+                }
+
+                regionName = rows[0].region_name;
+                return pubg.playerById(playerPubgId, regionName);
             })
 
             .then(playerData => {
@@ -36,7 +51,7 @@ class MatchCommandHandler extends CommandHandler {
                 let playerInfo = playerData.data;
                 let latestMatchInfo = playerInfo.relationships.matches.data[0];
 
-                return pubg.matchById(latestMatchInfo.id);
+                return pubg.matchById(latestMatchInfo.id, regionName);
             })
 
             .then(matchData => {
