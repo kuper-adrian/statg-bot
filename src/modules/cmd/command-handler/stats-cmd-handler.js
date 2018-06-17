@@ -28,11 +28,7 @@ class StatsCommandHandler extends CommandHandler {
 
         this.logger.debug("checking if player is registered");
 
-        return db.knex.select()
-            .from(db.TABLES.registeredPlayer)
-            .where({
-                discord_id: discordId
-            })
+        return db.getRegisteredPlayers({ discord_id: discordId })
 
             .then(rows => {
 
@@ -45,9 +41,7 @@ class StatsCommandHandler extends CommandHandler {
                 pubgId = rows[0].pubg_id;
                 pubgPlayerName = rows[0].pubg_name;
                 
-                return db.knex.select()
-                    .from(db.TABLES.region)
-                    .where('id', rows[0].region_id)
+                return db.getRegions({ id: rows[0].region_id })
             })
 
             .then(rows => {

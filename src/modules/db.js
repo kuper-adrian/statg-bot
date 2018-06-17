@@ -12,8 +12,6 @@ const TABLES = {
     mode: 'mode'
 }
 
-exports.TABLES = TABLES;
-
 // make sure that data folder exists
 const logFolderPath = "./data"
 if (!fs.existsSync(logFolderPath)) {
@@ -207,9 +205,53 @@ exports.init = function () {
                 logger.error(error);
                 reject(error);
             });
+    }); 
+}
 
-        exports.knex = knex;
-    });
+exports.getRegisteredPlayers = function(where) {
+    return knex
+        .select()
+        .from(TABLES.registeredPlayer)
+        .where(where);
+}
 
+exports.insertRegisteredPlayer = function(player) {
+    return knex(TABLES.registeredPlayer).insert(player);
+}
+
+exports.deleteRegisteredPlayers = function(where) {
+    return knex(TABLES.registeredPlayer)
+        .where(where)
+        .del()
+}
+
+exports.getRegions = function(where) {
+    return knex
+        .select()
+        .from(TABLES.region)
+        .where(where);
+}
+
+exports.setGlobalRegion = function(newRegionName) {
     
+    // use transaction to prevent faulty database state (e.g. no global region)
+    return knex.transaction((trx) => {
+
+        // first set current global region off
+        return knex(TABLES.region)
+            .transacting(trx)
+            .update({ is_global_region: false })
+            .where({ is_global_region: true })
+
+            .then(() => {
+                // ... set new global region
+                return knex(TABLES.region)
+                    .transacting(trx)
+                    .update({ is_global_region: true })
+                    .where({ region_name: newRegionName })
+            })
+
+            .then(trx.commit)
+            .catch(trx.rollback)
+    })
 }

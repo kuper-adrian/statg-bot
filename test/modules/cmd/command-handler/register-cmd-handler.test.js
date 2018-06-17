@@ -9,288 +9,321 @@ const RegisterCommandHandler = require('../../../../src/modules/cmd/command-hand
 
 describe('RegisterCommandHandler', () => {
 
-    describe('handle()', () => {
+    let sandbox = {};
 
-        let sandbox = {};
+    let debugStub = {};
+    let infoStub = {};
+    let warnStub = {};
+    let errorStub = {};
 
-        let debugStub = {};
-        let infoStub = {};
-        let warnStub = {};
-        let errorStub = {};
+    let cmd = {};
 
-        let cmd = {};
+    let bot = {};
+    let passedChannelId = '';
+    let passedBotMessage = '';
 
-        let bot = {};
-        let passedChannelId = '';
-        let passedBotMessage = '';
+    let db = {};
 
-        let db = {};
+    let passedPlayerName = '';
+    let playerByNameData = {};
+    let pubg = {};
 
-        let insertObject = {};
-        let whereObject = {};
-        let fromObject = {};
+    let sendMessageSpy = {};
+    let playerByNameSpy = {};
 
-        let passedPlayerName = '';
-        let playerByNameData = {};
-        let pubg = {};
+    beforeEach(() => {
 
-        let sendMessageSpy = {};
-        let playerByNameSpy = {};
+        sandbox = sinon.createSandbox();
 
-        beforeEach(() => {
+        // stub all log functions
+        debugStub = sandbox.stub(logger, "debug").callsFake((message) => {
+            // do nothing
+        });
+        infoStub = sandbox.stub(logger, "info").callsFake((message) => {
+            // do nothing
+        });
+        warnStub = sandbox.stub(logger, "warn").callsFake((message) => {
+            // do nothing
+        });
+        errorStub = sandbox.stub(logger, "error").callsFake((message) => {
+            // do nothing
+        });
 
-            sandbox = sinon.createSandbox();
+        cmd = {
+            discordUser: {
+                id: "some-discord-id",
+                channelId: "123"
+            },
+            arguments: []
+        };
 
-            // stub all log functions
-            debugStub = sandbox.stub(logger, "debug").callsFake((message) => {
-                // do nothing
-            });
-            infoStub = sandbox.stub(logger, "info").callsFake((message) => {
-                // do nothing
-            });
-            warnStub = sandbox.stub(logger, "warn").callsFake((message) => {
-                // do nothing
-            });
-            errorStub = sandbox.stub(logger, "error").callsFake((message) => {
-                // do nothing
-            });
-
-            cmd = {
-                discordUser: {
-                    id: "some-discord-id",
-                    channelId: "123"
-                },
-                arguments: []
-            };
-
-            bot = {
-                sendMessage: function(params) {
-                    passedChannelId = params.to;
-                    passedBotMessage = params.message;
-                }
-            };
-
-
-            insertObject = {
-                insert: function() {
-                    return Promise.resolve(1);
-                }
+        bot = {
+            sendMessage: function(params) {
+                passedChannelId = params.to;
+                passedBotMessage = params.message;
             }
-            db = {
-                knex: function(args) {
-                    return insertObject;
-                },
-                TABLES: {
-                    registeredPlayer: "registered_player"
-                }
-            }
-            whereObject = {
-                where: function(args) {
-                    return Promise.resolve([]);
-                }
-            }
-            fromObject = {
-                from: function(args) {
-                    return whereObject;
-                }
-            }
-            db.knex.select = function() {
-                return fromObject;
-            }
+        };
 
-            playerByNameData = {
-                data: [
+        db = {
+            getRegions: function(where) {
+                return Promise.resolve([
                     {
-                        id: "some-pubg-id",
-                        attributes: {
-                            name: "some-pubg-name"
-                        }
+                        id: 1,
+                        region_name: "some-region-name"
                     }
-                ]
-            };
-            pubg = {
-                playerByName: function(name) {
-                    passedPlayerName = name;
-                    return Promise.resolve(playerByNameData);
+                ])
+            },
+            getRegisteredPlayers: function(where) {
+                return Promise.resolve([])
+            },
+            insertRegisteredPlayer: function(player) {
+                return Promise.resolve(1);
+            }
+        }
+        
+        playerByNameData = {
+            data: [
+                {
+                    id: "some-pubg-id",
+                    attributes: {
+                        name: "some-pubg-name"
+                    }
                 }
-            };
+            ]
+        };
+        pubg = {
+            playerByName: function(name) {
+                passedPlayerName = name;
+                return Promise.resolve(playerByNameData);
+            }
+        };
 
-            sendMessageSpy = sandbox.spy(bot, "sendMessage");
-            playerByNameSpy = sandbox.spy(pubg, "playerByName");
-        });
+        sendMessageSpy = sandbox.spy(bot, "sendMessage");
+        playerByNameSpy = sandbox.spy(pubg, "playerByName");
+    });
 
-        afterEach(() => {       
-            sandbox.restore();
-        });
+    afterEach(() => {       
+        sandbox.restore();
+    });
+
+
+    describe('handle()', () => {
 
         // ----------------------------------------------------------------------------------------
         // Unit Tests
         // ----------------------------------------------------------------------------------------
 
-        // it('should call the pubg api for the player id with the given argument', () => {
+        it('should call the pubg api for the player id with the given argument', () => {
             
-        //     const handler = RegisterCommandHandler.getHandler();
+            const handler = RegisterCommandHandler.getHandler();
 
-        //     cmd.arguments = [
-        //         "to-register-pubg-name"
-        //     ]
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ]
             
-        //     let handlePromise = handler.handle(cmd, bot, db, pubg);
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
 
-        //     return handlePromise.then(() => {
-        //         sandbox.assert.calledOnce(playerByNameSpy);
-        //         sandbox.assert.calledWith(playerByNameSpy, cmd.arguments[0])
-        //     });
-        // });
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(playerByNameSpy);
+                sandbox.assert.calledWith(playerByNameSpy, cmd.arguments[0])
+            });
+        });
 
-        // it('should query the db for registered players', () => {
+        it('should query the db for registered players', () => {
 
-        //     const handler = RegisterCommandHandler.getHandler();
+            const handler = RegisterCommandHandler.getHandler();
 
-        //     cmd.arguments = [
-        //         "to-register-pubg-name"
-        //     ]
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ]
             
-        //     let selectSpy = sandbox.spy(db.knex, "select");
-        //     let fromSpy = sandbox.spy(fromObject, "from");
-        //     let whereSpy = sandbox.spy(whereObject, "where");
+            let getPlayerSpy = sandbox.spy(db, "getRegisteredPlayers");
 
-        //     let handlePromise = handler.handle(cmd, bot, db, pubg);
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
 
-        //     return handlePromise.then(() => {
-        //         sandbox.assert.calledOnce(selectSpy);
-        //         sandbox.assert.calledOnce(fromSpy);
-        //         sandbox.assert.calledOnce(whereSpy);
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(getPlayerSpy);
+                expect(getPlayerSpy.getCall(0).args[0].discord_id).to.be.equal(cmd.discordUser.id);
+            })
+        });
 
-        //         sandbox.assert.calledWith(fromSpy, db.TABLES.registeredPlayer);
-        //         expect('discord_id').to.be.equal(whereSpy.getCall(0).args[0]);
-        //         expect(cmd.discordUser.id).to.be.equal(whereSpy.getCall(0).args[1]);
-        //     })
-        // });
+        it('should query the database for the global region if only a single argument was given', () => {
 
-        // it('should create an database entry if player id does not exist yet', () => {
+            const handler = RegisterCommandHandler.getHandler();
+
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ]
             
-        //     const handler = RegisterCommandHandler.getHandler();
+            let getRegionsSpy = sandbox.spy(db, "getRegions");
 
-        //     cmd.arguments = [
-        //         "to-register-pubg-name"
-        //     ];
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
 
-        //     let knexSpy = sandbox.spy(db, "knex");
-        //     let insertSpy = sandbox.spy(insertObject, "insert");
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(getRegionsSpy);
+                expect(getRegionsSpy.getCall(0).args[0].is_global_region).to.be.equal(true);
+            })
+        });
 
-        //     let handlePromise = handler.handle(cmd, bot, db, pubg);
-
-        //     return handlePromise.then(() => {
-        //         sandbox.assert.calledOnce(knexSpy);
-        //         sandbox.assert.calledOnce(insertSpy);
-
-        //         sandbox.assert.calledWith(knexSpy, db.TABLES.registeredPlayer);
-        //         expect(cmd.discordUser.id).to.be.equal(insertSpy.getCall(0).args[0].discord_id);
-        //         expect(cmd.discordUser.name).to.be.equal(insertSpy.getCall(0).args[0].discord_name);
-        //         expect(playerByNameData.data[0].id).to.be.equal(insertSpy.getCall(0).args[0].pubg_id);
-        //         expect(playerByNameData.data[0].attributes.name).to.be.equal(insertSpy.getCall(0).args[0].pubg_name);
-        //     })
-        // });
-
-        // it('should send an success message if player was succesfully registered', () => {
+        it('should create an database entry if player id does not exist yet', () => {
             
-        //     const handler = RegisterCommandHandler.getHandler();
+            const handler = RegisterCommandHandler.getHandler();
 
-        //     cmd.arguments = [
-        //         "to-register-pubg-name"
-        //     ];
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ];
 
-        //     let handlePromise = handler.handle(cmd, bot, db, pubg);
+            let insertPlayerSpy = sandbox.spy(db, "insertRegisteredPlayer")
 
-        //     return handlePromise.then(() => {
-        //         sandbox.assert.calledOnce(sendMessageSpy);
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
 
-        //         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        //         expect(passedBotMessage).to.contain(playerByNameData.data[0].attributes.name);
-        //         expect(passedBotMessage).to.contain("successfully registered");
-        //     });
-        // });  
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(insertPlayerSpy);
 
-        // it('should send an error message if the pubg api request fails', () => {
+                expect(insertPlayerSpy.getCall(0).args[0].discord_id).to.be.equal(cmd.discordUser.id);
+                expect(insertPlayerSpy.getCall(0).args[0].discord_name).to.be.equal(cmd.discordUser.name);
+                expect(insertPlayerSpy.getCall(0).args[0].pubg_id).to.be.equal(playerByNameData.data[0].id);
+                expect(insertPlayerSpy.getCall(0).args[0].pubg_name).to.be.equal(playerByNameData.data[0].attributes.name);
+            })
+        });
 
-        //     const handler = RegisterCommandHandler.getHandler();
+        it('should send an success message if player was succesfully registered', () => {
+            
+            const handler = RegisterCommandHandler.getHandler();
 
-        //     cmd.arguments = [
-        //         "to-register-pubg-name"
-        //     ];
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ];
 
-        //     pubg.playerByName = function(args) {
-        //         return Promise.reject(new Error("whatever"));
-        //     };
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
 
-        //     let handlePromise = handler.handle(cmd, bot, db, pubg);
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(sendMessageSpy);
 
-        //     return handlePromise.then(() => {
-        //         sandbox.assert.calledOnce(sendMessageSpy);
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain(playerByNameData.data[0].attributes.name);
+                expect(passedBotMessage).to.contain("successfully registered");
+            });
+        });  
 
-        //         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        //         expect(passedBotMessage).to.contain("whatever");
-        //     });
-        // });
+        it('should send an error message if the pubg api request fails', () => {
+
+            const handler = RegisterCommandHandler.getHandler();
+
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ];
+
+            pubg.playerByName = function(args) {
+                return Promise.reject(new Error("whatever"));
+            };
+
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
+
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(sendMessageSpy);
+
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain("whatever");
+            });
+        });
         
-        // it('should send an error message if there already exists an entry for the player', () => {
+        it('should send an error message if there already exists an entry for the player', () => {
             
-        //     const handler = RegisterCommandHandler.getHandler();
+            const handler = RegisterCommandHandler.getHandler();
 
-        //     cmd.arguments = [
-        //         "to-register-pubg-name"
-        //     ];
+            cmd.arguments = [
+                "to-register-pubg-name"
+            ];
 
-        //     sandbox.stub(whereObject, "where").callsFake((args) => {
-        //         return Promise.resolve(["some-already-existing-player-name"]);
-        //     });
+            sandbox.stub(db, "getRegisteredPlayers").callsFake((args) => {
+                return Promise.resolve(["some-already-existing-player-name"]);
+            });
 
-        //     let handlePromise = handler.handle(cmd, bot, db, pubg);
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
 
-        //     return handlePromise.then(() => {
-        //         sinon.assert.calledOnce(sendMessageSpy);
+            return handlePromise.then(() => {
+                sinon.assert.calledOnce(sendMessageSpy);
 
-        //         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        //         expect(passedBotMessage).to.contain("already is a player name registered for your discord user");
-        //     });
-        // });
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain("already is a player name registered for your discord user");
+            });
+        });
 
-        // it('should send an eror message if no argument was given', () => {
+        it('should query the database for the region given by the second argument', () => {
             
-        //     const handler = RegisterCommandHandler.getHandler();
+            const handler = RegisterCommandHandler.getHandler();
 
-        //     cmd.arguments = [
-        //         // no  arguments
-        //     ];
-
-        //     let handlePromise = handler.handle(cmd, bot, db, pubg);
-
-        //     return handlePromise.then(() => {
-        //         sinon.assert.calledOnce(sendMessageSpy);
-
-        //         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        //         expect(passedBotMessage).to.contain("invalid amount of arguments");
-        //     });
-        // });
-
-        // it('should send an error message if multiple arguments were given', () => {
+            cmd.arguments = [
+                "to-register-pubg-name",
+                "pc-na"
+            ]
             
-        //     const handler = RegisterCommandHandler.getHandler();
+            let getRegionsSpy = sandbox.spy(db, "getRegions");
 
-        //     cmd.arguments = [
-        //         "to-register-pubg-name-1",
-        //         "to-register-pubg-name-2"
-        //     ];
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
 
-        //     let handlePromise = handler.handle(cmd, bot, db, pubg);
+            return handlePromise.then(() => {
+                sandbox.assert.calledOnce(getRegionsSpy);
+                expect(getRegionsSpy.getCall(0).args[0].region_name).to.be.equal("pc-na");
+            })
+        });
 
-        //     return handlePromise.then(() => {
-        //         sinon.assert.calledOnce(sendMessageSpy);
+        it('should send an eror message if no argument was given', () => {
+            
+            const handler = RegisterCommandHandler.getHandler();
 
-        //         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        //         expect(passedBotMessage).to.contain("invalid amount of arguments");
-        //     });
-        // });
+            cmd.arguments = [
+                // no  arguments
+            ];
+
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
+
+            return handlePromise.then(() => {
+                sinon.assert.calledOnce(sendMessageSpy);
+
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain("invalid amount of arguments");
+            });
+        });
+
+        it('should send an error message if the second argument is an invalid region', () => {
+            const handler = RegisterCommandHandler.getHandler();
+
+            cmd.arguments = [
+                "to-register-player-name",
+                "xbox-invalid"
+            ];
+
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
+
+            return handlePromise.then(() => {
+                sinon.assert.calledOnce(sendMessageSpy);
+
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain("unknown region");
+                expect(passedBotMessage).to.contain("xbox-invalid");
+            });
+        });
+
+        it('should send an error message if more than two arguments were given', () => {
+            
+            const handler = RegisterCommandHandler.getHandler();
+
+            cmd.arguments = [
+                "to-register-pubg-name-1",
+                "pc-eu",
+                "some-third-argument"
+            ];
+
+            let handlePromise = handler.handle(cmd, bot, db, pubg);
+
+            return handlePromise.then(() => {
+                sinon.assert.calledOnce(sendMessageSpy);
+
+                expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+                expect(passedBotMessage).to.contain("invalid amount of arguments");
+            });
+        });
     });
 });

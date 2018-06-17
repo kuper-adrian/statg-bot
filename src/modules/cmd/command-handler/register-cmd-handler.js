@@ -21,10 +21,7 @@ class RegisterCommandHandler extends CommandHandler {
             
             playerName = cmd.arguments[0];
 
-            return db.knex
-                .select()
-                .from(db.TABLES.region)
-                .where('is_global_region', true)
+            return db.getRegions({ is_global_region: true })
 
                 .then(rows => {
 
@@ -42,10 +39,7 @@ class RegisterCommandHandler extends CommandHandler {
 
                     pubgPlayerData = data.data[0];
 
-                    return db.knex
-                        .select()
-                        .from(db.TABLES.registeredPlayer)
-                        .where('discord_id', cmd.discordUser.id)
+                    return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
                 })
 
                 .then(rows => {
@@ -54,14 +48,13 @@ class RegisterCommandHandler extends CommandHandler {
 
                         this.logger.debug("Adding new player...")
 
-                        return db.knex(db.TABLES.registeredPlayer)
-                            .insert({
-                                discord_id: cmd.discordUser.id,
-                                discord_name: cmd.discordUser.name,
-                                pubg_id: pubgPlayerData.id,
-                                pubg_name: pubgPlayerData.attributes.name,
-                                region_id: regionId
-                            });
+                        return db.insertRegisteredPlayer({
+                            discord_id: cmd.discordUser.id,
+                            discord_name: cmd.discordUser.name,
+                            pubg_id: pubgPlayerData.id,
+                            pubg_name: pubgPlayerData.attributes.name,
+                            region_id: regionId
+                        });
 
                     } else {
                         return Promise.reject(new Error("There already is a player name registered for your discord user. Try using unregister command first."));
@@ -103,10 +96,7 @@ class RegisterCommandHandler extends CommandHandler {
             regionName = cmd.arguments[1];
 
 
-            return db.knex
-                .select()
-                .from(db.TABLES.region)
-                .where('region_name', regionName)
+            return db.getRegions({ region_name: regionName })
 
                 .then(rows => {
 
@@ -123,10 +113,7 @@ class RegisterCommandHandler extends CommandHandler {
 
                     pubgPlayerData = data.data[0];
 
-                    return db.knex
-                        .select()
-                        .from(db.TABLES.registeredPlayer)
-                        .where('discord_id', cmd.discordUser.id)
+                    return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
                 })
 
                 .then(rows => {
@@ -135,14 +122,13 @@ class RegisterCommandHandler extends CommandHandler {
 
                         this.logger.debug("Adding new player...")
 
-                        return db.knex(db.TABLES.registeredPlayer)
-                            .insert({
-                                discord_id: cmd.discordUser.id,
-                                discord_name: cmd.discordUser.name,
-                                pubg_id: pubgPlayerData.id,
-                                pubg_name: pubgPlayerData.attributes.name,
-                                region_id: regionId
-                            });
+                        return db.insertRegisteredPlayer({
+                            discord_id: cmd.discordUser.id,
+                            discord_name: cmd.discordUser.name,
+                            pubg_id: pubgPlayerData.id,
+                            pubg_name: pubgPlayerData.attributes.name,
+                            region_id: regionId
+                        })
 
                     } else {
                         return Promise.reject(new Error("There already is a player name registered for your discord user. Try using unregister command first."));

@@ -16,12 +16,6 @@ describe('UnregisterCommandHandler', () => {
     let passedChannelId = '';
     let passedBotMessage = '';
 
-    let delObject = {};
-    let deleteWhereObject = {};
-
-    let fromObject = {};
-    let selectWhereObject = {};
-
     let sendMessageSpy = {};
 
     beforeEach(() => {
@@ -57,39 +51,13 @@ describe('UnregisterCommandHandler', () => {
             }
         };
 
-
-        delObject = {
-            del: function() {
+        db = {
+            getRegisteredPlayers: function(where) {
+                return Promise.resolve([]);
+            },
+            deleteRegisteredPlayers: function(where) {
                 return Promise.resolve(1);
             }
-        }
-        deleteWhereObject = {
-            where: function(args) {
-                return delObject;
-            }
-        }
-
-        db = {
-            knex: function(args) {
-                return deleteWhereObject;
-            },
-            TABLES: {
-                registeredPlayer: "registered_player"
-            }
-        }
-
-        selectWhereObject = {
-            where: function(args) {
-                return Promise.resolve([]);
-            }
-        }
-        fromObject = {
-            from: function(args) {
-                return selectWhereObject;
-            }
-        }
-        db.knex.select = function() {
-            return fromObject;
         }
 
         sendMessageSpy = sandbox.spy(bot, "sendMessage");
@@ -111,7 +79,7 @@ describe('UnregisterCommandHandler', () => {
 
             const handler = UnregisterCommandHandler.getHandler();
 
-            let selectWhereStub = sandbox.stub(selectWhereObject, "where").callsFake((args) => {
+            let getRegisteredPlayersStub = sandbox.stub(db, "getRegisteredPlayers").callsFake((args) => {
                 return Promise.resolve([
                     {
                         discord_id: 1,
@@ -137,20 +105,13 @@ describe('UnregisterCommandHandler', () => {
 
             const handler = UnregisterCommandHandler.getHandler();
 
-            let selectSpy = sandbox.spy(db.knex, "select");
-            let fromSpy = sandbox.spy(fromObject, "from");
-            let whereSpy = sandbox.spy(selectWhereObject, "where");
+            const getRegisteredPlayersSpy = sandbox.spy(db, "getRegisteredPlayers");
 
             let handlePromise = handler.handle(cmd, bot, db, pubg);
 
             return handlePromise.then(() => {
-                sandbox.assert.calledOnce(selectSpy);
-                sandbox.assert.calledOnce(fromSpy);
-                sandbox.assert.calledOnce(whereSpy);
-
-                sandbox.assert.calledWith(fromSpy, db.TABLES.registeredPlayer);
-                expect('discord_id').to.be.equal(whereSpy.getCall(0).args[0]);
-                expect(cmd.discordUser.id).to.be.equal(whereSpy.getCall(0).args[1]);
+                sandbox.assert.calledOnce(getRegisteredPlayersSpy);
+                expect(getRegisteredPlayersSpy.getCall(0).args[0].discord_id).to.be.equal(cmd.discordUser.id);
             });
         });
 
@@ -158,10 +119,9 @@ describe('UnregisterCommandHandler', () => {
 
             const handler = UnregisterCommandHandler.getHandler();
 
-            let whereSpy = sandbox.spy(deleteWhereObject, "where");
-            let deleteSpy = sandbox.spy(delObject, "del");
+            const deleteSpy = sandbox.spy(db, "deleteRegisteredPlayers");
 
-            let selectWhereStub = sandbox.stub(selectWhereObject, "where").callsFake((args) => {
+            const getRegisteredPlayersStub = sandbox.stub(db, "getRegisteredPlayers").callsFake((args) => {
                 return Promise.resolve([
                     {
                         discord_id: 1,
@@ -175,11 +135,9 @@ describe('UnregisterCommandHandler', () => {
             let handlePromise = handler.handle(cmd, bot, db, pubg);
 
             return handlePromise.then(() => {              
-                sandbox.assert.calledOnce(whereSpy);
                 sandbox.assert.calledOnce(deleteSpy);
 
-                expect('discord_id').to.be.equal(whereSpy.getCall(0).args[0]);
-                expect(cmd.discordUser.id).to.be.equal(whereSpy.getCall(0).args[1]);
+                expect(getRegisteredPlayersStub.getCall(0).args[0].discord_id).to.be.equal(cmd.discordUser.id);
             });
         });
 
@@ -187,17 +145,15 @@ describe('UnregisterCommandHandler', () => {
             
             const handler = UnregisterCommandHandler.getHandler();
 
-            let whereSpy = sandbox.spy(deleteWhereObject, "where");
-            let deleteSpy = sandbox.spy(delObject, "del");
+            const deleteSpy = sandbox.spy(db, "deleteRegisteredPlayers");
 
-            let selectWhereStub = sandbox.stub(selectWhereObject, "where").callsFake((args) => {
+            const getRegisteredPlayersStub = sandbox.stub(db, "getRegisteredPlayers").callsFake((args) => {
                 return Promise.resolve([]); // <-- empty
             });
 
             let handlePromise = handler.handle(cmd, bot, db, pubg);
 
             return handlePromise.then(() => {              
-                sandbox.assert.notCalled(whereSpy);
                 sandbox.assert.notCalled(deleteSpy);
             });
         });
@@ -206,7 +162,7 @@ describe('UnregisterCommandHandler', () => {
 
             const handler = UnregisterCommandHandler.getHandler();
 
-            let selectWhereStub = sandbox.stub(selectWhereObject, "where").callsFake((args) => {
+            const getRegisteredPlayersStub = sandbox.stub(db, "getRegisteredPlayers").callsFake((args) => {
                 return Promise.resolve([]); // <-- empty
             });
 

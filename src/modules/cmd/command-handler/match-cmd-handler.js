@@ -14,11 +14,7 @@ class MatchCommandHandler extends CommandHandler {
         let playerPubgId = '';
         let regionName = '';
 
-        db.knex.select()
-            .from(db.TABLES.registeredPlayer)
-            .where({
-                discord_id: cmd.discordUser.id
-            })
+        db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
 
             .then(rows => {
 
@@ -31,9 +27,7 @@ class MatchCommandHandler extends CommandHandler {
                 let player = rows[0];
                 playerPubgId = player.pubg_id; 
 
-                return db.knex.select()
-                    .from(db.TABLES.region)
-                    .where('id', player.region_id)
+                return db.getRegions({ id: player.region_id })
             })
 
             .then(rows => {

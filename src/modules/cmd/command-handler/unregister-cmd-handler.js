@@ -19,7 +19,8 @@ class UnregisterCommandHandler extends CommandHandler {
 
         let player = {};
 
-        return db.knex.select().from(db.TABLES.registeredPlayer).where('discord_id', cmd.discordUser.id)
+        return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
+            
             .then((rows) => {
 
                 if (rows.length === 0) {
@@ -28,9 +29,7 @@ class UnregisterCommandHandler extends CommandHandler {
 
                 player = rows[0];
 
-                return db.knex(db.TABLES.registeredPlayer)
-                    .where('discord_id', cmd.discordUser.id)
-                    .del()
+                return db.deleteRegisteredPlayers({ discord_id: cmd.discordUser.id })
             })
 
             .then((i) => {
