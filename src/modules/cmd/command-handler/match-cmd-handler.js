@@ -14,7 +14,12 @@ class MatchCommandHandler extends CommandHandler {
         let playerPubgId = '';
         let regionName = '';
 
-        db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
+        if (cmd.arguments.length !== 0) {
+            this._onError(bot, channelId, "invalid amount of arguments");
+            return Promise.resolve();
+        }
+
+        return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
 
             .then(rows => {
 
