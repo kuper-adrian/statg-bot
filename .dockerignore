@@ -1,10 +1,11 @@
+test/
+data/
+logs/
+coverage/
+.nyc_output/
+
 notes.md
 Dockerfile
 README.md
 Jenkinsfile
 auth.json
-
-test/
-data/
-logs/
-coverage/

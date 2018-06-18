@@ -23,11 +23,11 @@
         "chai": "^4.1.2",
         "istanbul": "^0.4.5",
         "mocha": "^5.2.0",
-        "codecov": "^3.0.2"
+        "nyc": "^12.0.2"
     },
     "scripts": {
         "debug": "nodemon --inspect src/bot.js runConfig=debug",
-        "test": "mocha test/ --recursive",
-        "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec & codecov"
+        "test": "nyc mocha --timeout=3000 --recursive",
+        "coverage": "nyc report --reporter=text-lcov | coveralls"
     }
 }

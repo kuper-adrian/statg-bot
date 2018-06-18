@@ -2,6 +2,7 @@ node_modules/
 data/
 logs/
 coverage/
+.nyc_output/
 
 auth.json
 notes.md
