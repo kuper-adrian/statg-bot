@@ -12,17 +12,16 @@ const TABLES = {
     mode: 'mode'
 }
 
-// make sure that data folder exists
-const logFolderPath = "./data"
-if (!fs.existsSync(logFolderPath)) {
-    fs.mkdirSync(logFolderPath);
-}
-
-exports.init = function () {
+exports.init = function (dataFolderPath = "./data") {
 
     return new Promise((resolve, reject) => {
 
-        const dbFilePath = './data/' + DB_FILE_NAME;
+        // make sure that data folder exists
+        if (!fs.existsSync(dataFolderPath)) {
+            fs.mkdirSync(dataFolderPath);
+        }
+
+        const dbFilePath = `${dataFolderPath}/${DB_FILE_NAME}`;
 
         // create db file if it doesnt already exist
         if (fs.existsSync(dbFilePath)) {
