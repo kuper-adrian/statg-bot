@@ -100,9 +100,6 @@ describe('StatsCommandHandler', () => {
 
             const cmdHandler = StatsCommandHandler.getHandler();
 
-            let passedTableName = '';
-            let passedWhereMapping = {};
-
             const getPlayersStub = sandbox.stub(db, "getRegisteredPlayers").callsFake((where) => {
                 return Promise.resolve([
                     {
