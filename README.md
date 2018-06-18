@@ -1,9 +1,11 @@
-# StatG - PUBG statistics Discord Bot
+# StatG - PUBG Statistics Discord Bot
 
 [![Build Status](https://travis-ci.org/kuper-adrian/statg-bot.svg?branch=master)](https://travis-ci.org/kuper-adrian/statg-bot)
 [![Coverage Status](https://coveralls.io/repos/github/kuper-adrian/statg-bot/badge.svg?branch=master)](https://coveralls.io/github/kuper-adrian/statg-bot?branch=master)
 
 StatG is a discord bot that can post PUBG statistics in your discord channel!
+
+![Alt text](docs/images/statg-bot-enter-command.gif "Entering Command")
 
 **Disclaimer:** StatG is a hobby project for the purpose of learning JavaScript, Node.js, Docker, CI and CD. While the bot works and I personally use it, I can give no guarantees about reliabilty or further development. So use it with care ;)
 
