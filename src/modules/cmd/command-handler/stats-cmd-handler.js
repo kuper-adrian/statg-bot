@@ -1,5 +1,5 @@
 const CommandHandler = require('./cmd-handler.js').CommandHandler;
-const _ = require('lodash');
+const math = require('../../math');
 
 const AVAILABLE_ARGS = [
     "solo",
@@ -158,10 +158,10 @@ class StatsCommandHandler extends CommandHandler {
         let result =
 `Season stats for player **${pubgPlayerName}** (game mode: **${gameMode}**):
 \`\`\`markdown
-- Kills:           ${avgStats.kills} (avg. ${_.round(avgStats.avgKills, 2)})
-- Assists:         ${avgStats.assists} (avg. ${_.round(avgStats.avgAssists, 2)})
-- Damage:          ${_.round(avgStats.damageDealt, 2)} (avg. ${_.round(avgStats.avgDamageDealt, 2)})
-- Wins:            ${avgStats.wins} (avg. ${_.round(avgStats.avgWins, 4)})
+- Kills:           ${avgStats.kills} (avg. ${math.round(avgStats.avgKills, 2)})
+- Assists:         ${avgStats.assists} (avg. ${math.round(avgStats.avgAssists, 2)})
+- Damage:          ${math.round(avgStats.damageDealt, 2)} (avg. ${math.round(avgStats.avgDamageDealt, 2)})
+- Wins:            ${avgStats.wins} (avg. ${math.round(avgStats.avgWins, 4)})
 - Rounds Played:   ${avgStats.roundsPlayed}
 \`\`\``
 
