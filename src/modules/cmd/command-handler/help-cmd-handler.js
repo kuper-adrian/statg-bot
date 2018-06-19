@@ -7,7 +7,7 @@ const HELP_MESSAGE = 'https://github.com/kuper-adrian/statg-bot/blob/master/READ
  */
 class HelpCommandHandler extends CommandHandler {
   handle(cmd, bot) {
-    const { channelId } = cmd.discordUser.channelId;
+    const { channelId } = cmd.discordUser;
 
     if (cmd.arguments.length !== 0) {
       this.onError(bot, channelId, 'invalid amount of arguments');
