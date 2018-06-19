@@ -49,7 +49,7 @@ class StatsCommandHandler extends CommandHandler {
       .then((seasons) => {
         this.logger.debug('Successfully fetched seasons data!');
 
-        const { seasonsData } = seasons.data;
+        const { data: seasonsData } = seasons;
         const currentSeason = seasonsData.filter(s => s.attributes.isCurrentSeason)[0];
 
         this.logger.debug(`Id of current season: ${currentSeason.id}`);
