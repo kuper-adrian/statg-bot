@@ -1,35 +1,48 @@
 {
-    "name": "statg-bot",
-    "version": "1.0.0",
-    "description": "Discord bot for PUBG stats",
-    "main": "src/bot.js",
-    "author": "Adrian Kuper",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/kuper-adrian/statg-bot.git"
-    },
-    "dependencies": {
-        "discord.io": "^2.5.3",
-        "knex": "^0.14.6",
-        "lodash": "4.17.10",
-        "moment": "^2.22.2",
-        "npm": "^6.1.0",
-        "sinon": "^5.1.1",
-        "sqlite3": "^4.0.0",
-        "winston": "^2.4.3"
-    },
-    "devDependencies": {
-        "chai": "^4.1.2",
-        "coveralls": "^3.0.1",
-        "istanbul": "^0.4.5",
-        "mocha": "^5.2.0",
-        "mocha-lcov-reporter": "^1.3.0",
-        "nyc": "^12.0.2"
-    },
-    "scripts": {
-        "debug": "nodemon --inspect src/bot.js runConfig=debug",
-        "test": "nyc mocha --timeout=3000 --recursive",
-        "coverage": "nyc report --reporter=text-lcov | coveralls"
-    }
+  "name": "statg-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for PUBG stats",
+  "main": "src/bot.js",
+  "author": "Adrian Kuper",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuper-adrian/statg-bot.git"
+  },
+  "dependencies": {
+    "discord.io": "^2.5.3",
+    "knex": "^0.14.6",
+    "lodash": "4.17.10",
+    "moment": "^2.22.2",
+    "npm": "^6.1.0",
+    "sinon": "^5.1.1",
+    "sqlite3": "^4.0.0",
+    "winston": "^2.4.3"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^12.0.2"
+  },
+  "scripts": {
+    "debug": "nodemon --inspect src/bot.js runConfig=debug",
+    "test": "nyc mocha --timeout=3000 --recursive",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "bugs": {
+    "url": "https://github.com/kuper-adrian/statg-bot/issues"
+  },
+  "homepage": "https://github.com/kuper-adrian/statg-bot#readme",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "keywords": [
+    "bot",
+    "discord",
+    "pubg"
+  ]
 }
