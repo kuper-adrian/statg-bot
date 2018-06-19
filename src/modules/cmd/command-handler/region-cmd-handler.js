@@ -1,53 +1,44 @@
-const CommandHandler = require('./cmd-handler.js').CommandHandler;
-const REGIONS = require('./regions').REGIONS;
+const { CommandHandler } = require('./cmd-handler.js');
+const { REGIONS } = require('./regions');
 
 class RegionCommandHandler extends CommandHandler {
+  setGlobalRegion(newRegion, cmd, db, bot) {
+    return db.setGlobalRegion(newRegion)
+      .then(() => {
+        const message = `global region successfully set to "${newRegion}"!`;
+        bot.sendMessage({
+          message,
+          to: cmd.discordUser.channelId,
+        });
+      })
+      .catch((error) => {
+        this.onError(bot, cmd.discordUser.channelId, error.message);
+      });
+  }
 
-    constructor() {
-        super();
+  handle(cmd, bot, db) {
+    let newRegion = '';
+    const { channelId } = cmd.discordUser;
+
+    if (cmd.arguments.length === 0) {
+      this.onError(bot, channelId, 'invalid amount of arguments');
+      return Promise.resolve();
+    } else if (cmd.arguments.length === 1) {
+      [newRegion] = cmd.arguments;
+
+      if (!REGIONS.includes(newRegion)) {
+        this.onError(bot, channelId, `unknown region "${newRegion}"`);
+        return Promise.resolve();
+      }
+
+      return this.setGlobalRegion(newRegion, cmd, db, bot);
     }
 
-    _setGlobalRegion(newRegion, cmd, db, bot) {
-
-        return db.setGlobalRegion(newRegion)
-            .then(o => {
-                let message = `global region successfully set to "${newRegion}"!`
-                bot.sendMessage({
-                    to: cmd.discordUser.channelId,
-                    message: message
-                });
-            })
-            .catch(error => {
-                this._onError(bot, cmd.discordUser.channelId, error.message);
-            }); 
-    }
-
-    handle(cmd, bot, db, pubg) {
-
-        let newRegion = '';
-        let channelId = cmd.discordUser.channelId;
-
-        if (cmd.arguments.length === 0) {
-            this._onError(bot, channelId, "invalid amount of arguments")
-            return Promise.resolve();
-        } else if (cmd.arguments.length === 1) {
-
-            newRegion = cmd.arguments[0];
-
-            if (!REGIONS.includes(newRegion)) {
-                this._onError(bot, channelId, `unknown region "${newRegion}"`)
-                return Promise.resolve();
-            }
-
-            return this._setGlobalRegion(newRegion, cmd, db, bot);
-
-        } else {
-            this._onError(bot, channelId, "invalid amount of arguments")
-            return Promise.resolve();
-        }
-    }
+    this.onError(bot, channelId, 'invalid amount of arguments');
+    return Promise.resolve();
+  }
 }
 
-exports.getHandler = function() {
-    return new RegionCommandHandler();
-}
+exports.getHandler = function getHandler() {
+  return new RegionCommandHandler();
+};

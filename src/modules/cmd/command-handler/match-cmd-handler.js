@@ -1,128 +1,111 @@
-const CommandHandler = require('./cmd-handler.js').CommandHandler;
-
+const { CommandHandler } = require('./cmd-handler.js');
 const _ = require('lodash');
 
 class MatchCommandHandler extends CommandHandler {
+  /**
+   * Handles the match command.
+   * @param {*} cmd the command object
+   * @param {*} bot the bot object
+   * @param {*} db the db object
+   * @param {*} pubg the pubg api object
+   */
+  handle(cmd, bot, db, pubg) {
+    const { channelId } = cmd.discordUser;
+    let playerPubgId = '';
+    let regionName = '';
 
-    constructor() {
-        super();
+    if (cmd.arguments.length !== 0) {
+      this.onError(bot, channelId, 'invalid amount of arguments');
+      return Promise.resolve();
     }
 
-    handle(cmd, bot, db, pubg) {
+    return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
 
-        let channelId = cmd.discordUser.channelId;
-        let playerPubgId = '';
-        let regionName = '';
-
-        if (cmd.arguments.length !== 0) {
-            this._onError(bot, channelId, "invalid amount of arguments");
-            return Promise.resolve();
+      .then((rows) => {
+        if (rows.length === 0) {
+          return Promise.reject(new Error('Player not registered. Try register command first'));
+        } else if (rows.length > 1) {
+          return Promise.reject(new Error('Something really weird happened.'));
         }
 
-        return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
+        const player = rows[0];
+        playerPubgId = player.pubg_id;
 
-            .then(rows => {
+        return db.getRegions({ id: player.region_id });
+      })
 
-                if (rows.length === 0) {
-                    return Promise.reject('Player not registered. Try register command first');
-                } else if (rows.length > 1) {
-                    return Promise.reject('Something really weird happened.');
-                }
+      .then((rows) => {
+        if (rows.length !== 1) {
+          return Promise.reject(new Error('Something really weird happened.'));
+        }
 
-                let player = rows[0];
-                playerPubgId = player.pubg_id; 
+        regionName = rows[0].region_name;
+        return pubg.playerById(playerPubgId, regionName);
+      })
 
-                return db.getRegions({ id: player.region_id })
-            })
+      .then((playerData) => {
+        const playerInfo = playerData.data;
+        const latestMatchInfo = playerInfo.relationships.matches.data[0];
 
-            .then(rows => {
+        return pubg.matchById(latestMatchInfo.id, regionName);
+      })
 
-                if (rows.length !== 1) {
-                    return Promise.reject('Something really weird happened.');
-                }
+      .then((matchData) => {
+        const players = matchData.included.filter(i => i.type === 'participant');
+        const rosters = matchData.included.filter(i => i.type === 'roster');
 
-                regionName = rows[0].region_name;
-                return pubg.playerById(playerPubgId, regionName);
-            })
+        const requestingPlayer = players.filter(p =>
+          p.attributes.stats.playerId === playerPubgId)[0];
 
-            .then(playerData => {
+        const requestingPlayerRoster = rosters.filter(r =>
+          r.relationships.participants.data.map(p => p.id)
+            .includes(requestingPlayer.id))[0];
 
-                let playerInfo = playerData.data;
-                let latestMatchInfo = playerInfo.relationships.matches.data[0];
+        const teammateIds = requestingPlayerRoster.relationships.participants.data.map(d => d.id);
 
-                return pubg.matchById(latestMatchInfo.id, regionName);
-            })
-
-            .then(matchData => {
-
-                let players = matchData.included.filter(i => {
-                    return i.type === "participant";
-                });
-                let rosters = matchData.included.filter(i => {
-                    return i.type === "roster";
-                });
-
-                let requestingPlayer = players.filter(p => {
-                    return p.attributes.stats.playerId === playerPubgId;
-                })[0];
-
-                let requestingPlayerRoster = rosters.filter(r => {
-                    return r.relationships.participants.data.map(p => {
-                        return p.id;
-                    }).includes(requestingPlayer.id);
-                })[0];
-
-                let teammateIds = requestingPlayerRoster.relationships.participants.data.map(d => {
-                    return d.id;
-                });
-
-                let teammates = players.filter(p => {
-                    return teammateIds.includes(p.id);
-                })
+        const teammates = players.filter(p => teammateIds.includes(p.id));
 
 
-                let message = this._craftDiscordMessage(matchData, teammates);
-                bot.sendMessage({
-                    to: channelId,
-                    message: message
-                });
+        const message = MatchCommandHandler.craftDiscordMessage(matchData, teammates);
+        bot.sendMessage({
+          message,
+          to: channelId,
+        });
 
-                if (teammates[0].attributes.stats.winPlace === 1) {
-                    bot.sendMessage({
-                        to: channelId,
-                        tts: true,
-                        message: "WINNER WINNER CHICKEN DINNER!"
-                    })
-                }
-            })
+        if (teammates[0].attributes.stats.winPlace === 1) {
+          bot.sendMessage({
+            to: channelId,
+            tts: true,
+            message: 'WINNER WINNER CHICKEN DINNER!',
+          });
+        }
+      })
 
-            .catch(error => {
-                this._onError(bot, channelId, error);
-            });
-    }
+      .catch((error) => {
+        this.onError(bot, channelId, error);
+      });
+  }
 
-    _getPlayerStatsString(player) {
+  static getPlayerStatsString(player) {
+    const { stats } = player.attributes;
 
-        let stats = player.attributes.stats;
-        return ` 
+    return ` 
 **${stats.name}**
 \`\`\`markdown
-- Kills:      ${stats.kills} (${stats.headshotKills})
-- Assists:    ${stats.assists}
-- Damage:     ${_.round(stats.damageDealt, 2)}
-- Heals:      ${stats.heals}
-- Revives:    ${stats.revives}
+- Kills:    ${stats.kills} (${stats.headshotKills})
+- Assists:  ${stats.assists}
+- Damage:   ${_.round(stats.damageDealt, 2)}
+- Heals:    ${stats.heals}
+- Revives:  ${stats.revives}
 
 - Win Points: ${stats.winPoints} (${stats.winPointsDelta})
 \`\`\``;
+  }
 
-    }
+  static craftDiscordMessage(matchData, teammates) {
+    const matchPlace = teammates[0].attributes.stats.winPlace;
 
-    _craftDiscordMessage(matchData, teammates) {
-    
-        let matchPlace = teammates[0].attributes.stats.winPlace;
-    
-        let result = 
+    let result =
 `**Latest Match Info**
 \`\`\`markdown
 - Game Mode: ${matchData.data.attributes.gameMode}
@@ -133,24 +116,24 @@ class MatchCommandHandler extends CommandHandler {
 - Win Place: ${matchPlace}
 \`\`\`
 `;
-    
-        // CHICKEN DINNER!!!
-        if (matchPlace === 1) {
-            result += `
+
+    // CHICKEN DINNER!!!
+    if (matchPlace === 1) {
+      result += `
 \`\`\`
 WINNER WINNER CHICKEN DINNER
 \`\`\`
-`
-        }
-    
-        _.forEach(teammates, t => {
-            result += this._getPlayerStatsString(t);
-        })
-    
-        return result;
+`;
     }
+
+    teammates.forEach((t) => {
+      result += MatchCommandHandler.getPlayerStatsString(t);
+    });
+
+    return result;
+  }
 }
 
-exports.getHandler = function() {
-    return new MatchCommandHandler();
-}
+exports.getHandler = function getHandler() {
+  return new MatchCommandHandler();
+};

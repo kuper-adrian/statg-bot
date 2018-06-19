@@ -1,32 +1,26 @@
-const CommandHandler = require('./cmd-handler.js').CommandHandler;
+const { CommandHandler } = require('./cmd-handler.js');
 
-const HELP_MESSAGE = `https://github.com/kuper-adrian/statg-bot/blob/master/README.md`
+const HELP_MESSAGE = 'https://github.com/kuper-adrian/statg-bot/blob/master/README.md';
 
 /**
  * Handler for the "help" command
  */
 class HelpCommandHandler extends CommandHandler {
+  handle(cmd, bot) {
+    const { channelId } = cmd.discordUser.channelId;
 
-    constructor() {
-        super();
+    if (cmd.arguments.length !== 0) {
+      this.onError(bot, channelId, 'invalid amount of arguments');
+      return;
     }
 
-    handle(cmd, bot, db, pubg) {
-
-        const channelId = cmd.discordUser.channelId; 
-
-        if (cmd.arguments.length !== 0) {
-            this._onError(bot, channelId, "invalid amount of arguments");
-            return;
-        }
-
-        bot.sendMessage({
-            to: channelId,
-            message: HELP_MESSAGE
-        });
-    }
+    bot.sendMessage({
+      to: channelId,
+      message: HELP_MESSAGE,
+    });
+  }
 }
 
-exports.getHandler = function() {
-    return new HelpCommandHandler();
-}
+exports.getHandler = function getHandler() {
+  return new HelpCommandHandler();
+};

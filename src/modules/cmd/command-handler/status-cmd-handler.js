@@ -1,53 +1,42 @@
-const CommandHandler = require('./cmd-handler.js').CommandHandler;
+const { CommandHandler } = require('./cmd-handler.js');
 
 class StatusCommandHandler extends CommandHandler {
+  handle(cmd, bot, db, pubg) {
+    const { channelId } = cmd.discordUser;
 
-    constructor() {
-        super();
+    if (cmd.arguments.length !== 0) {
+      this.onError(bot, channelId, 'invalid amount of arguments');
+      return undefined;
     }
 
-    handle(cmd, bot, db, pubg) {
+    return pubg.status()
+      .then((data) => {
+        const statusData = data.data;
 
-        let channelId = cmd.discordUser.channelId;
+        const { id } = statusData;
+        const { releasedAt: releaseDate, version: apiVersion } = statusData.attributes;
 
-        if (cmd.arguments.length !== 0) {
-            this._onError(bot, channelId, "invalid amount of arguments");
-            return;
-        }
+        bot.sendMessage({
+          to: channelId,
+          message: StatusCommandHandler.getStatusMessage(id, apiVersion, releaseDate),
+        });
+      })
 
-        return pubg.status()
-            .then(data => {
+      .catch((error) => {
+        this.onError(bot, channelId, error.message);
+      });
+  }
 
-                let statusData = data.data;
-
-                let id = statusData.id;
-                let releaseDate = statusData.attributes.releasedAt;
-                let apiVersion = statusData.attributes.version;
-
-                bot.sendMessage({
-                    to: channelId,
-                    message: this._getStatusMessage(id, apiVersion, releaseDate)
-                });
-
-                return Promise.resolve();
-            })
-
-            .catch(error => {
-
-                this._onError(bot, channelId, error.message);
-            })
-    }
-
-    _getStatusMessage(id, version, releasedAt) {
-        return `\`\`\`
+  static getStatusMessage(id, version, releasedAt) {
+    return `\`\`\`
 PUBG-API online!
 
 ID:          ${id}
 Version:     ${version}
-Released at: ${releasedAt}\`\`\``
-    }
+Released at: ${releasedAt}\`\`\``;
+  }
 }
 
-exports.getHandler = function() {
-    return new StatusCommandHandler();
-}
+exports.getHandler = function getHandler() {
+  return new StatusCommandHandler();
+};

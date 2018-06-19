@@ -1,50 +1,43 @@
-const CommandHandler = require('./cmd-handler.js').CommandHandler;
+const { CommandHandler } = require('./cmd-handler.js');
 
 
 /**
  * Command for unregistering the pubg player name from the discord user.
  */
 class UnregisterCommandHandler extends CommandHandler {
-
-    constructor() {
-        super();
+  handle(cmd, bot, db) {
+    if (cmd.arguments.length !== 0) {
+      this.onError(bot, cmd.discordUser.channelId, 'invalid amount of arguments');
+      return Promise.resolve();
     }
 
-    handle(cmd, bot, db, pubg) {
+    let player = {};
 
-        if (cmd.arguments.length !== 0) {
-            this._onError(bot, cmd.discordUser.channelId, "invalid amount of arguments");
-            return Promise.resolve();
+    return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
+
+      .then((rows) => {
+        if (rows.length === 0) {
+          return Promise.reject(new Error('player not registered'));
         }
 
-        let player = {};
+        [player] = rows;
 
-        return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
-            
-            .then((rows) => {
+        return db.deleteRegisteredPlayers({ discord_id: cmd.discordUser.id });
+      })
 
-                if (rows.length === 0) {
-                    return Promise.reject(new Error("player not registered"));
-                }
+      .then(() => {
+        bot.sendMessage({
+          to: cmd.discordUser.channelId,
+          message: `Player "${player.pubg_name}" successfully unregistered!`,
+        });
+      })
 
-                player = rows[0];
-
-                return db.deleteRegisteredPlayers({ discord_id: cmd.discordUser.id })
-            })
-
-            .then((i) => {
-                bot.sendMessage({
-                    to: cmd.discordUser.channelId,
-                    message: `Player "${player.pubg_name}" successfully unregistered!`
-                });
-            })
-
-            .catch((error) => {
-                this._onError(bot, cmd.discordUser.channelId, error.message);
-            })
-    }
+      .catch((error) => {
+        this.onError(bot, cmd.discordUser.channelId, error.message);
+      });
+  }
 }
 
-exports.getHandler = function() {
-    return new UnregisterCommandHandler();
-}
+exports.getHandler = function getHandler() {
+  return new UnregisterCommandHandler();
+};

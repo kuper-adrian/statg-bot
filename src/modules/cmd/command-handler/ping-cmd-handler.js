@@ -1,24 +1,19 @@
-const CommandHandler = require('./cmd-handler.js').CommandHandler;
-
+const { CommandHandler } = require('./cmd-handler.js');
 
 /**
  * Useless example command that only anwers "pong!"
  */
 class PingCommandHandler extends CommandHandler {
+  handle(cmd, bot) {
+    this.logger.debug('sending answer');
 
-    constructor() {
-        super();
-    }
-
-    handle(cmd, bot, db, pubg) {
-
-        bot.sendMessage({
-            to: cmd.discordUser.channelId,
-            message: 'pong'
-        });
-    }
+    bot.sendMessage({
+      to: cmd.discordUser.channelId,
+      message: 'pong',
+    });
+  }
 }
 
-exports.getHandler = function() {
-    return new PingCommandHandler();
-}
+exports.getHandler = function getHandler() {
+  return new PingCommandHandler();
+};
