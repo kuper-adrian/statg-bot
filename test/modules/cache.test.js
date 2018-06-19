@@ -1,4 +1,4 @@
-let expect = require('chai').expect;
+const { expect } = require('chai');
 let Cache = require('../../src/modules/cache').Cache;
 let CacheItem = require('../../src/modules/cache').CacheItem;
 
@@ -111,7 +111,7 @@ describe('Cache', () => {
             c.add("2", { some: "prop2"})
             c.add("3", { some: "prop3"})
     
-            c._isItemInvalid = function (item) {
+            c.isItemInvalid = function (item) {
                 if (item.value === objToReplace) {
                     return true;
                 }
@@ -235,7 +235,7 @@ describe('Cache', () => {
             let obj5 = { some: "prop5" }
             let obj6 = { some: "prop6" }
     
-            c._isItemInvalid = function (item) {
+            c.isItemInvalid = function (item) {
                 if (item.value === obj1 || item.value === obj4) {
                     return true;
                 }
@@ -254,7 +254,7 @@ describe('Cache', () => {
     
             c.tidy();
     
-            c._isItemInvalid = function (item) {
+            c.isItemInvalid = function (item) {
                 if (item.value === obj6) {
                     return true;
                 }
@@ -277,7 +277,7 @@ describe('Cache', () => {
             let obj3 = { some: "prop3" }
             let obj4 = { some: "prop4" }
     
-            c._isItemInvalid = function (item) {
+            c.isItemInvalid = function (item) {
                 if (item.value === obj1 || item.value === obj4) {
                     return true;
                 }
@@ -307,7 +307,7 @@ describe('Cache', () => {
             let obj3 = { some: "prop3" }
             let obj4 = { some: "prop4" }
     
-            c._isItemInvalid = function (item) {
+            c.isItemInvalid = function (item) {
                 if (item.value === obj1 || item.value === obj4) {
                     return true;
                 }
@@ -363,7 +363,7 @@ describe('Cache', () => {
         })
     })
 
-    describe('_isItemInvalid()', () => {
+    describe('isItemInvalid()', () => {
 
         it('should throw an error if null was passed', () => {
             // PREPARE
@@ -372,7 +372,7 @@ describe('Cache', () => {
     
             // SYSTEM UNDER TEST
             try {
-                c._isItemInvalid(null)
+                c.isItemInvalid(null)
             } catch (error) {
                 errorMessage = error.message
             }
@@ -388,7 +388,7 @@ describe('Cache', () => {
     
             // SYSTEM UNDER TEST
             try {
-                c._isItemInvalid(undefined)
+                c.isItemInvalid(undefined)
             } catch (error) {
                 errorMessage = error.message
             }
