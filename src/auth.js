@@ -73,7 +73,7 @@ exports.init = function init(cmdLineArgs) {
 
   // if runConfig is null, it will be handled as 'release'
   if (!RUN_CONFIGS.includes(runConfig) && runConfig !== null) {
-    throw new Error(`invalid run config '${runConfig}'`);
+    throw new Error(`invalid run config "${runConfig}"`);
   }
 
   if (runConfig === 'debug') {
@@ -86,10 +86,10 @@ exports.init = function init(cmdLineArgs) {
   }
 
   if (discordToken === '') {
-    throw new Error(`invalid value '${discordToken}' for argument 'discordToken'`);
+    throw new Error(`invalid value "${discordToken}" for argument "discordToken"`);
   }
   if (pubgApiKey === '') {
-    throw new Error(`invalid value '${pubgApiKey}' for argument 'pubgApiKey'`);
+    throw new Error(`invalid value "${pubgApiKey}" for argument "pubgApiKey"`);
   }
 
   logger.info('using secrets passed by command line');
