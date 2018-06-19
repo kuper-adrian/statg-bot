@@ -152,7 +152,7 @@ describe('Cache', () => {
       const returned = c.retrieve('2');
 
       // VERIFY
-      expect(returned).to.be.null();
+      expect(returned).to.be.equal(null);
     });
 
     it('should throw an error if null was passed', () => {
