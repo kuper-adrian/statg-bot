@@ -1,4 +1,4 @@
-const CommandHandler = require('./cmd-handler.js').CommandHandler;
+const { CommandHandler } = require('./cmd-handler.js');
 const math = require('../../math');
 
 const AVAILABLE_ARGS = [

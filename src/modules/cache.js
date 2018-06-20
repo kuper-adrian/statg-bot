@@ -1,5 +1,4 @@
 const moment = require('moment');
-const _ = require('lodash');
 
 class CacheItem {
   constructor(value) {
