@@ -1,6 +1,4 @@
-const logger = require('./log').getLogger();
 const moment = require('moment');
-const _ = require('lodash')
 
 /**
  * Class for caching objects based on a key for a given amount of "cache time".
@@ -82,16 +80,16 @@ class Cache {
      * Removes all objects that exceeded their cache time from the cache.
      */
     tidy() {
-        _.forOwn(this.items, (value, key) => {
-            if (this._isItemInvalid(value)) {
+        Object.keys(this.items).forEach((key) => {
+            if (this._isItemInvalid(this.items[key])) {
                 delete this.items[key]; // remove item from cache
             }
-        })
+        });
     }
 
     count() {
         let count = 0;
-        _.forOwn(this.items, (value, key) => {
+        Object.values(this.items).forEach((value) => {
             if (!this._isItemInvalid(value)) {
                 count++;
             }
