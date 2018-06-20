@@ -42,7 +42,7 @@ describe('VersionCommandHandler.handle()', () => {
       arguments: [],
     };
     const bot = {
-      sendMessage: () => {},
+      sendMessage: () => { },
     };
     const db = {};
     const pubg = {};
@@ -127,11 +127,53 @@ describe('VersionCommandHandler.handle()', () => {
   });
 
   it('should send a message containing the version of the bot', () => {
-    // TODO
+    const handler = VersionCommandHandler.getHandler();
+
+    const version = '1.0.0';
+    let passedMessage = '';
+
+    const cmd = {
+      arguments: [],
+    };
+    const bot = {
+      sendMessage: (params) => {
+        passedMessage = params.message;
+      },
+    };
+    const db = {};
+    const pubg = {};
+
+    cmd.discordUser = {};
+    cmd.discordUser.channelId = '123';
+
+    handler.handle(cmd, bot, db, pubg);
+
+    expect(passedMessage).to.contain(version);
   });
 
-  // most important test right here
+  // ! most important test right here
   it('should send a message containing the author of the bot', () => {
-    // TODO
+    const handler = VersionCommandHandler.getHandler();
+
+    const author = 'Adrian Kuper';
+    let passedMessage = '';
+
+    const cmd = {
+      arguments: [],
+    };
+    const bot = {
+      sendMessage: (params) => {
+        passedMessage = params.message;
+      },
+    };
+    const db = {};
+    const pubg = {};
+
+    cmd.discordUser = {};
+    cmd.discordUser.channelId = '123';
+
+    handler.handle(cmd, bot, db, pubg);
+
+    expect(passedMessage).to.contain(author);
   });
 });
