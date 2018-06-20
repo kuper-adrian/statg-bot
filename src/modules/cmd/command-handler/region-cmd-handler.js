@@ -7,30 +7,12 @@ class RegionCommandHandler extends CommandHandler {
         super();
     }
 
-    _setGlobalRegion(newRegion, cmd, db, bot) {
-
-        return db.setGlobalRegion(newRegion)
-            .then(o => {
-                let message = `global region successfully set to "${newRegion}"!`
-                bot.sendMessage({
-                    to: cmd.discordUser.channelId,
-                    message: message
-                });
-            })
-            .catch(error => {
-                this._onError(bot, cmd.discordUser.channelId, error.message);
-            }); 
-    }
-
     handle(cmd, bot, db, pubg) {
 
         let newRegion = '';
         let channelId = cmd.discordUser.channelId;
 
-        if (cmd.arguments.length === 0) {
-            this._onError(bot, channelId, "invalid amount of arguments")
-            return Promise.resolve();
-        } else if (cmd.arguments.length === 1) {
+        if (cmd.arguments.length === 1) {
 
             newRegion = cmd.arguments[0];
 
@@ -39,7 +21,19 @@ class RegionCommandHandler extends CommandHandler {
                 return Promise.resolve();
             }
 
-            return this._setGlobalRegion(newRegion, cmd, db, bot);
+            return db.setGlobalRegion(newRegion)
+                .then(() => {
+                    let message = `global region successfully set to "${newRegion}"!`
+                    bot.sendMessage({
+                        to: cmd.discordUser.channelId,
+                        message: message
+                    });
+                    return Promise.resolve();
+                })
+                .catch(error => {
+                    this._onError(bot, cmd.discordUser.channelId, error.message);
+                    return Promise.resolve();
+                });
 
         } else {
             this._onError(bot, channelId, "invalid amount of arguments")
@@ -48,6 +42,6 @@ class RegionCommandHandler extends CommandHandler {
     }
 }
 
-exports.getHandler = function() {
+exports.getHandler = function () {
     return new RegionCommandHandler();
 }
