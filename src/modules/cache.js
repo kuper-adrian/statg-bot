@@ -78,11 +78,11 @@ class Cache {
   }
 
   /**
-   * Removes all objects that exceeded their cache time from the cache.
-   */
+     * Removes all objects that exceeded their cache time from the cache.
+     */
   tidy() {
-    _.forOwn(this.items, (value, key) => {
-      if (this.isItemInvalid(value)) {
+    Object.keys(this.items).forEach((key) => {
+      if (this.isItemInvalid(this.items[key])) {
         delete this.items[key]; // remove item from cache
       }
     });
@@ -90,7 +90,7 @@ class Cache {
 
   count() {
     let count = 0;
-    _.forOwn(this.items, (value) => {
+    Object.values(this.items).forEach((value) => {
       if (!this.isItemInvalid(value)) {
         count += 1;
       }
