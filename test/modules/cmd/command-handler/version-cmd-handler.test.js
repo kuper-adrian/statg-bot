@@ -1,143 +1,137 @@
-const expect = require('chai').expect;
+/* eslint-env mocha */
+
+const { expect } = require('chai');
 const sinon = require('sinon');
 
 const logger = require('../../../../src/modules/log').getLogger();
 const VersionCommandHandler = require('../../../../src/modules/cmd/command-handler/version-cmd-handler');
 
 describe('VersionCommandHandler.handle()', () => {
+  let debugStub = {};
+  let infoStub = {};
+  let warnStub = {};
+  let errorStub = {};
 
-    let debugStub = {};
-    let infoStub = {};
-    let warnStub = {};
-    let errorStub = {};
-
-    beforeEach(() => {
-
-        // stub all log functions
-        debugStub = sinon.stub(logger, "debug").callsFake((message) => {
-            // do nothing
-        });
-        infoStub = sinon.stub(logger, "info").callsFake((message) => {
-            // do nothing
-        });
-        warnStub = sinon.stub(logger, "warn").callsFake((message) => {
-            // do nothing
-        });
-        errorStub = sinon.stub(logger, "error").callsFake((message) => {
-            // do nothing
-        });
+  beforeEach(() => {
+    // stub all log functions
+    debugStub = sinon.stub(logger, 'debug').callsFake(() => {
+      // do nothing
     });
-
-    afterEach(() => {
-        
-        debugStub.restore();
-        infoStub.restore();
-        warnStub.restore();
-        errorStub.restore();
+    infoStub = sinon.stub(logger, 'info').callsFake(() => {
+      // do nothing
     });
-
-    it('should send a message to the right channel', () => {
-
-        const handler = VersionCommandHandler.getHandler();
-
-        const cmd = {
-            arguments: []
-        };
-        const bot = {
-            sendMessage: function(params) {
-                // do nothing
-            }
-        };
-        const db = {};
-        const pubg = {};
-
-        let sendMessageSpy = sinon.spy(bot, 'sendMessage');
-
-        cmd.discordUser = {};
-        cmd.discordUser.channelId = '123';
-
-        //cmd, bot, db, pubg
-        handler.handle(cmd, bot, db, pubg);
-
-        sinon.assert.calledOnce(sendMessageSpy);
-
-        sendMessageSpy.restore();
+    warnStub = sinon.stub(logger, 'warn').callsFake(() => {
+      // do nothing
     });
-
-    it('should send a error message if there is a single argument given', () => {
-
-        const handler = VersionCommandHandler.getHandler();
-
-        let passedMessage = '';
-
-        const cmd = {
-            arguments: [
-                "some-argument"
-            ]
-        };
-        const bot = {
-            sendMessage: function(params) {
-                passedMessage = params.message;
-            }
-        };
-        const db = {};
-        const pubg = {};
-
-        let sendMessageSpy = sinon.spy(bot, 'sendMessage');
-
-        cmd.discordUser = {};
-        cmd.discordUser.channelId = '123';
-
-        //cmd, bot, db, pubg
-        handler.handle(cmd, bot, db, pubg);
-
-        sinon.assert.calledOnce(sendMessageSpy);
-        expect(passedMessage).to.contain("invalid amount of arguments")
-
-        sendMessageSpy.restore();
+    errorStub = sinon.stub(logger, 'error').callsFake(() => {
+      // do nothing
     });
+  });
 
-    it('should send a error message if there are multiple arguments given', () => {
+  afterEach(() => {
+    debugStub.restore();
+    infoStub.restore();
+    warnStub.restore();
+    errorStub.restore();
+  });
 
-        const handler = VersionCommandHandler.getHandler();
+  it('should send a message to the right channel', () => {
+    const handler = VersionCommandHandler.getHandler();
 
-        let passedMessage = '';
+    const cmd = {
+      arguments: [],
+    };
+    const bot = {
+      sendMessage: () => {},
+    };
+    const db = {};
+    const pubg = {};
 
-        const cmd = {
-            arguments: [
-                "some-argument",
-                "some-other-argument",
-                "some-last-argument"
-            ]
-        };
-        const bot = {
-            sendMessage: function(params) {
-                passedMessage = params.message;
-            }
-        };
-        const db = {};
-        const pubg = {};
+    const sendMessageSpy = sinon.spy(bot, 'sendMessage');
 
-        let sendMessageSpy = sinon.spy(bot, 'sendMessage');
+    cmd.discordUser = {};
+    cmd.discordUser.channelId = '123';
 
-        cmd.discordUser = {};
-        cmd.discordUser.channelId = '123';
+    // cmd, bot, db, pubg
+    handler.handle(cmd, bot, db, pubg);
 
-        //cmd, bot, db, pubg
-        handler.handle(cmd, bot, db, pubg);
+    sinon.assert.calledOnce(sendMessageSpy);
 
-        sinon.assert.calledOnce(sendMessageSpy);
-        expect(passedMessage).to.contain("invalid amount of arguments")
+    sendMessageSpy.restore();
+  });
 
-        sendMessageSpy.restore();
-    });
+  it('should send a error message if there is a single argument given', () => {
+    const handler = VersionCommandHandler.getHandler();
 
-    it('should send a message containing the version of the bot', () => {       
-        // TODO
-    });
+    let passedMessage = '';
 
-    // most important test right here
-    it('should send a message containing the author of the bot', () => {
-        // TODO
-    });
-})
+    const cmd = {
+      arguments: [
+        'some-argument',
+      ],
+    };
+    const bot = {
+      sendMessage: (params) => {
+        passedMessage = params.message;
+      },
+    };
+    const db = {};
+    const pubg = {};
+
+    const sendMessageSpy = sinon.spy(bot, 'sendMessage');
+
+    cmd.discordUser = {};
+    cmd.discordUser.channelId = '123';
+
+    // cmd, bot, db, pubg
+    handler.handle(cmd, bot, db, pubg);
+
+    sinon.assert.calledOnce(sendMessageSpy);
+    expect(passedMessage).to.contain('invalid amount of arguments');
+
+    sendMessageSpy.restore();
+  });
+
+  it('should send a error message if there are multiple arguments given', () => {
+    const handler = VersionCommandHandler.getHandler();
+
+    let passedMessage = '';
+
+    const cmd = {
+      arguments: [
+        'some-argument',
+        'some-other-argument',
+        'some-last-argument',
+      ],
+    };
+    const bot = {
+      sendMessage: (params) => {
+        passedMessage = params.message;
+      },
+    };
+    const db = {};
+    const pubg = {};
+
+    const sendMessageSpy = sinon.spy(bot, 'sendMessage');
+
+    cmd.discordUser = {};
+    cmd.discordUser.channelId = '123';
+
+    // cmd, bot, db, pubg
+    handler.handle(cmd, bot, db, pubg);
+
+    sinon.assert.calledOnce(sendMessageSpy);
+    expect(passedMessage).to.contain('invalid amount of arguments');
+
+    sendMessageSpy.restore();
+  });
+
+  it('should send a message containing the version of the bot', () => {
+    // TODO
+  });
+
+  // most important test right here
+  it('should send a message containing the author of the bot', () => {
+    // TODO
+  });
+});
