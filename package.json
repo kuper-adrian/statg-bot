@@ -12,7 +12,6 @@
   "dependencies": {
     "discord.io": "^2.5.3",
     "knex": "^0.14.6",
-    "lodash": "4.17.10",
     "moment": "^2.22.2",
     "npm": "^6.1.0",
     "sinon": "^5.1.1",

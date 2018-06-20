@@ -1,5 +1,5 @@
-const { CommandHandler } = require('./cmd-handler.js');
-const _ = require('lodash');
+const CommandHandler = require('./cmd-handler.js').CommandHandler;
+const math = require('../../math');
 
 class MatchCommandHandler extends CommandHandler {
   /**
@@ -92,11 +92,11 @@ class MatchCommandHandler extends CommandHandler {
     return ` 
 **${stats.name}**
 \`\`\`markdown
-- Kills:    ${stats.kills} (${stats.headshotKills})
-- Assists:  ${stats.assists}
-- Damage:   ${_.round(stats.damageDealt, 2)}
-- Heals:    ${stats.heals}
-- Revives:  ${stats.revives}
+- Kills:      ${stats.kills} (${stats.headshotKills})
+- Assists:    ${stats.assists}
+- Damage:     ${math.round(stats.damageDealt, 2)}
+- Heals:      ${stats.heals}
+- Revives:    ${stats.revives}
 
 - Win Points: ${stats.winPoints} (${stats.winPointsDelta})
 \`\`\``;
@@ -111,7 +111,7 @@ class MatchCommandHandler extends CommandHandler {
 - Game Mode: ${matchData.data.attributes.gameMode}
 - Map Name:  ${matchData.data.attributes.mapName}
 - Time:      ${matchData.data.attributes.createdAt}
-- Duration:  ${_.round(matchData.data.attributes.duration / 60.0, 2)}min
+- Duration:  ${math.round(matchData.data.attributes.duration / 60.0, 2)}min
 
 - Win Place: ${matchPlace}
 \`\`\`
