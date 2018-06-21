@@ -26,25 +26,7 @@ class UnregisterCommandHandler extends CommandHandler {
       })
 
       .then(() => {
-        const data = {
-          to: cmd.discordUser.channelId,
-          embed: {
-            color: this.successEmbedColor,
-            timestamp: this.moment().toISOString(),
-            footer: {
-              icon_url: 'https://cdn.discordapp.com/embed/avatars/4.png',
-              text: `!statg ${cmd.command}`,
-            },
-            fields: [
-              {
-                name: 'Success',
-                value: `Player "${player.pubg_name}" successfully unregistered!`,
-              },
-            ],
-          },
-        };
-
-        bot.sendMessage(data);
+        this.onSuccess(bot, cmd, `Player "${player.pubg_name}" successfully unregistered!`);
       })
 
       .catch((error) => {
