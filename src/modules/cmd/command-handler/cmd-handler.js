@@ -23,7 +23,7 @@ class CommandHandler {
   onResolved(bot, cmd, embedFields) {
     const data = this.createEmbedData(
       cmd,
-      this.errorEmbedColor,
+      this.defaultEmbedColor,
       embedFields,
     );
     bot.sendMessage(data);
