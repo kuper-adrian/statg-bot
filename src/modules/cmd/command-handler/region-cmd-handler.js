@@ -16,10 +16,7 @@ class RegionCommandHandler extends CommandHandler {
       return db.setGlobalRegion(newRegion)
         .then(() => {
           const message = `global region successfully set to "${newRegion}"!`;
-          bot.sendMessage({
-            to: cmd.discordUser.channelId,
-            message,
-          });
+          this.onSuccess(bot, cmd, message);
           return Promise.resolve();
         })
         .catch((error) => {

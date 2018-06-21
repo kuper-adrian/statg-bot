@@ -16,7 +16,6 @@ describe('RegionCommandHandler', () => {
   const pubg = {};
 
   let passedChannelId = '';
-  let passedBotMessage = '';
   let passedEmbed = {};
 
   let sendMessageSpy = {};
@@ -41,7 +40,6 @@ describe('RegionCommandHandler', () => {
     bot = {
       sendMessage: (params) => {
         passedChannelId = params.to;
-        passedBotMessage = params.message;
         passedEmbed = params.embed;
       },
     };
@@ -80,8 +78,8 @@ describe('RegionCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain(newRegion);
-        expect(passedBotMessage).to.contain('region successfully set');
+        expect(passedEmbed.fields[0].value).to.contain(newRegion);
+        expect(passedEmbed.fields[0].value).to.contain('region successfully set');
       });
     });
 
