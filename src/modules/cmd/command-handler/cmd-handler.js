@@ -8,6 +8,7 @@ class CommandHandler {
     this.moment = require('moment');
 
     this.defaultEmbedColor = 1344221; // blue
+    this.successEmbedColor = 1365331; // green
     this.errorEmbedColor = 14688331; // red
   }
 

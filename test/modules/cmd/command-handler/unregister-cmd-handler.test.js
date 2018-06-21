@@ -15,7 +15,6 @@ describe('UnregisterCommandHandler', () => {
   const pubg = {};
 
   let passedChannelId = '';
-  let passedBotMessage = '';
   let passedEmbed = {};
 
   let sendMessageSpy = {};
@@ -48,7 +47,6 @@ describe('UnregisterCommandHandler', () => {
     bot = {
       sendMessage: (params) => {
         passedChannelId = params.to;
-        passedBotMessage = params.message;
         passedEmbed = params.embed;
       },
     };
@@ -89,8 +87,8 @@ describe('UnregisterCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('some-pubg-name');
-        expect(passedBotMessage).to.contain('successfully unregistered');
+        expect(passedEmbed.fields[0].value).to.contain('some-pubg-name');
+        expect(passedEmbed.fields[0].value).to.contain('successfully unregistered');
       });
     });
 
