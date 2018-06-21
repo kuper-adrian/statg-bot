@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/kuper-adrian/statg-bot.svg?branch=master)](https://travis-ci.org/kuper-adrian/statg-bot)
 [![Coverage Status](https://coveralls.io/repos/github/kuper-adrian/statg-bot/badge.svg?branch=master)](https://coveralls.io/github/kuper-adrian/statg-bot?branch=master)
 
-StatG is a discord bot that can post PUBG statistics in your discord channel!
+StatG is an open source, self-hosted discord bot that can post PUBG statistics in your discord channel!
 
 ![Alt text](docs/images/statg-bot-enter-command.gif "Entering Command")
 
@@ -77,7 +77,7 @@ node ./src/bot.js discordToken=TOKEN_HERE pubgApiKey=API_KEY_HERE
 
 ### Running in Docker
 
-Alternatively the bot can be run inside a docker container. For now you will have to build the image by yourself using the `Dockerfile` of this repo. You will also need to get PUBG API key and Discord token as described above.
+Alternatively you can run the bot inside a docker container. For now you will have to build the image by yourself using the `Dockerfile` of this repo. You will also need to get PUBG API key and Discord token as described above.
 
 1. Clone this repo or download it as `.zip`-file and unpack it to a folder of your liking
 2. Open a terminal and navigate to the project folder
