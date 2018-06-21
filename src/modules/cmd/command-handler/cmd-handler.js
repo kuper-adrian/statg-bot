@@ -12,6 +12,29 @@ class CommandHandler {
     this.errorEmbedColor = 14688331; // red
   }
 
+  onSuccess(bot, cmd, successMessage) {
+    const data = {
+      to: cmd.discordUser.channelId,
+      embed: {
+        color: this.successEmbedColor,
+        timestamp: this.moment().toISOString(),
+        footer: {
+          icon_url: 'https://cdn.discordapp.com/embed/avatars/4.png',
+          text: `!statg ${cmd.command}`,
+        },
+        fields: [
+          {
+            name: 'Success',
+            value: successMessage,
+          },
+        ],
+      },
+    };
+
+    this.logger.debug(successMessage);
+    bot.sendMessage(data);
+  }
+
   onError(bot, cmd, detailMessage) {
     const data = {
       to: cmd.discordUser.channelId,
