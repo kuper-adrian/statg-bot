@@ -36,6 +36,10 @@ class CommandHandler {
   }
 
   onError(bot, cmd, error) {
+    if (!(error instanceof Error)) {
+      throw new Error('argument "error" must be of type "Error"');
+    }
+
     const data = {
       to: cmd.discordUser.channelId,
       embed: {
