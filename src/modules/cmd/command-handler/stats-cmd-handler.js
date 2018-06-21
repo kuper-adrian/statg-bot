@@ -14,7 +14,6 @@ class StatsCommandHandler extends CommandHandler {
   handle(cmd, bot, db, pubg) {
     this.logger.info('Handling stats command!');
 
-    const { channelId } = cmd.discordUser;
     const { id: discordId } = cmd.discordUser;
     let pubgId;
     let pubgPlayerName;
@@ -64,37 +63,48 @@ class StatsCommandHandler extends CommandHandler {
       .then((stats) => {
         this.logger.debug('Successfully fetched stats!');
 
-        let avgStats;
-        let message;
-
+        let avgStats = {};
+        let statMessage = '';
+        let gameMode = '';
 
         if (cmd.arguments.length === 0) {
+          gameMode = 'all';
           avgStats = StatsCommandHandler.getAverageStats(stats.data.attributes.gameModeStats);
-          message = StatsCommandHandler.getStatsAsDiscordFormattedString(pubgPlayerName, 'all', avgStats);
+          statMessage = StatsCommandHandler.getStatsAsDiscordFormattedString(avgStats);
         } else if (cmd.arguments.length > 1) {
           this.onError(bot, cmd, new Error('invalid amount of arguments.'));
           return;
         } else if (AVAILABLE_ARGS.includes(cmd.arguments[0])) {
-          const gameMode = cmd.arguments[0];
+          [gameMode] = cmd.arguments;
           const filteredStats = {};
 
           filteredStats[gameMode] = stats.data.attributes.gameModeStats[gameMode];
 
           avgStats = StatsCommandHandler.getAverageStats(filteredStats);
-          message = StatsCommandHandler.getStatsAsDiscordFormattedString(
-            pubgPlayerName,
-            gameMode,
-            avgStats,
-          );
+          statMessage = StatsCommandHandler.getStatsAsDiscordFormattedString(avgStats);
         } else {
           this.onError(bot, cmd, new Error(`invalid game mode "${cmd.arguments[0]}"`));
           return;
         }
 
-        bot.sendMessage({
-          to: channelId,
-          message,
-        });
+        const fields = [
+          {
+            name: 'Player',
+            value: pubgPlayerName,
+            inline: true,
+          },
+          {
+            name: 'Game Mode',
+            value: gameMode,
+            inline: true,
+          },
+          {
+            name: 'Current Season Statistics',
+            value: statMessage,
+          },
+        ];
+
+        this.onResolved(bot, cmd, fields);
       })
 
       .catch((error) => {
@@ -135,9 +145,8 @@ class StatsCommandHandler extends CommandHandler {
     return result;
   }
 
-  static getStatsAsDiscordFormattedString(pubgPlayerName, gameMode, avgStats) {
-    const result = `Season stats for player **${pubgPlayerName}** (game mode: **${gameMode}**):
-\`\`\`markdown
+  static getStatsAsDiscordFormattedString(avgStats) {
+    const result = `\`\`\`markdown
 - Kills:           ${avgStats.kills} (avg. ${math.round(avgStats.avgKills, 2)})
 - Assists:         ${avgStats.assists} (avg. ${math.round(avgStats.avgAssists, 2)})
 - Damage:          ${math.round(avgStats.damageDealt, 2)} (avg. ${math.round(avgStats.avgDamageDealt, 2)})

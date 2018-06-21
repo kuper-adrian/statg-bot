@@ -15,7 +15,6 @@ describe('StatsCommandHandler', () => {
   let pubg = {};
 
   let passedChannelId = '';
-  let passedBotMessage = '';
   let passedEmbed = {};
 
   let sendMessageSpy = {};
@@ -48,7 +47,6 @@ describe('StatsCommandHandler', () => {
     bot = {
       sendMessage: (params) => {
         passedChannelId = params.to;
-        passedBotMessage = params.message;
         passedEmbed = params.embed;
       },
     };
@@ -413,22 +411,22 @@ describe('StatsCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
 
-        expect(passedBotMessage).to.contain('all');
-        expect(passedBotMessage).to.contain(pubgPlayerName);
+        expect(passedEmbed.fields[0].value).to.contain(pubgPlayerName);
+        expect(passedEmbed.fields[1].value).to.contain('all');
 
-        expect(passedBotMessage).to.contain('Kills');
-        expect(passedBotMessage).to.contain(stats.solo.kills + stats.squad.kills);
-        expect(passedBotMessage).to.contain((stats.solo.kills + stats.squad.kills) /
+        expect(passedEmbed.fields[2].value).to.contain('Kills');
+        expect(passedEmbed.fields[2].value).to.contain(stats.solo.kills + stats.squad.kills);
+        expect(passedEmbed.fields[2].value).to.contain((stats.solo.kills + stats.squad.kills) /
           (stats.solo.roundsPlayed + stats.squad.roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Assists');
-        expect(passedBotMessage).to.contain(stats.solo.assists + stats.squad.assists);
-        expect(passedBotMessage).to.contain((stats.solo.assists + stats.squad.assists) /
+        expect(passedEmbed.fields[2].value).to.contain('Assists');
+        expect(passedEmbed.fields[2].value).to.contain(stats.solo.assists + stats.squad.assists);
+        expect(passedEmbed.fields[2].value).to.contain((stats.solo.assists + stats.squad.assists) /
         (stats.solo.roundsPlayed + stats.squad.roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Wins');
-        expect(passedBotMessage).to.contain(stats.solo.wins + stats.squad.wins);
-        expect(passedBotMessage).to.contain((stats.solo.wins + stats.squad.wins) /
+        expect(passedEmbed.fields[2].value).to.contain('Wins');
+        expect(passedEmbed.fields[2].value).to.contain(stats.solo.wins + stats.squad.wins);
+        expect(passedEmbed.fields[2].value).to.contain((stats.solo.wins + stats.squad.wins) /
           (stats.solo.roundsPlayed + stats.squad.roundsPlayed));
       });
     });
@@ -518,20 +516,23 @@ describe('StatsCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
 
-        expect(passedBotMessage).to.contain('solo');
-        expect(passedBotMessage).to.contain(pubgPlayerName);
+        expect(passedEmbed.fields[1].value).to.contain('solo');
+        expect(passedEmbed.fields[0].value).to.contain(pubgPlayerName);
 
-        expect(passedBotMessage).to.contain('Kills');
-        expect(passedBotMessage).to.contain(stats.solo.kills);
-        expect(passedBotMessage).to.contain((stats.solo.kills) / (stats.solo.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Kills');
+        expect(passedEmbed.fields[2].value).to.contain(stats.solo.kills);
+        expect(passedEmbed.fields[2].value).to.contain((stats.solo.kills) /
+          (stats.solo.roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Assists');
-        expect(passedBotMessage).to.contain(stats.solo.assists);
-        expect(passedBotMessage).to.contain((stats.solo.assists) / (stats.solo.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Assists');
+        expect(passedEmbed.fields[2].value).to.contain(stats.solo.assists);
+        expect(passedEmbed.fields[2].value).to.contain((stats.solo.assists) /
+          (stats.solo.roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Wins');
-        expect(passedBotMessage).to.contain(stats.solo.wins);
-        expect(passedBotMessage).to.contain((stats.solo.wins) / (stats.solo.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Wins');
+        expect(passedEmbed.fields[2].value).to.contain(stats.solo.wins);
+        expect(passedEmbed.fields[2].value).to.contain((stats.solo.wins) /
+          (stats.solo.roundsPlayed));
       });
     });
 
@@ -628,20 +629,20 @@ describe('StatsCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
 
-        expect(passedBotMessage).to.contain('solo-fpp');
-        expect(passedBotMessage).to.contain(pubgPlayerName);
+        expect(passedEmbed.fields[1].value).to.contain('solo-fpp');
+        expect(passedEmbed.fields[0].value).to.contain(pubgPlayerName);
 
-        expect(passedBotMessage).to.contain('Kills');
-        expect(passedBotMessage).to.contain(stats['solo-fpp'].kills);
-        expect(passedBotMessage).to.contain((stats['solo-fpp'].kills) / (stats['solo-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Kills');
+        expect(passedEmbed.fields[2].value).to.contain(stats['solo-fpp'].kills);
+        expect(passedEmbed.fields[2].value).to.contain((stats['solo-fpp'].kills) / (stats['solo-fpp'].roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Assists');
-        expect(passedBotMessage).to.contain(stats['solo-fpp'].assists);
-        expect(passedBotMessage).to.contain((stats['solo-fpp'].assists) / (stats['solo-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Assists');
+        expect(passedEmbed.fields[2].value).to.contain(stats['solo-fpp'].assists);
+        expect(passedEmbed.fields[2].value).to.contain((stats['solo-fpp'].assists) / (stats['solo-fpp'].roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Wins');
-        expect(passedBotMessage).to.contain(stats['solo-fpp'].wins);
-        expect(passedBotMessage).to.contain((stats['solo-fpp'].wins) / (stats['solo-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Wins');
+        expect(passedEmbed.fields[2].value).to.contain(stats['solo-fpp'].wins);
+        expect(passedEmbed.fields[2].value).to.contain((stats['solo-fpp'].wins) / (stats['solo-fpp'].roundsPlayed));
       });
     });
 
@@ -738,20 +739,23 @@ describe('StatsCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
 
-        expect(passedBotMessage).to.contain('duo');
-        expect(passedBotMessage).to.contain(pubgPlayerName);
+        expect(passedEmbed.fields[1].value).to.contain('duo');
+        expect(passedEmbed.fields[0].value).to.contain(pubgPlayerName);
 
-        expect(passedBotMessage).to.contain('Kills');
-        expect(passedBotMessage).to.contain(stats.duo.kills);
-        expect(passedBotMessage).to.contain((stats.duo.kills) / (stats.duo.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Kills');
+        expect(passedEmbed.fields[2].value).to.contain(stats.duo.kills);
+        expect(passedEmbed.fields[2].value).to.contain((stats.duo.kills) /
+          (stats.duo.roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Assists');
-        expect(passedBotMessage).to.contain(stats.duo.assists);
-        expect(passedBotMessage).to.contain((stats.duo.assists) / (stats.duo.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Assists');
+        expect(passedEmbed.fields[2].value).to.contain(stats.duo.assists);
+        expect(passedEmbed.fields[2].value).to.contain((stats.duo.assists) /
+          (stats.duo.roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Wins');
-        expect(passedBotMessage).to.contain(stats.duo.wins);
-        expect(passedBotMessage).to.contain((stats.duo.wins) / (stats.duo.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Wins');
+        expect(passedEmbed.fields[2].value).to.contain(stats.duo.wins);
+        expect(passedEmbed.fields[2].value).to.contain((stats.duo.wins) /
+          (stats.duo.roundsPlayed));
       });
     });
 
@@ -849,20 +853,20 @@ describe('StatsCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
 
-        expect(passedBotMessage).to.contain('duo-fpp');
-        expect(passedBotMessage).to.contain(pubgPlayerName);
+        expect(passedEmbed.fields[1].value).to.contain('duo-fpp');
+        expect(passedEmbed.fields[0].value).to.contain(pubgPlayerName);
 
-        expect(passedBotMessage).to.contain('Kills');
-        expect(passedBotMessage).to.contain(stats['duo-fpp'].kills);
-        expect(passedBotMessage).to.contain((stats['duo-fpp'].kills) / (stats['duo-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Kills');
+        expect(passedEmbed.fields[2].value).to.contain(stats['duo-fpp'].kills);
+        expect(passedEmbed.fields[2].value).to.contain((stats['duo-fpp'].kills) / (stats['duo-fpp'].roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Assists');
-        expect(passedBotMessage).to.contain(stats['duo-fpp'].assists);
-        expect(passedBotMessage).to.contain((stats['duo-fpp'].assists) / (stats['duo-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Assists');
+        expect(passedEmbed.fields[2].value).to.contain(stats['duo-fpp'].assists);
+        expect(passedEmbed.fields[2].value).to.contain((stats['duo-fpp'].assists) / (stats['duo-fpp'].roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Wins');
-        expect(passedBotMessage).to.contain(stats['duo-fpp'].wins);
-        expect(passedBotMessage).to.contain((stats['duo-fpp'].wins) / (stats['duo-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Wins');
+        expect(passedEmbed.fields[2].value).to.contain(stats['duo-fpp'].wins);
+        expect(passedEmbed.fields[2].value).to.contain((stats['duo-fpp'].wins) / (stats['duo-fpp'].roundsPlayed));
       });
     });
 
@@ -959,20 +963,23 @@ describe('StatsCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
 
-        expect(passedBotMessage).to.contain('squad');
-        expect(passedBotMessage).to.contain(pubgPlayerName);
+        expect(passedEmbed.fields[1].value).to.contain('squad');
+        expect(passedEmbed.fields[0].value).to.contain(pubgPlayerName);
 
-        expect(passedBotMessage).to.contain('Kills');
-        expect(passedBotMessage).to.contain(stats.squad.kills);
-        expect(passedBotMessage).to.contain((stats.squad.kills) / (stats.squad.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Kills');
+        expect(passedEmbed.fields[2].value).to.contain(stats.squad.kills);
+        expect(passedEmbed.fields[2].value).to.contain((stats.squad.kills) /
+          (stats.squad.roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Assists');
-        expect(passedBotMessage).to.contain(stats.squad.assists);
-        expect(passedBotMessage).to.contain((stats.squad.assists) / (stats.squad.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Assists');
+        expect(passedEmbed.fields[2].value).to.contain(stats.squad.assists);
+        expect(passedEmbed.fields[2].value).to.contain((stats.squad.assists) /
+          (stats.squad.roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Wins');
-        expect(passedBotMessage).to.contain(stats.squad.wins);
-        expect(passedBotMessage).to.contain((stats.squad.wins) / (stats.squad.roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Wins');
+        expect(passedEmbed.fields[2].value).to.contain(stats.squad.wins);
+        expect(passedEmbed.fields[2].value).to.contain((stats.squad.wins) /
+          (stats.squad.roundsPlayed));
       });
     });
 
@@ -1069,20 +1076,20 @@ describe('StatsCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
 
-        expect(passedBotMessage).to.contain('squad-fpp');
-        expect(passedBotMessage).to.contain(pubgPlayerName);
+        expect(passedEmbed.fields[1].value).to.contain('squad-fpp');
+        expect(passedEmbed.fields[0].value).to.contain(pubgPlayerName);
 
-        expect(passedBotMessage).to.contain('Kills');
-        expect(passedBotMessage).to.contain(stats['squad-fpp'].kills);
-        expect(passedBotMessage).to.contain((stats['squad-fpp'].kills) / (stats['squad-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Kills');
+        expect(passedEmbed.fields[2].value).to.contain(stats['squad-fpp'].kills);
+        expect(passedEmbed.fields[2].value).to.contain((stats['squad-fpp'].kills) / (stats['squad-fpp'].roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Assists');
-        expect(passedBotMessage).to.contain(stats['squad-fpp'].assists);
-        expect(passedBotMessage).to.contain((stats['squad-fpp'].assists) / (stats['squad-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Assists');
+        expect(passedEmbed.fields[2].value).to.contain(stats['squad-fpp'].assists);
+        expect(passedEmbed.fields[2].value).to.contain((stats['squad-fpp'].assists) / (stats['squad-fpp'].roundsPlayed));
 
-        expect(passedBotMessage).to.contain('Wins');
-        expect(passedBotMessage).to.contain(stats['squad-fpp'].wins);
-        expect(passedBotMessage).to.contain((stats['squad-fpp'].wins) / (stats['squad-fpp'].roundsPlayed));
+        expect(passedEmbed.fields[2].value).to.contain('Wins');
+        expect(passedEmbed.fields[2].value).to.contain(stats['squad-fpp'].wins);
+        expect(passedEmbed.fields[2].value).to.contain((stats['squad-fpp'].wins) / (stats['squad-fpp'].roundsPlayed));
       });
     });
 
