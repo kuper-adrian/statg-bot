@@ -10,7 +10,7 @@ class HelpCommandHandler extends CommandHandler {
     const { channelId } = cmd.discordUser;
 
     if (cmd.arguments.length !== 0) {
-      this.onError(bot, channelId, 'invalid amount of arguments');
+      this.onError(bot, cmd, 'invalid amount of arguments');
       return;
     }
 

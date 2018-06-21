@@ -16,6 +16,7 @@ describe('StatsCommandHandler', () => {
 
   let passedChannelId = '';
   let passedBotMessage = '';
+  let passedEmbed = {};
 
   let sendMessageSpy = {};
 
@@ -48,6 +49,7 @@ describe('StatsCommandHandler', () => {
       sendMessage: (params) => {
         passedChannelId = params.to;
         passedBotMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
 
@@ -1134,7 +1136,7 @@ describe('StatsCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedBotMessage).to.contain('Player not registered');
+        expect(passedEmbed.fields[0].value).to.contain('Player not registered');
 
         sandbox.assert.notCalled(seasonsStub);
         sandbox.assert.notCalled(playerStatsStub);
@@ -1202,9 +1204,9 @@ describe('StatsCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedBotMessage).to.be.not.equal(undefined);
-        expect(passedBotMessage).to.be.not.equal(null);
-        expect(passedBotMessage.length).to.be.greaterThan(0);
+        expect(passedEmbed.fields[0].value).to.be.not.equal(undefined);
+        expect(passedEmbed.fields[0].value).to.be.not.equal(null);
+        expect(passedEmbed.fields[0].value.length).to.be.greaterThan(0);
 
         sandbox.assert.notCalled(seasonsStub);
         sandbox.assert.notCalled(playerStatsStub);
@@ -1271,7 +1273,7 @@ describe('StatsCommandHandler', () => {
 
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
-        expect(passedBotMessage).to.contain('invalid game mode "invalid"');
+        expect(passedEmbed.fields[0].value).to.contain('invalid game mode "invalid"');
       });
     });
 
@@ -1336,7 +1338,7 @@ describe('StatsCommandHandler', () => {
 
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
   });

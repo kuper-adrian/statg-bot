@@ -64,12 +64,12 @@ class RegisterCommandHandler extends CommandHandler {
           } else {
             errorInfo = error.message;
           }
-          this.onError(bot, channelId, `Error on registering player "${playerName}" for region "${regionName}". ${errorInfo}`);
+          this.onError(bot, cmd, `Error on registering player "${playerName}" for region "${regionName}". ${errorInfo}`);
         });
     } else if (cmd.arguments.length === 2) {
       // check whether the second argument is a valid region
       if (!REGIONS.includes(cmd.arguments[1])) {
-        this.onError(bot, channelId, `unknown region "${cmd.arguments[1]}"`);
+        this.onError(bot, cmd, `unknown region "${cmd.arguments[1]}"`);
         return Promise.resolve();
       }
 
@@ -123,10 +123,10 @@ class RegisterCommandHandler extends CommandHandler {
           } else {
             errorInfo = error.message;
           }
-          this.onError(bot, channelId, `Error on registering player "${playerName}" for region "${regionName}". ${errorInfo}`);
+          this.onError(bot, cmd, `Error on registering player "${playerName}" for region "${regionName}". ${errorInfo}`);
         });
     }
-    this.onError(bot, channelId, 'invalid amount of arguments');
+    this.onError(bot, cmd, 'invalid amount of arguments');
     return Promise.resolve();
   }
 }

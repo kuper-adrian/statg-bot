@@ -226,7 +226,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     const error = new Error('some message');
 
-    let passedMessage = '';
+    let passedEmbed = '';
 
     const cmd = {
       discordUser: {
@@ -236,7 +236,7 @@ describe('StatusCommandHandler.handle()', () => {
     };
     const bot = {
       sendMessage: (params) => {
-        passedMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
     const db = {};
@@ -247,7 +247,7 @@ describe('StatusCommandHandler.handle()', () => {
     const handlePromise = handler.handle(cmd, bot, db, pubg);
 
     return handlePromise.then(() => {
-      expect(passedMessage).to.contain('some message');
+      expect(passedEmbed.fields[0].value).to.contain('some message');
     });
   });
 
@@ -313,7 +313,7 @@ describe('StatusCommandHandler.handle()', () => {
   it('should send a error message if a single argument was given', () => {
     const handler = StatusCommandHandler.getHandler();
 
-    let passedMessage = '';
+    let passedEmbed = '';
 
     const cmd = {
       arguments: [
@@ -322,7 +322,7 @@ describe('StatusCommandHandler.handle()', () => {
     };
     const bot = {
       sendMessage: (params) => {
-        passedMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
     const db = {};
@@ -341,7 +341,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     sinon.assert.calledOnce(sendMessageSpy);
     sinon.assert.notCalled(statusSpy);
-    expect(passedMessage).to.contain('invalid amount of arguments');
+    expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
 
     sendMessageSpy.restore();
     statusSpy.restore();
@@ -350,7 +350,7 @@ describe('StatusCommandHandler.handle()', () => {
   it('should send a error message if multiple arguments were given', () => {
     const handler = StatusCommandHandler.getHandler();
 
-    let passedMessage = '';
+    let passedEmbed = '';
 
     const cmd = {
       arguments: [
@@ -361,7 +361,7 @@ describe('StatusCommandHandler.handle()', () => {
     };
     const bot = {
       sendMessage: (params) => {
-        passedMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
     const db = {};
@@ -380,7 +380,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     sinon.assert.calledOnce(sendMessageSpy);
     sinon.assert.notCalled(statusSpy);
-    expect(passedMessage).to.contain('invalid amount of arguments');
+    expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
 
     sendMessageSpy.restore();
     statusSpy.restore();

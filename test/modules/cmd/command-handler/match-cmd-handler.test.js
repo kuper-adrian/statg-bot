@@ -153,6 +153,7 @@ describe('MatchCommandHandler', () => {
 
   let passedChannelId = '';
   let passedBotMessage = '';
+  let passedEmbed = {};
 
   let sendMessageSpy = {};
 
@@ -185,6 +186,7 @@ describe('MatchCommandHandler', () => {
       sendMessage: (params) => {
         passedChannelId = params.to;
         passedBotMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
 
@@ -491,7 +493,7 @@ describe('MatchCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('Player not registered');
+        expect(passedEmbed.fields[0].value).to.contain('Player not registered');
       });
     });
 
@@ -669,7 +671,7 @@ describe('MatchCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
 
@@ -718,7 +720,7 @@ describe('MatchCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
   });

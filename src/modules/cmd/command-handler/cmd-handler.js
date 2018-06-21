@@ -5,16 +5,33 @@ class CommandHandler {
   constructor() {
     /* eslint global-require: "off" */
     this.logger = require('../../log.js').getLogger();
+    this.moment = require('moment');
+
+    this.defaultEmbedColor = 1344221; // blue
+    this.errorEmbedColor = 14688331; // red
   }
 
-  onError(bot, channelId, detailMessage) {
-    const errorMessage = `Error on handling command. Details: ${detailMessage}`;
+  onError(bot, cmd, detailMessage) {
+    const data = {
+      to: cmd.discordUser.channelId,
+      embed: {
+        color: this.errorEmbedColor,
+        timestamp: this.moment().toISOString(),
+        footer: {
+          icon_url: 'https://cdn.discordapp.com/embed/avatars/4.png',
+          text: `!statg ${cmd.command}`,
+        },
+        fields: [
+          {
+            name: 'Error',
+            value: detailMessage,
+          },
+        ],
+      },
+    };
 
-    this.logger.error(errorMessage);
-    bot.sendMessage({
-      to: channelId,
-      message: errorMessage,
-    });
+    this.logger.error(detailMessage);
+    bot.sendMessage(data);
   }
 }
 

@@ -63,7 +63,7 @@ describe('VersionCommandHandler.handle()', () => {
   it('should send a error message if there is a single argument given', () => {
     const handler = VersionCommandHandler.getHandler();
 
-    let passedMessage = '';
+    let passedEmbed = '';
 
     const cmd = {
       arguments: [
@@ -72,7 +72,7 @@ describe('VersionCommandHandler.handle()', () => {
     };
     const bot = {
       sendMessage: (params) => {
-        passedMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
     const db = {};
@@ -87,7 +87,7 @@ describe('VersionCommandHandler.handle()', () => {
     handler.handle(cmd, bot, db, pubg);
 
     sinon.assert.calledOnce(sendMessageSpy);
-    expect(passedMessage).to.contain('invalid amount of arguments');
+    expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
 
     sendMessageSpy.restore();
   });
@@ -95,7 +95,7 @@ describe('VersionCommandHandler.handle()', () => {
   it('should send a error message if there are multiple arguments given', () => {
     const handler = VersionCommandHandler.getHandler();
 
-    let passedMessage = '';
+    let passedEmbed = '';
 
     const cmd = {
       arguments: [
@@ -106,7 +106,7 @@ describe('VersionCommandHandler.handle()', () => {
     };
     const bot = {
       sendMessage: (params) => {
-        passedMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
     const db = {};
@@ -121,7 +121,7 @@ describe('VersionCommandHandler.handle()', () => {
     handler.handle(cmd, bot, db, pubg);
 
     sinon.assert.calledOnce(sendMessageSpy);
-    expect(passedMessage).to.contain('invalid amount of arguments');
+    expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
 
     sendMessageSpy.restore();
   });
@@ -130,14 +130,14 @@ describe('VersionCommandHandler.handle()', () => {
     const handler = VersionCommandHandler.getHandler();
 
     const version = '1.0.0';
-    let passedMessage = '';
+    let passedEmbed = '';
 
     const cmd = {
       arguments: [],
     };
     const bot = {
       sendMessage: (params) => {
-        passedMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
     const db = {};
@@ -148,7 +148,7 @@ describe('VersionCommandHandler.handle()', () => {
 
     handler.handle(cmd, bot, db, pubg);
 
-    expect(passedMessage).to.contain(version);
+    expect(passedEmbed.fields[0].value).to.contain(version);
   });
 
   // ! most important test right here
@@ -156,14 +156,14 @@ describe('VersionCommandHandler.handle()', () => {
     const handler = VersionCommandHandler.getHandler();
 
     const author = 'Adrian Kuper';
-    let passedMessage = '';
+    let passedEmbed = '';
 
     const cmd = {
       arguments: [],
     };
     const bot = {
       sendMessage: (params) => {
-        passedMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
     const db = {};
@@ -174,6 +174,31 @@ describe('VersionCommandHandler.handle()', () => {
 
     handler.handle(cmd, bot, db, pubg);
 
-    expect(passedMessage).to.contain(author);
+    expect(passedEmbed.fields[1].value).to.contain(author);
+    expect(passedEmbed.fields[1].value).to.contain('https://github.com/kuper-adrian');
+  });
+
+  it('should send a message containing the github repo of the bot', () => {
+    const handler = VersionCommandHandler.getHandler();
+
+    let passedEmbed = '';
+
+    const cmd = {
+      arguments: [],
+    };
+    const bot = {
+      sendMessage: (params) => {
+        passedEmbed = params.embed;
+      },
+    };
+    const db = {};
+    const pubg = {};
+
+    cmd.discordUser = {};
+    cmd.discordUser.channelId = '123';
+
+    handler.handle(cmd, bot, db, pubg);
+
+    expect(passedEmbed.fields[2].value).to.contain('https://github.com/kuper-adrian/statg-bot');
   });
 });

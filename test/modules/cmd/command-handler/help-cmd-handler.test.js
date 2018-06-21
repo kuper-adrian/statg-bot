@@ -99,7 +99,7 @@ describe('HelpCommandHandler', () => {
       const handler = HelpCommandHandler.getHandler();
 
       let passedChannelId = '';
-      let passedMessage = '';
+      let passedEmbed = '';
 
       const cmd = {
         arguments: [
@@ -109,7 +109,7 @@ describe('HelpCommandHandler', () => {
       const bot = {
         sendMessage: (params) => {
           passedChannelId = params.to;
-          passedMessage = params.message;
+          passedEmbed = params.embed;
         },
       };
       const db = {};
@@ -126,14 +126,14 @@ describe('HelpCommandHandler', () => {
 
       sinon.assert.calledOnce(sendMessageSpy);
       expect(passedChannelId).to.be.equal('123');
-      expect(passedMessage).to.contain('invalid amount of arguments');
+      expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
     });
 
     it('should send an error message if there are multiple arguments given', () => {
       const handler = HelpCommandHandler.getHandler();
 
       let passedChannelId = '';
-      let passedMessage = '';
+      let passedEmbed = '';
 
       const cmd = {
         arguments: [
@@ -145,7 +145,7 @@ describe('HelpCommandHandler', () => {
       const bot = {
         sendMessage: (params) => {
           passedChannelId = params.to;
-          passedMessage = params.message;
+          passedEmbed = params.embed;
         },
       };
       const db = {};
@@ -162,7 +162,7 @@ describe('HelpCommandHandler', () => {
 
       sinon.assert.calledOnce(sendMessageSpy);
       expect(passedChannelId).to.be.equal('123');
-      expect(passedMessage).to.contain('invalid amount of arguments');
+      expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
     });
   });
 });

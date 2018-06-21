@@ -17,6 +17,7 @@ describe('RegionCommandHandler', () => {
 
   let passedChannelId = '';
   let passedBotMessage = '';
+  let passedEmbed = {};
 
   let sendMessageSpy = {};
 
@@ -41,6 +42,7 @@ describe('RegionCommandHandler', () => {
       sendMessage: (params) => {
         passedChannelId = params.to;
         passedBotMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
 
@@ -121,7 +123,7 @@ describe('RegionCommandHandler', () => {
 
         sandbox.assert.calledOnce(sendMessageSpy);
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain(errorMessage);
+        expect(passedEmbed.fields[0].value).to.contain(errorMessage);
       });
     });
 
@@ -134,7 +136,7 @@ describe('RegionCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
 
@@ -152,7 +154,7 @@ describe('RegionCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
 
@@ -169,7 +171,7 @@ describe('RegionCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('unknown region "pc-invalid"');
+        expect(passedEmbed.fields[0].value).to.contain('unknown region "pc-invalid"');
       });
     });
   });

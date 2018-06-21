@@ -16,6 +16,7 @@ describe('UnregisterCommandHandler', () => {
 
   let passedChannelId = '';
   let passedBotMessage = '';
+  let passedEmbed = {};
 
   let sendMessageSpy = {};
 
@@ -48,6 +49,7 @@ describe('UnregisterCommandHandler', () => {
       sendMessage: (params) => {
         passedChannelId = params.to;
         passedBotMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
 
@@ -155,7 +157,7 @@ describe('UnregisterCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('player not registered');
+        expect(passedEmbed.fields[0].value).to.contain('player not registered');
       });
     });
 
@@ -172,7 +174,7 @@ describe('UnregisterCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
 
@@ -190,7 +192,7 @@ describe('UnregisterCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
   });

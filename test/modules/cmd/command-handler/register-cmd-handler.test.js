@@ -10,10 +10,11 @@ describe('RegisterCommandHandler', () => {
   let sandbox = {};
 
   let cmd = {};
-
   let bot = {};
+
   let passedChannelId = '';
   let passedBotMessage = '';
+  let passedEmbed = {};
 
   let db = {};
 
@@ -52,6 +53,7 @@ describe('RegisterCommandHandler', () => {
       sendMessage: (params) => {
         passedChannelId = params.to;
         passedBotMessage = params.message;
+        passedEmbed = params.embed;
       },
     };
 
@@ -195,7 +197,7 @@ describe('RegisterCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('whatever');
+        expect(passedEmbed.fields[0].value).to.contain('whatever');
       });
     });
 
@@ -214,7 +216,7 @@ describe('RegisterCommandHandler', () => {
         sinon.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('already is a player name registered for your discord user');
+        expect(passedEmbed.fields[0].value).to.contain('already is a player name registered for your discord user');
       });
     });
 
@@ -248,7 +250,7 @@ describe('RegisterCommandHandler', () => {
         sinon.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
 
@@ -266,8 +268,8 @@ describe('RegisterCommandHandler', () => {
         sinon.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('unknown region');
-        expect(passedBotMessage).to.contain('xbox-invalid');
+        expect(passedEmbed.fields[0].value).to.contain('unknown region');
+        expect(passedEmbed.fields[0].value).to.contain('xbox-invalid');
       });
     });
 
@@ -286,7 +288,7 @@ describe('RegisterCommandHandler', () => {
         sinon.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain('invalid amount of arguments');
+        expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
   });
