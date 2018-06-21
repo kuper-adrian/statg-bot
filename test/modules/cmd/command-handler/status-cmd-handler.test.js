@@ -147,8 +147,7 @@ describe('StatusCommandHandler.handle()', () => {
     const handlePromise = handler.handle(cmd, bot, db, pubg);
 
     return handlePromise.then(() => {
-      expect(passedEmbed.fields[0].value).to.contain(apiData.data.id);
-      expect(passedEmbed.fields[1].value).to.contain(apiData.data.attributes.version);
+      expect(passedEmbed.fields[0].value).to.contain('up and ready');
     });
   });
 
