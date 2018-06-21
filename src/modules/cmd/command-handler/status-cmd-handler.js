@@ -14,26 +14,39 @@ class StatusCommandHandler extends CommandHandler {
         const statusData = data.data;
 
         const { id } = statusData;
-        const { releasedAt: releaseDate, version: apiVersion } = statusData.attributes;
+        const { version: apiVersion } = statusData.attributes;
 
-        bot.sendMessage({
+
+        const botMessage = {
           to: channelId,
-          message: StatusCommandHandler.getStatusMessage(id, apiVersion, releaseDate),
-        });
+          embed: {
+            title: 'PUBG-API online!',
+            color: 1365331,
+            timestamp: this.moment().toISOString(),
+            footer: {
+              icon_url: 'https://cdn.discordapp.com/embed/avatars/4.png',
+              text: '!statg status',
+            },
+            fields: [
+              {
+                name: 'ID',
+                value: id,
+                inline: true,
+              },
+              {
+                name: 'Version',
+                value: apiVersion,
+                inline: true,
+              },
+            ],
+          },
+        };
+        bot.sendMessage(botMessage);
       })
 
       .catch((error) => {
         this.onError(bot, cmd, error.message);
       });
-  }
-
-  static getStatusMessage(id, version, releasedAt) {
-    return `\`\`\`
-PUBG-API online!
-
-ID:          ${id}
-Version:     ${version}
-Released at: ${releasedAt}\`\`\``;
   }
 }
 
