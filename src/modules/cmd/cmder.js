@@ -74,7 +74,11 @@ exports.processMessage = function processMessage(
       handler[commandInfo.command].handle(commandInfo, bot, db, pubg);
     } else {
       const errorHandler = new CommandHandler();
-      errorHandler.onError(bot, commandInfo, 'Unknown command. Type```!statg help```to get more infos about all commands.');
+      errorHandler.onError(
+        bot,
+        commandInfo,
+        new Error('Unknown command. Type```!statg help```to get more infos about all commands.'),
+      );
     }
   }
 };
