@@ -10,7 +10,6 @@ class MatchCommandHandler extends CommandHandler {
    * @param {*} pubg the pubg api object
    */
   handle(cmd, bot, db, pubg) {
-    const { channelId } = cmd.discordUser;
     let playerPubgId = '';
     let regionName = '';
 
@@ -65,20 +64,32 @@ class MatchCommandHandler extends CommandHandler {
 
         const teammates = players.filter(p => teammateIds.includes(p.id));
 
+        const fields = [
+          {
+            name: 'Game Mode',
+            value: matchData.data.attributes.gameMode,
+            inline: true,
+          },
+          {
+            name: 'Map',
+            value: matchData.data.attributes.mapName,
+            inline: true,
+          },
+          {
+            name: 'Rank',
+            value: teammates[0].attributes.stats.winPlace,
+            inline: true,
+          },
+        ];
 
-        const message = MatchCommandHandler.craftDiscordMessage(matchData, teammates);
-        bot.sendMessage({
-          message,
-          to: channelId,
+        teammates.forEach((t) => {
+          fields.push({
+            name: t.attributes.stats.name,
+            value: MatchCommandHandler.getPlayerStatsString(t),
+          });
         });
 
-        if (teammates[0].attributes.stats.winPlace === 1) {
-          bot.sendMessage({
-            to: channelId,
-            tts: true,
-            message: 'WINNER WINNER CHICKEN DINNER!',
-          });
-        }
+        this.onResolved(bot, cmd, fields);
       })
 
       .catch((error) => {
@@ -89,9 +100,7 @@ class MatchCommandHandler extends CommandHandler {
   static getPlayerStatsString(player) {
     const { stats } = player.attributes;
 
-    return ` 
-**${stats.name}**
-\`\`\`markdown
+    return `\`\`\`markdown
 - Kills:      ${stats.kills} (${stats.headshotKills})
 - Assists:    ${stats.assists}
 - Damage:     ${math.round(stats.damageDealt, 2)}

@@ -152,7 +152,6 @@ describe('MatchCommandHandler', () => {
   let pubg = {};
 
   let passedChannelId = '';
-  let passedBotMessage = '';
   let passedEmbed = {};
 
   let sendMessageSpy = {};
@@ -185,7 +184,6 @@ describe('MatchCommandHandler', () => {
     bot = {
       sendMessage: (params) => {
         passedChannelId = params.to;
-        passedBotMessage = params.message;
         passedEmbed = params.embed;
       },
     };
@@ -447,10 +445,10 @@ describe('MatchCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
 
-        expect(passedBotMessage).to.contain('squad-fpp');
-        expect(passedBotMessage).to.contain('Desert_Main');
-        expect(passedBotMessage).to.contain('some-dude-1');
-        expect(passedBotMessage).to.contain('some-dude-2');
+        expect(passedEmbed.fields[0].value).to.contain('squad-fpp');
+        expect(passedEmbed.fields[1].value).to.contain('Desert_Main');
+        expect(passedEmbed.fields[3].name).to.contain('some-dude-1');
+        expect(passedEmbed.fields[4].name).to.contain('some-dude-2');
       });
     });
 
