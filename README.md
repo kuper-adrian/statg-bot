@@ -47,8 +47,6 @@ StatG is an open source, self-hosted discord bot that can post PUBG statistics i
   Displays version of the stat-g bot.
 * `!statg status`
   Displays the current status of the PUBG api.
-* `!statg ping`
-  Pong!
 
 ## Installation
 
