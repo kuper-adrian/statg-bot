@@ -12,11 +12,6 @@ const seasonsCache = new Cache(3600);
 const playerStatsCache = new Cache(600);
 const matchByIdCache = new Cache(300);
 
-function ApiError(exception, apiErrors) {
-  this.exception = exception;
-  this.apiErrors = apiErrors;
-}
-
 function getApiOptions(path) {
   return {
     path,
@@ -43,7 +38,7 @@ function apiRequest(options, resolve, reject, cache) {
   if (cachedObject !== null) {
     logger.debug('retrieved pubg api data from cache');
 
-    if (typeof cachedObject === typeof ApiError) {
+    if (typeof cachedObject === typeof Error) {
       reject(cachedObject);
     } else {
       resolve(cachedObject);
@@ -64,22 +59,24 @@ function apiRequest(options, resolve, reject, cache) {
         const apiData = JSON.parse(data);
 
         if (apiData.errors !== undefined && apiData.errors.length > 0) {
-          const apiError = new ApiError(null, apiData.errors);
+          let errorMessage = apiData.errors[0].title;
+          if (apiData.errors[0].detail !== undefined) {
+            errorMessage += `. Details: ${apiData.errors[0].detail}`;
+          }
+          const apiError = new Error(errorMessage);
           cache.add(options.path, apiError);
 
           reject(apiError);
-          return;
+        } else {
+          cache.add(options.path, apiData);
+          resolve(apiData);
         }
-
-        cache.add(options.path, apiData);
-        resolve(apiData);
       });
     }).on('error', (err) => {
       logger.warn('error on making api call', err);
-      const apiError = new ApiError(err, null);
-      cache.add(options.path, apiError);
+      cache.add(options.path, err);
 
-      reject(apiError);
+      reject(err);
     });
   }
 }

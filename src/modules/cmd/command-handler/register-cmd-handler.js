@@ -10,7 +10,6 @@ class RegisterCommandHandler extends CommandHandler {
     let regionId = '';
     let regionName = '';
 
-
     if (cmd.arguments.length === 1) {
       [playerName] = cmd.arguments;
 
@@ -52,6 +51,8 @@ class RegisterCommandHandler extends CommandHandler {
             to: channelId,
             message: `Player "${pubgPlayerData.attributes.name}" successfully registered for region "${regionName}"!`,
           });
+          // this.onSuccess(bot, cmd, `Player "${pubgPlayerData.attributes.name}"
+          // successfully registered for region "${regionName}"!`);
         })
 
         .catch((error) => {
@@ -64,12 +65,12 @@ class RegisterCommandHandler extends CommandHandler {
           } else {
             errorInfo = error.message;
           }
-          this.onError(bot, cmd, `Error on registering player "${playerName}" for region "${regionName}". ${errorInfo}`);
+          this.onError(bot, cmd, new Error(`Error on registering player "${playerName}" for region "${regionName}". ${errorInfo}`));
         });
     } else if (cmd.arguments.length === 2) {
       // check whether the second argument is a valid region
       if (!REGIONS.includes(cmd.arguments[1])) {
-        this.onError(bot, cmd, `unknown region "${cmd.arguments[1]}"`);
+        this.onError(bot, cmd, new Error(`unknown region "${cmd.arguments[1]}"`));
         return Promise.resolve();
       }
 
@@ -114,19 +115,10 @@ class RegisterCommandHandler extends CommandHandler {
         })
 
         .catch((error) => {
-          let errorInfo = '';
-
-          if (error.apiErrors !== undefined &&
-              error.apiErrors !== null &&
-              error.apiErrors.length > 0) {
-            errorInfo = error.apiErrors[0].detail;
-          } else {
-            errorInfo = error.message;
-          }
-          this.onError(bot, cmd, `Error on registering player "${playerName}" for region "${regionName}". ${errorInfo}`);
+          this.onError(bot, cmd, error);
         });
     }
-    this.onError(bot, cmd, 'invalid amount of arguments');
+    this.onError(bot, cmd, new Error('invalid amount of arguments'));
     return Promise.resolve();
   }
 }

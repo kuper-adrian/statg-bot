@@ -35,7 +35,7 @@ class CommandHandler {
     bot.sendMessage(data);
   }
 
-  onError(bot, cmd, detailMessage) {
+  onError(bot, cmd, error) {
     const data = {
       to: cmd.discordUser.channelId,
       embed: {
@@ -48,13 +48,13 @@ class CommandHandler {
         fields: [
           {
             name: 'Error',
-            value: detailMessage,
+            value: error.message,
           },
         ],
       },
     };
 
-    this.logger.error(detailMessage);
+    this.logger.error(error);
     bot.sendMessage(data);
   }
 }

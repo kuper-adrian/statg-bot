@@ -9,7 +9,7 @@ class RegionCommandHandler extends CommandHandler {
       [newRegion] = cmd.arguments;
 
       if (!REGIONS.includes(newRegion)) {
-        this.onError(bot, cmd, `unknown region "${newRegion}"`);
+        this.onError(bot, cmd, new Error(`unknown region "${newRegion}"`));
         return Promise.resolve();
       }
 
@@ -23,11 +23,11 @@ class RegionCommandHandler extends CommandHandler {
           return Promise.resolve();
         })
         .catch((error) => {
-          this.onError(bot, cmd, error.message);
+          this.onError(bot, cmd, error);
           return Promise.resolve();
         });
     }
-    this.onError(bot, cmd, 'invalid amount of arguments');
+    this.onError(bot, cmd, new Error('invalid amount of arguments'));
     return Promise.resolve();
   }
 }

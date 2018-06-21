@@ -7,7 +7,7 @@ const { CommandHandler } = require('./cmd-handler.js');
 class UnregisterCommandHandler extends CommandHandler {
   handle(cmd, bot, db) {
     if (cmd.arguments.length !== 0) {
-      this.onError(bot, cmd, 'invalid amount of arguments');
+      this.onError(bot, cmd, new Error('invalid amount of arguments'));
       return Promise.resolve();
     }
 
@@ -30,7 +30,7 @@ class UnregisterCommandHandler extends CommandHandler {
       })
 
       .catch((error) => {
-        this.onError(bot, cmd, error.message);
+        this.onError(bot, cmd, error);
       });
   }
 }

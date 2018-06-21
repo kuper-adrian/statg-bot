@@ -5,7 +5,7 @@ class StatusCommandHandler extends CommandHandler {
     const { channelId } = cmd.discordUser;
 
     if (cmd.arguments.length !== 0) {
-      this.onError(bot, cmd, 'invalid amount of arguments');
+      this.onError(bot, cmd, new Error('invalid amount of arguments'));
       return undefined;
     }
 
@@ -45,7 +45,7 @@ class StatusCommandHandler extends CommandHandler {
       })
 
       .catch((error) => {
-        this.onError(bot, cmd, error.message);
+        this.onError(bot, cmd, error);
       });
   }
 }

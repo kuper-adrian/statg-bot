@@ -15,7 +15,7 @@ class MatchCommandHandler extends CommandHandler {
     let regionName = '';
 
     if (cmd.arguments.length !== 0) {
-      this.onError(bot, cmd, 'invalid amount of arguments');
+      this.onError(bot, cmd, new Error('invalid amount of arguments'));
       return Promise.resolve();
     }
 
@@ -82,7 +82,7 @@ class MatchCommandHandler extends CommandHandler {
       })
 
       .catch((error) => {
-        this.onError(bot, cmd, error.message);
+        this.onError(bot, cmd, error);
       });
   }
 
