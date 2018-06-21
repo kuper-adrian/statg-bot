@@ -2,6 +2,7 @@ const logger = require('../log').getLogger();
 
 const { DiscordUser } = require('./discord-user.js');
 const { Command } = require('./command.js');
+const { CommandHandler } = require('./command-handler/cmd-handler');
 
 const BASE_CMD = '!statg';
 const AVAILABLE_COMMANDS = [
@@ -68,14 +69,13 @@ exports.processMessage = function processMessage(
 
     logger.info(`Got command "${cmd}" by "${username}". Args: "${args}"`);
 
+    const commandInfo = new Command(cmd, args, user);
+
     if (AVAILABLE_COMMANDS.includes(cmd)) {
-      const commandInfo = new Command(cmd, args, user);
       handler[commandInfo.command].handle(commandInfo, bot, db, pubg);
     } else {
-      bot.sendMessage({
-        to: channelId,
-        message: 'Unknown command. Type "!statg help" to get more infos about all commands.',
-      });
+      const errorHandler = new CommandHandler();
+      errorHandler.onError(bot, commandInfo, 'Unknown command. Type```!statg help```to get more infos about all commands.');
     }
   }
 };
