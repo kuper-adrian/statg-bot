@@ -13,7 +13,6 @@ describe('RegisterCommandHandler', () => {
   let bot = {};
 
   let passedChannelId = '';
-  let passedBotMessage = '';
   let passedEmbed = {};
 
   let db = {};
@@ -52,7 +51,6 @@ describe('RegisterCommandHandler', () => {
     bot = {
       sendMessage: (params) => {
         passedChannelId = params.to;
-        passedBotMessage = params.message;
         passedEmbed = params.embed;
       },
     };
@@ -177,8 +175,8 @@ describe('RegisterCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
-        expect(passedBotMessage).to.contain(playerByNameData.data[0].attributes.name);
-        expect(passedBotMessage).to.contain('successfully registered');
+        expect(passedEmbed.fields[0].value).to.contain(playerByNameData.data[0].attributes.name);
+        expect(passedEmbed.fields[0].value).to.contain('successfully registered');
       });
     });
 

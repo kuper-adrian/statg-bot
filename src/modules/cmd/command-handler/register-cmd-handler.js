@@ -47,12 +47,7 @@ class RegisterCommandHandler extends CommandHandler {
         })
 
         .then(() => {
-          bot.sendMessage({
-            to: channelId,
-            message: `Player "${pubgPlayerData.attributes.name}" successfully registered for region "${regionName}"!`,
-          });
-          // this.onSuccess(bot, cmd, `Player "${pubgPlayerData.attributes.name}"
-          // successfully registered for region "${regionName}"!`);
+          this.onSuccess(bot, cmd, `Player "${pubgPlayerData.attributes.name}" successfully registered for region "${regionName}"!`);
         })
 
         .catch((error) => {
