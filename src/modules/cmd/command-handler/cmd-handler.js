@@ -78,7 +78,7 @@ class CommandHandler {
       true,
     );
 
-    this.logger.error(error);
+    this.logger.log('error', error.message);
     bot.sendMessage(data);
   }
 
