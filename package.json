@@ -15,7 +15,7 @@
     "moment": "^2.22.2",
     "npm": "^6.1.0",
     "sqlite3": "^4.0.0",
-    "winston": "^2.4.3"
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "sinon": "^6.0.0",
