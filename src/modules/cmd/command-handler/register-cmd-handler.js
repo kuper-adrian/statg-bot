@@ -1,5 +1,5 @@
 const { CommandHandler } = require('./cmd-handler.js');
-const { REGIONS } = require('./regions');
+const regionHelper = require('../region-helper');
 
 class RegisterCommandHandler extends CommandHandler {
   handle(cmd, bot, db, pubg) {
@@ -64,7 +64,7 @@ class RegisterCommandHandler extends CommandHandler {
         });
     } else if (cmd.arguments.length === 2) {
       // check whether the second argument is a valid region
-      if (!REGIONS.includes(cmd.arguments[1])) {
+      if (!regionHelper.REGIONS.includes(cmd.arguments[1])) {
         this.onError(bot, cmd, new Error(`unknown region "${cmd.arguments[1]}"`));
         return Promise.resolve();
       }

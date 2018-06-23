@@ -1,5 +1,7 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const math = require('../../math');
+const regionHelper = require('../region-helper');
+const pubgOpHelper = require('../pubg-op-helper');
 
 class MatchCommandHandler extends CommandHandler {
   /**
@@ -82,11 +84,15 @@ class MatchCommandHandler extends CommandHandler {
           },
         ];
 
+        let squadFieldValue = '';
+
         teammates.forEach((t) => {
-          fields.push({
-            name: t.attributes.stats.name,
-            value: MatchCommandHandler.getPlayerStatsString(t),
-          });
+          squadFieldValue += MatchCommandHandler.getPlayerStatsString(t, regionName);
+        });
+
+        fields.push({
+          name: 'Squad',
+          value: squadFieldValue,
         });
 
         this.onResolved(bot, cmd, fields);
@@ -97,10 +103,17 @@ class MatchCommandHandler extends CommandHandler {
       });
   }
 
-  static getPlayerStatsString(player) {
+  static getPlayerStatsString(player, regionName) {
     const { stats } = player.attributes;
 
-    return `\`\`\`markdown
+    const playerName = stats.name;
+    const pubgOpLink = pubgOpHelper.getUrlForPlayer(
+      playerName,
+      regionHelper.getAreaPartFromRegion(regionName),
+    );
+
+    return `[${playerName}](${pubgOpLink})
+\`\`\`markdown
 - Kills:      ${stats.kills} (${stats.headshotKills})
 - Assists:    ${stats.assists}
 - Damage:     ${math.round(stats.damageDealt, 2)}
@@ -109,37 +122,6 @@ class MatchCommandHandler extends CommandHandler {
 
 - Win Points: ${stats.winPoints} (${stats.winPointsDelta})
 \`\`\``;
-  }
-
-  static craftDiscordMessage(matchData, teammates) {
-    const matchPlace = teammates[0].attributes.stats.winPlace;
-
-    let result =
-`**Latest Match Info**
-\`\`\`markdown
-- Game Mode: ${matchData.data.attributes.gameMode}
-- Map Name:  ${matchData.data.attributes.mapName}
-- Time:      ${matchData.data.attributes.createdAt}
-- Duration:  ${math.round(matchData.data.attributes.duration / 60.0, 2)}min
-
-- Win Place: ${matchPlace}
-\`\`\`
-`;
-
-    // CHICKEN DINNER!!!
-    if (matchPlace === 1) {
-      result += `
-\`\`\`
-WINNER WINNER CHICKEN DINNER
-\`\`\`
-`;
-    }
-
-    teammates.forEach((t) => {
-      result += MatchCommandHandler.getPlayerStatsString(t);
-    });
-
-    return result;
   }
 }
 

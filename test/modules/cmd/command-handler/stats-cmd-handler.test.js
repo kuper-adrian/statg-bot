@@ -55,7 +55,7 @@ describe('StatsCommandHandler', () => {
       getRegions: () => Promise.resolve([
         {
           id: 1,
-          region_name: 'some_region',
+          region_name: 'pc-eu',
         },
       ]),
       getRegisteredPlayers: () => Promise.resolve([]),

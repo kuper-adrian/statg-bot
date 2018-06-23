@@ -1,5 +1,7 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const math = require('../../math');
+const regionHelper = require('../region-helper');
+const pubgOpHelper = require('../pubg-op-helper');
 
 const AVAILABLE_ARGS = [
   'solo',
@@ -87,10 +89,15 @@ class StatsCommandHandler extends CommandHandler {
           return;
         }
 
+        const pubgOpLink = pubgOpHelper.getUrlForPlayer(
+          pubgPlayerName,
+          regionHelper.getAreaPartFromRegion(regionName),
+        );
+
         const fields = [
           {
             name: 'Player',
-            value: pubgPlayerName,
+            value: `[${pubgPlayerName}](${pubgOpLink})`,
             inline: true,
           },
           {

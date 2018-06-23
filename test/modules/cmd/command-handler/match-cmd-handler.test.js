@@ -219,7 +219,7 @@ describe('MatchCommandHandler', () => {
       sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
         {
           id: 1,
-          region_name: 'some-region-name',
+          region_name: 'pc-eu',
         },
       ]));
 
@@ -413,7 +413,7 @@ describe('MatchCommandHandler', () => {
       sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
         {
           id: 1,
-          region_name: 'some-region-name'
+          region_name: 'pc-eu'
         }
       ]));
 
@@ -447,8 +447,8 @@ describe('MatchCommandHandler', () => {
 
         expect(passedEmbed.fields[0].value).to.contain('squad-fpp');
         expect(passedEmbed.fields[1].value).to.contain('Desert_Main');
-        expect(passedEmbed.fields[3].name).to.contain('some-dude-1');
-        expect(passedEmbed.fields[4].name).to.contain('some-dude-2');
+        expect(passedEmbed.fields[3].value).to.contain('some-dude-1');
+        expect(passedEmbed.fields[3].value).to.contain('some-dude-2');
       });
     });
 
@@ -543,7 +543,12 @@ describe('MatchCommandHandler', () => {
         'some-argument'
       ];
 
-      const getPlayersStub = sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([])); // <-- empty
+      const getPlayersStub = sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([
+        {
+          pubg_id: '1',
+          pubg_name: 'some-pubg-name'
+        }
+      ]));
 
       const getRegionsStub = sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
         {
@@ -588,7 +593,12 @@ describe('MatchCommandHandler', () => {
         'some-argument'
       ];
 
-      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([]));
+      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([
+        {
+          pubg_id: '1',
+          pubg_name: 'some-pubg-name'
+        }
+      ]));
 
       sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
         {
@@ -633,7 +643,12 @@ describe('MatchCommandHandler', () => {
         'some-argument'
       ];
 
-      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([]));
+      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([
+        {
+          pubg_id: '1',
+          pubg_name: 'some-pubg-name'
+        }
+      ]));
 
       sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
         {
@@ -682,7 +697,12 @@ describe('MatchCommandHandler', () => {
         'yet-another-argument'
       ];
 
-      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([]));
+      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([
+        {
+          pubg_id: '1',
+          pubg_name: 'some-pubg-name'
+        }
+      ]));
 
       sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
         {
@@ -719,6 +739,30 @@ describe('MatchCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
+      });
+    });
+
+    it('should send an error message if two registered players are found for discord id', () => {
+      const cmdHandler = MatchCommandHandler.getHandler();
+
+      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([
+        {
+          pubg_id: '1',
+          pubg_name: 'some-pubg-name'
+        },
+        {
+          pubg_id: '2',
+          pubg_name: 'some-pubg-name-2'
+        }
+      ]));
+
+      const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
+
+      return handlePromise.then(() => {
+        sandbox.assert.calledOnce(sendMessageSpy);
+
+        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedEmbed.fields[0].value).to.contain('weird');
       });
     });
   });
