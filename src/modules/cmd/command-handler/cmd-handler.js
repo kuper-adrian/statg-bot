@@ -47,6 +47,7 @@ class CommandHandler {
           value: successMessage,
         },
       ],
+      true,
     );
 
     this.logger.debug(successMessage);
@@ -74,6 +75,7 @@ class CommandHandler {
           value: error.message,
         },
       ],
+      true,
     );
 
     this.logger.error(error);
@@ -86,9 +88,9 @@ class CommandHandler {
    * @param {Number} color Number of the color of the embed message
    * @param {Array} fields Array of fields in the embed message
    */
-  createEmbedData(cmd, color, fields) {
+  createEmbedData(cmd, color, fields, directMessage = false) {
     return {
-      to: cmd.discordUser.channelId,
+      to: directMessage ? cmd.discordUser.id : cmd.discordUser.channelId,
       embed: {
         color,
         timestamp: this.moment().toISOString(),

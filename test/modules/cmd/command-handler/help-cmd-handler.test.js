@@ -39,14 +39,14 @@ describe('HelpCommandHandler', () => {
     it('should send a message to the right channel', () => {
       const handler = HelpCommandHandler.getHandler();
 
-      let passedChannelId = '';
+      let passedTo = '';
 
       const cmd = {
         arguments: [],
       };
       const bot = {
         sendMessage: (params) => {
-          passedChannelId = params.to;
+          passedTo = params.to;
         },
       };
       const db = {};
@@ -55,60 +55,26 @@ describe('HelpCommandHandler', () => {
       const sendMessageSpy = sinon.spy(bot, 'sendMessage');
 
       cmd.discordUser = {};
-      cmd.discordUser.channelId = '123';
+      cmd.discordUser.id = '123';
 
       // cmd, bot, db, pubg
       handler.handle(cmd, bot, db, pubg);
       sendMessageSpy.restore();
 
       sinon.assert.calledOnce(sendMessageSpy);
-      expect(passedChannelId).to.be.equal('123');
+      expect(passedTo).to.be.equal(cmd.discordUser.id);
     });
 
     it('should send a message containing help about every command', () => {
       const handler = HelpCommandHandler.getHandler();
 
-      let passedMessage = '';
+      let passedEmbed = '';
 
       const cmd = {
         arguments: [],
       };
       const bot = {
         sendMessage: (params) => {
-          passedMessage = params.message;
-        },
-      };
-      const db = {};
-      const pubg = {};
-
-      const sendMessageSpy = sinon.spy(bot, 'sendMessage');
-
-      cmd.discordUser = {};
-      cmd.discordUser.channelId = '123';
-
-      // cmd, bot, db, pubg
-      handler.handle(cmd, bot, db, pubg);
-      sendMessageSpy.restore();
-
-      sinon.assert.calledOnce(sendMessageSpy);
-
-      expect(passedMessage).to.contain('https://github.com/kuper-adrian/statg-bot/blob/master/README.md');
-    });
-
-    it('should send an error if there is a single argument given', () => {
-      const handler = HelpCommandHandler.getHandler();
-
-      let passedChannelId = '';
-      let passedEmbed = '';
-
-      const cmd = {
-        arguments: [
-          'some-arg',
-        ],
-      };
-      const bot = {
-        sendMessage: (params) => {
-          passedChannelId = params.to;
           passedEmbed = params.embed;
         },
       };
@@ -125,14 +91,48 @@ describe('HelpCommandHandler', () => {
       sendMessageSpy.restore();
 
       sinon.assert.calledOnce(sendMessageSpy);
-      expect(passedChannelId).to.be.equal('123');
+
+      expect(passedEmbed.fields[0].value).to.contain('https://github.com/kuper-adrian/statg-bot/blob/master/README.md#Commands');
+    });
+
+    it('should send an error if there is a single argument given', () => {
+      const handler = HelpCommandHandler.getHandler();
+
+      let passedTo = '';
+      let passedEmbed = '';
+
+      const cmd = {
+        arguments: [
+          'some-arg',
+        ],
+      };
+      const bot = {
+        sendMessage: (params) => {
+          passedTo = params.to;
+          passedEmbed = params.embed;
+        },
+      };
+      const db = {};
+      const pubg = {};
+
+      const sendMessageSpy = sinon.spy(bot, 'sendMessage');
+
+      cmd.discordUser = {};
+      cmd.discordUser.id = '123';
+
+      // cmd, bot, db, pubg
+      handler.handle(cmd, bot, db, pubg);
+      sendMessageSpy.restore();
+
+      sinon.assert.calledOnce(sendMessageSpy);
+      expect(passedTo).to.be.equal(cmd.discordUser.id);
       expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
     });
 
     it('should send an error message if there are multiple arguments given', () => {
       const handler = HelpCommandHandler.getHandler();
 
-      let passedChannelId = '';
+      let passedTo = '';
       let passedEmbed = '';
 
       const cmd = {
@@ -144,7 +144,7 @@ describe('HelpCommandHandler', () => {
       };
       const bot = {
         sendMessage: (params) => {
-          passedChannelId = params.to;
+          passedTo = params.to;
           passedEmbed = params.embed;
         },
       };
@@ -154,14 +154,14 @@ describe('HelpCommandHandler', () => {
       const sendMessageSpy = sinon.spy(bot, 'sendMessage');
 
       cmd.discordUser = {};
-      cmd.discordUser.channelId = '123';
+      cmd.discordUser.id = '123';
 
       // cmd, bot, db, pubg
       handler.handle(cmd, bot, db, pubg);
       sendMessageSpy.restore();
 
       sinon.assert.calledOnce(sendMessageSpy);
-      expect(passedChannelId).to.be.equal('123');
+      expect(passedTo).to.be.equal(cmd.discordUser.id);
       expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
     });
   });

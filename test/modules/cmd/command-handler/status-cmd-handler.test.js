@@ -51,6 +51,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     const cmd = {
       discordUser: {
+        id: 'some-id',
         channelId: '123',
       },
       arguments: [],
@@ -90,6 +91,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     const cmd = {
       discordUser: {
+        id: 'some-id',
         channelId: '123',
       },
       arguments: [],
@@ -130,6 +132,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     const cmd = {
       discordUser: {
+        id: 'some-id',
         channelId: '123',
       },
       arguments: [],
@@ -165,17 +168,18 @@ describe('StatusCommandHandler.handle()', () => {
       },
     };
 
-    let passedDiscordId = '';
+    let passedTo = '';
 
     const cmd = {
       discordUser: {
+        id: 'some-id',
         channelId: '123',
       },
       arguments: [],
     };
     const bot = {
       sendMessage: (params) => {
-        passedDiscordId = params.to;
+        passedTo = params.to;
       },
     };
     const db = {};
@@ -186,7 +190,7 @@ describe('StatusCommandHandler.handle()', () => {
     const handlePromise = handler.handle(cmd, bot, db, pubg);
 
     return handlePromise.then(() => {
-      expect(passedDiscordId).to.be.equal('123');
+      expect(passedTo).to.be.equal(cmd.discordUser.id);
     });
   });
 
@@ -197,6 +201,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     const cmd = {
       discordUser: {
+        id: 'some-id',
         channelId: '123',
       },
       arguments: [],
@@ -229,6 +234,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     const cmd = {
       discordUser: {
+        id: 'some-id',
         channelId: '123',
       },
       arguments: [],
@@ -255,17 +261,18 @@ describe('StatusCommandHandler.handle()', () => {
 
     const error = new Error('some message');
 
-    let passedChannelId = '';
+    let passedTo = '';
 
     const cmd = {
       discordUser: {
+        id: 'some-id',
         channelId: '123',
       },
       arguments: [],
     };
     const bot = {
       sendMessage: (params) => {
-        passedChannelId = params.to;
+        passedTo = params.to;
       },
     };
     const db = {};
@@ -276,7 +283,7 @@ describe('StatusCommandHandler.handle()', () => {
     const handlePromise = handler.handle(cmd, bot, db, pubg);
 
     return handlePromise.then(() => {
-      expect(passedChannelId).to.be.equal('123');
+      expect(passedTo).to.be.equal(cmd.discordUser.id);
     });
   });
 
@@ -288,6 +295,7 @@ describe('StatusCommandHandler.handle()', () => {
 
     const cmd = {
       discordUser: {
+        id: 'some-id',
         channelId: '123',
       },
       arguments: [],
@@ -312,15 +320,21 @@ describe('StatusCommandHandler.handle()', () => {
   it('should send a error message if a single argument was given', () => {
     const handler = StatusCommandHandler.getHandler();
 
+    let passedTo = '';
     let passedEmbed = '';
 
     const cmd = {
+      discordUser: {
+        id: 'some-id',
+        channelId: '123',
+      },
       arguments: [
         'some-argument',
       ],
     };
     const bot = {
       sendMessage: (params) => {
+        passedTo = params.to;
         passedEmbed = params.embed;
       },
     };
@@ -332,14 +346,13 @@ describe('StatusCommandHandler.handle()', () => {
     const sendMessageSpy = sinon.spy(bot, 'sendMessage');
     const statusSpy = sinon.spy(pubg, 'status');
 
-    cmd.discordUser = {};
-    cmd.discordUser.channelId = '123';
-
     // cmd, bot, db, pubg
     handler.handle(cmd, bot, db, pubg);
 
     sinon.assert.calledOnce(sendMessageSpy);
     sinon.assert.notCalled(statusSpy);
+
+    expect(passedTo).to.be.equal(cmd.discordUser.id);
     expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
 
     sendMessageSpy.restore();
@@ -349,9 +362,14 @@ describe('StatusCommandHandler.handle()', () => {
   it('should send a error message if multiple arguments were given', () => {
     const handler = StatusCommandHandler.getHandler();
 
+    let passedTo = '';
     let passedEmbed = '';
 
     const cmd = {
+      discordUser: {
+        id: 'some-id',
+        channelId: '123',
+      },
       arguments: [
         'some-argument',
         'some-other-arg',
@@ -360,6 +378,7 @@ describe('StatusCommandHandler.handle()', () => {
     };
     const bot = {
       sendMessage: (params) => {
+        passedTo = params.to;
         passedEmbed = params.embed;
       },
     };
@@ -371,14 +390,13 @@ describe('StatusCommandHandler.handle()', () => {
     const sendMessageSpy = sinon.spy(bot, 'sendMessage');
     const statusSpy = sinon.spy(pubg, 'status');
 
-    cmd.discordUser = {};
-    cmd.discordUser.channelId = '123';
-
     // cmd, bot, db, pubg
     handler.handle(cmd, bot, db, pubg);
 
     sinon.assert.calledOnce(sendMessageSpy);
     sinon.assert.notCalled(statusSpy);
+
+    expect(passedTo).to.be.equal(cmd.discordUser.id);
     expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
 
     sendMessageSpy.restore();

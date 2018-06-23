@@ -151,7 +151,7 @@ describe('MatchCommandHandler', () => {
   let db = {};
   let pubg = {};
 
-  let passedChannelId = '';
+  let passedTo = '';
   let passedEmbed = {};
 
   let sendMessageSpy = {};
@@ -183,7 +183,7 @@ describe('MatchCommandHandler', () => {
 
     bot = {
       sendMessage: (params) => {
-        passedChannelId = params.to;
+        passedTo = params.to;
         passedEmbed = params.embed;
       },
     };
@@ -443,7 +443,7 @@ describe('MatchCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.channelId);
 
         expect(passedEmbed.fields[0].value).to.contain('squad-fpp');
         expect(passedEmbed.fields[1].value).to.contain('Desert_Main');
@@ -490,7 +490,7 @@ describe('MatchCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('Player not registered');
       });
     });
@@ -683,7 +683,7 @@ describe('MatchCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
@@ -737,7 +737,7 @@ describe('MatchCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
@@ -761,7 +761,7 @@ describe('MatchCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('weird');
       });
     });

@@ -12,7 +12,7 @@ describe('RegisterCommandHandler', () => {
   let cmd = {};
   let bot = {};
 
-  let passedChannelId = '';
+  let passedTo = '';
   let passedEmbed = {};
 
   let db = {};
@@ -50,7 +50,7 @@ describe('RegisterCommandHandler', () => {
 
     bot = {
       sendMessage: (params) => {
-        passedChannelId = params.to;
+        passedTo = params.to;
         passedEmbed = params.embed;
       },
     };
@@ -174,7 +174,7 @@ describe('RegisterCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain(playerByNameData.data[0].attributes.name);
         expect(passedEmbed.fields[0].value).to.contain('successfully registered');
       });
@@ -194,7 +194,7 @@ describe('RegisterCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('whatever');
       });
     });
@@ -213,7 +213,7 @@ describe('RegisterCommandHandler', () => {
       return handlePromise.then(() => {
         sinon.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('already is a player name registered for your discord user');
       });
     });
@@ -233,7 +233,7 @@ describe('RegisterCommandHandler', () => {
       return handlePromise.then(() => {
         sinon.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('already is a player name registered for your discord user');
       });
     });
@@ -267,7 +267,7 @@ describe('RegisterCommandHandler', () => {
       return handlePromise.then(() => {
         sinon.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
@@ -285,7 +285,7 @@ describe('RegisterCommandHandler', () => {
       return handlePromise.then(() => {
         sinon.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('unknown region');
         expect(passedEmbed.fields[0].value).to.contain('xbox-invalid');
       });
@@ -305,7 +305,7 @@ describe('RegisterCommandHandler', () => {
       return handlePromise.then(() => {
         sinon.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
@@ -333,7 +333,7 @@ describe('RegisterCommandHandler', () => {
       const handlePromise = handler.handle(cmd, bot, db, pubg);
 
       return handlePromise.then(() => {
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('weird');
       });
     });
@@ -362,7 +362,7 @@ describe('RegisterCommandHandler', () => {
       const handlePromise = handler.handle(cmd, bot, db, pubg);
 
       return handlePromise.then(() => {
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('weird');
       });
     });

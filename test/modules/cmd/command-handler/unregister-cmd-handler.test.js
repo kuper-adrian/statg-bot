@@ -14,7 +14,7 @@ describe('UnregisterCommandHandler', () => {
   let db = {};
   const pubg = {};
 
-  let passedChannelId = '';
+  let passedTo = '';
   let passedEmbed = {};
 
   let sendMessageSpy = {};
@@ -46,7 +46,7 @@ describe('UnregisterCommandHandler', () => {
 
     bot = {
       sendMessage: (params) => {
-        passedChannelId = params.to;
+        passedTo = params.to;
         passedEmbed = params.embed;
       },
     };
@@ -86,7 +86,7 @@ describe('UnregisterCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('some-pubg-name');
         expect(passedEmbed.fields[0].value).to.contain('successfully unregistered');
       });
@@ -154,7 +154,7 @@ describe('UnregisterCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('player not registered');
       });
     });
@@ -171,7 +171,7 @@ describe('UnregisterCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
@@ -189,7 +189,7 @@ describe('UnregisterCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });

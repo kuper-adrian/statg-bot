@@ -15,7 +15,7 @@ describe('RegionCommandHandler', () => {
   let db = {};
   const pubg = {};
 
-  let passedChannelId = '';
+  let passedTo = '';
   let passedEmbed = {};
 
   let sendMessageSpy = {};
@@ -39,7 +39,7 @@ describe('RegionCommandHandler', () => {
 
     bot = {
       sendMessage: (params) => {
-        passedChannelId = params.to;
+        passedTo = params.to;
         passedEmbed = params.embed;
       },
     };
@@ -77,7 +77,7 @@ describe('RegionCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain(newRegion);
         expect(passedEmbed.fields[0].value).to.contain('region successfully set');
       });
@@ -120,7 +120,7 @@ describe('RegionCommandHandler', () => {
         expect(setGlobalRegionStub.getCall(0).args[0]).to.be.equal(newRegion);
 
         sandbox.assert.calledOnce(sendMessageSpy);
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain(errorMessage);
       });
     });
@@ -133,7 +133,7 @@ describe('RegionCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
@@ -151,7 +151,7 @@ describe('RegionCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
       });
     });
@@ -168,7 +168,7 @@ describe('RegionCommandHandler', () => {
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
-        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('unknown region "pc-invalid"');
       });
     });
