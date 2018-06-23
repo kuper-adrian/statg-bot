@@ -51,16 +51,7 @@ class RegisterCommandHandler extends CommandHandler {
         })
 
         .catch((error) => {
-          let errorInfo = '';
-
-          if (error.apiErrors !== undefined &&
-              error.apiErrors !== null &&
-              error.apiErrors.length > 0) {
-            errorInfo = error.apiErrors[0].detail;
-          } else {
-            errorInfo = error.message;
-          }
-          this.onError(bot, cmd, new Error(`Error on registering player "${playerName}" for region "${regionName}". ${errorInfo}`));
+          this.onError(bot, cmd, error);
         });
     } else if (cmd.arguments.length === 2) {
       // check whether the second argument is a valid region

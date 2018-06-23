@@ -218,6 +218,26 @@ describe('RegisterCommandHandler', () => {
       });
     });
 
+    it('should send an error message if there already exists an entry for the player (mult.args)', () => {
+      const handler = RegisterCommandHandler.getHandler();
+
+      cmd.arguments = [
+        'to-register-pubg-name',
+        'pc-eu',
+      ];
+
+      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve(['some-already-existing-player-name']));
+
+      const handlePromise = handler.handle(cmd, bot, db, pubg);
+
+      return handlePromise.then(() => {
+        sinon.assert.calledOnce(sendMessageSpy);
+
+        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedEmbed.fields[0].value).to.contain('already is a player name registered for your discord user');
+      });
+    });
+
     it('should query the database for the region given by the second argument', () => {
       const handler = RegisterCommandHandler.getHandler();
 
@@ -287,6 +307,63 @@ describe('RegisterCommandHandler', () => {
 
         expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
         expect(passedEmbed.fields[0].value).to.contain('invalid amount of arguments');
+      });
+    });
+
+    it('should send an error message if multiple global regions are returned (single arg)', () => {
+      const handler = RegisterCommandHandler.getHandler();
+
+      cmd.arguments = [
+        'to-register-pubg-name',
+      ];
+
+      sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
+        {
+          id: 1,
+          region_name: 'pc-na',
+          is_global_region: true,
+        },
+        {
+          id: 2,
+          region_name: 'pc-eu',
+          is_global_region: true,
+        },
+      ]));
+
+      const handlePromise = handler.handle(cmd, bot, db, pubg);
+
+      return handlePromise.then(() => {
+        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedEmbed.fields[0].value).to.contain('weird');
+      });
+    });
+
+    it('should send an error message if multiple global regions are returned (mult. args)', () => {
+      const handler = RegisterCommandHandler.getHandler();
+
+      cmd.arguments = [
+        'to-register-pubg-name',
+        'pc-na',
+      ];
+
+      sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
+        {
+          id: 1,
+          region_name: 'pc-na',
+          is_global_region: true,
+        },
+        {
+          id: 2,
+          region_name: 'pc-eu',
+          is_global_region: true,
+        },
+      ]));
+
+      const handlePromise = handler.handle(cmd, bot, db, pubg);
+
+      return handlePromise.then(() => {
+        expect(passedChannelId).to.be.equal(cmd.discordUser.channelId);
+        expect(passedEmbed.fields[0].value).to.contain('weird');
       });
     });
   });
