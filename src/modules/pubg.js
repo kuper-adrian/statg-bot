@@ -38,7 +38,7 @@ function apiRequest(options, resolve, reject, cache) {
   if (cachedObject !== null) {
     logger.debug('retrieved pubg api data from cache');
 
-    if (typeof cachedObject === typeof Error) {
+    if (cachedObject instanceof Error) {
       reject(cachedObject);
     } else {
       resolve(cachedObject);
