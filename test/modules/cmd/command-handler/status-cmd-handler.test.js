@@ -313,7 +313,7 @@ describe('StatusCommandHandler.handle()', () => {
     return handlePromise.then(() => {
       sinon.assert.calledOnce(errorStub);
       const passedError = errorStub.getCall(0).args[0];
-      expect(passedError.message).to.contain(errorMessage);
+      expect(passedError).to.contain(errorMessage);
     });
   });
 
