@@ -172,7 +172,7 @@ exports.init = function init(dataFolderPath = './data') {
       })
 
       .catch((error) => {
-        logger.error(error);
+        logger.error(error.message);
         reject(error);
       });
   });

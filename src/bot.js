@@ -12,7 +12,7 @@ try {
   process.argv.splice(0, 2);
   auth.init(process.argv);
 } catch (error) {
-  logger.error(error);
+  logger.error(error.message);
   process.exit();
 }
 
@@ -43,13 +43,13 @@ bot.on('message', (user, userID, channelID, message, evt) => {
   try {
     cmder.processMessage(bot, statgDb, pubg, user, userID, channelID, message, evt);
   } catch (err) {
-    logger.error(err);
+    logger.error(err.message);
   }
 });
 
 bot.on('error', (error) => {
   logger.info('bot.on("error")');
-  logger.error(error);
+  logger.error(error.message);
 });
 
 bot.on('disconnect', (event) => {
