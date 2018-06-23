@@ -32,6 +32,7 @@
   "scripts": {
     "debug": "nodemon --inspect src/bot.js runConfig=debug",
     "test": "nyc mocha --timeout=3000 --recursive",
+    "lint": "./node_modules/.bin/eslint **/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "bugs": {
