@@ -14,11 +14,11 @@
     "knex": "^0.14.6",
     "moment": "^2.22.2",
     "npm": "^6.1.0",
-    "sinon": "^5.1.1",
     "sqlite3": "^4.0.0",
     "winston": "^2.4.3"
   },
   "devDependencies": {
+    "sinon": "^6.0.0",
     "chai": "^4.1.2",
     "coveralls": "^3.0.1",
     "eslint": "^4.19.1",
