@@ -4,6 +4,7 @@ const HELP_LINK = 'https://github.com/kuper-adrian/statg-bot/blob/master/README.
 
 /**
  * Handler for the "help" command
+ * @extends CommandHandler
  */
 class HelpCommandHandler extends CommandHandler {
   handle(cmd, bot) {

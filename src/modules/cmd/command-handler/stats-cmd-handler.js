@@ -12,6 +12,10 @@ const AVAILABLE_ARGS = [
   'squad-fpp',
 ];
 
+/**
+ * Command handler for !statg stats command. Shows stats for player.
+ * @extends CommandHandler
+ */
 class StatsCommandHandler extends CommandHandler {
   handle(cmd, bot, db, pubg) {
     this.logger.info('Handling stats command!');

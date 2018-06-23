@@ -3,6 +3,10 @@ const math = require('../../math');
 const regionHelper = require('../region-helper');
 const pubgOpHelper = require('../pubg-op-helper');
 
+/**
+ * Handler for !statg match command. Posts statistics about latest match.
+ * @extends CommandHandler
+ */
 class MatchCommandHandler extends CommandHandler {
   /**
    * Handles the match command.

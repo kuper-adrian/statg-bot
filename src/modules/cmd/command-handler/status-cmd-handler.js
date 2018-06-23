@@ -1,5 +1,9 @@
 const { CommandHandler } = require('./cmd-handler.js');
 
+/**
+ * Command handler for !statg status command. Posts status of PUBG API.
+ * @extends CommandHandler
+ */
 class StatusCommandHandler extends CommandHandler {
   handle(cmd, bot, db, pubg) {
     if (cmd.arguments.length !== 0) {

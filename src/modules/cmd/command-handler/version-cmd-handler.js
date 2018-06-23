@@ -4,9 +4,9 @@ const { version } = require('../../../../package.json');
 const { author } = require('../../../../package.json');
 
 /**
- * Command handler for the "version" command.
- *
- * Shows info about version and author of the bot.
+ * Command handler for the !statg version command. Shows info about version
+ * and author of the bot.
+ * @extends CommandHandler
  */
 class VersionCommandHandler extends CommandHandler {
   handle(cmd, bot) {

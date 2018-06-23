@@ -1,6 +1,12 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const regionHelper = require('../region-helper');
 
+/**
+ * Command handler for !statg register command. Links discord account
+ * with PUBG name and region to enable fetching stats from the
+ * PUBG API.
+ * @extends CommandHandler
+ */
 class RegisterCommandHandler extends CommandHandler {
   handle(cmd, bot, db, pubg) {
     const { channelId } = cmd.discordUser;

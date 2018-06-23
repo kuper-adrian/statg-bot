@@ -3,6 +3,7 @@ const { CommandHandler } = require('./cmd-handler.js');
 
 /**
  * Command for unregistering the pubg player name from the discord user.
+ * @extends CommandHandler
  */
 class UnregisterCommandHandler extends CommandHandler {
   handle(cmd, bot, db) {

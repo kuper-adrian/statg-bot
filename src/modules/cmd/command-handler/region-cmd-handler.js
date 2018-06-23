@@ -1,6 +1,11 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const regionHelper = require('../region-helper');
 
+/**
+ * Command handler for !statg region command. Sets global region
+ * used by !statg register command.
+ * @extends CommandHandler
+ */
 class RegionCommandHandler extends CommandHandler {
   handle(cmd, bot, db) {
     let newRegion = '';
