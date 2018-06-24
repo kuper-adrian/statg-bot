@@ -1,16 +1,16 @@
 const auth = require('../auth.js');
 const https = require('https');
 const logger = require('./log').getLogger();
-const { Cache } = require('./cache');
+const { Cache } = require('clean-cache');
 
 const PUBG_API_HOST_NAME = 'api.playbattlegrounds.com';
 
-const playerByIdCache = new Cache(120);
-const playerByNameCache = new Cache(1200);
-const statusCache = new Cache(60);
-const seasonsCache = new Cache(3600);
-const playerStatsCache = new Cache(600);
-const matchByIdCache = new Cache(300);
+const playerByIdCache = new Cache(120 * 1000);
+const playerByNameCache = new Cache(1200 * 1000);
+const statusCache = new Cache(60 * 1000);
+const seasonsCache = new Cache(3600 * 1000);
+const playerStatsCache = new Cache(600 * 1000);
+const matchByIdCache = new Cache(300 * 1000);
 
 function getApiOptions(path) {
   return {
