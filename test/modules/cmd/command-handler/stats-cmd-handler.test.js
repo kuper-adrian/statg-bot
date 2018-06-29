@@ -236,8 +236,8 @@ describe('StatsCommandHandler', () => {
         ],
       }));
 
-      sandbox.stub(pubg, 'playerStats').callsFake((pubgId, seasonId) => {
-        passedSeasonsId = seasonId;
+      sandbox.stub(pubg, 'playerStats').callsFake((options) => {
+        passedSeasonsId = options.seasonId;
 
         return Promise.resolve({
           type: 'stats',
@@ -305,9 +305,9 @@ describe('StatsCommandHandler', () => {
         ],
       }));
 
-      const playerStatsStub = sandbox.stub(pubg, 'playerStats').callsFake((pubgId, seasonId) => {
-        passedPubgPlayerId = pubgId;
-        passedSeasonId = seasonId;
+      const playerStatsStub = sandbox.stub(pubg, 'playerStats').callsFake((options) => {
+        passedPubgPlayerId = options.playerId;
+        passedSeasonId = options.seasonId;
 
         return Promise.resolve({
           type: 'stats',

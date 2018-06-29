@@ -29,7 +29,10 @@ class RegisterCommandHandler extends CommandHandler {
           regionId = rows[0].id;
           regionName = rows[0].region_name;
 
-          return pubg.playerByName(playerName, regionName);
+          return pubg.player({
+            name: playerName,
+            region: regionName,
+          });
         })
 
         .then((data) => {
@@ -77,7 +80,10 @@ class RegisterCommandHandler extends CommandHandler {
 
           regionId = rows[0].id;
 
-          return pubg.playerByName(playerName, regionName);
+          return pubg.player({
+            name: playerName,
+            region: regionName,
+          });
         })
 
         .then((data) => {

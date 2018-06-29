@@ -45,14 +45,20 @@ class MatchCommandHandler extends CommandHandler {
         }
 
         regionName = rows[0].region_name;
-        return pubg.playerById(playerPubgId, regionName);
+        return pubg.player({
+          id: playerPubgId,
+          region: regionName,
+        });
       })
 
       .then((playerData) => {
         const playerInfo = playerData.data;
         const latestMatchInfo = playerInfo.relationships.matches.data[0];
 
-        return pubg.matchById(latestMatchInfo.id, regionName);
+        return pubg.match({
+          id: latestMatchInfo.id,
+          region: regionName,
+        });
       })
 
       .then((matchData) => {

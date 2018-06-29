@@ -48,7 +48,7 @@ class StatsCommandHandler extends CommandHandler {
         }
 
         regionName = rows[0].region_name;
-        return pubg.seasons(regionName);
+        return pubg.seasons({ region: regionName });
       })
 
       .then((seasons) => {
@@ -63,7 +63,11 @@ class StatsCommandHandler extends CommandHandler {
 
       .then((seasonId) => {
         this.logger.debug('Fetching stats...');
-        return pubg.playerStats(pubgId, seasonId, regionName);
+        return pubg.playerStats({
+          seasonId,
+          playerId: pubgId,
+          region: regionName,
+        });
       })
 
       .then((stats) => {

@@ -194,8 +194,8 @@ describe('MatchCommandHandler', () => {
     };
 
     pubg = {
-      playerById: () => Promise.resolve({}),
-      matchById: () => Promise.resolve({}),
+      player: () => Promise.resolve({}),
+      match: () => Promise.resolve({}),
     };
 
     sendMessageSpy = sandbox.spy(bot, 'sendMessage');
@@ -223,7 +223,7 @@ describe('MatchCommandHandler', () => {
         },
       ]));
 
-      sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -242,7 +242,7 @@ describe('MatchCommandHandler', () => {
         },
       }));
 
-      sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
@@ -271,7 +271,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -290,7 +290,7 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
@@ -320,7 +320,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      const playerByIdStub = sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      const playerFromPubgApiStub = sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -339,14 +339,14 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
       return handlePromise.then(() => {
-        sandbox.assert.calledOnce(playerByIdStub);
-        expect(pubgId).to.be.equal(playerByIdStub.getCall(0).args[0]);
-        expect(regionName).to.be.equal(playerByIdStub.getCall(0).args[1]);
+        sandbox.assert.calledOnce(playerFromPubgApiStub);
+        expect(pubgId).to.be.equal(playerFromPubgApiStub.getCall(0).args[0].id);
+        expect(regionName).to.be.equal(playerFromPubgApiStub.getCall(0).args[0].region);
       });
     });
 
@@ -370,7 +370,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -389,14 +389,14 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      const matchByIdStub = sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      const matchByIdStub = sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(matchByIdStub);
-        expect(matchId).to.be.equal(matchByIdStub.getCall(0).args[0]);
-        expect(regionName).to.be.equal(matchByIdStub.getCall(0).args[1]);
+        expect(matchId).to.be.equal(matchByIdStub.getCall(0).args[0].id);
+        expect(regionName).to.be.equal(matchByIdStub.getCall(0).args[0].region);
       });
     });
 
@@ -417,7 +417,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -436,7 +436,7 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
@@ -464,7 +464,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -483,7 +483,7 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
@@ -507,7 +507,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      const playerByIdStub = sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      const playerByIdStub = sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -526,7 +526,7 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      const matchByIdStub = sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      const matchByIdStub = sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
@@ -557,7 +557,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -576,7 +576,7 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
@@ -607,7 +607,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      const playerByIdStub = sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      const playerByIdStub = sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -626,7 +626,7 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      const matchByIdStub = sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      const matchByIdStub = sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
@@ -657,7 +657,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -676,7 +676,7 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
@@ -711,7 +711,7 @@ describe('MatchCommandHandler', () => {
         }
       ]));
 
-      sandbox.stub(pubg, 'playerById').callsFake(() => Promise.resolve({
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
           relationships: {
             matches: {
@@ -730,7 +730,7 @@ describe('MatchCommandHandler', () => {
         }
       }));
 
-      sandbox.stub(pubg, 'matchById').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
 
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 

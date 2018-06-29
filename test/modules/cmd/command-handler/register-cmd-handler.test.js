@@ -77,11 +77,11 @@ describe('RegisterCommandHandler', () => {
       ],
     };
     pubg = {
-      playerByName: () => Promise.resolve(playerByNameData),
+      player: () => Promise.resolve(playerByNameData),
     };
 
     sendMessageSpy = sandbox.spy(bot, 'sendMessage');
-    playerByNameSpy = sandbox.spy(pubg, 'playerByName');
+    playerByNameSpy = sandbox.spy(pubg, 'player');
   });
 
   afterEach(() => {
@@ -104,7 +104,7 @@ describe('RegisterCommandHandler', () => {
 
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(playerByNameSpy);
-        sandbox.assert.calledWith(playerByNameSpy, cmd.arguments[0]);
+        expect(cmd.arguments[0]).to.be.equal(playerByNameSpy.getCall(0).args[0].name);
       });
     });
 
@@ -187,7 +187,7 @@ describe('RegisterCommandHandler', () => {
         'to-register-pubg-name',
       ];
 
-      pubg.playerByName = () => Promise.reject(new Error('whatever'));
+      pubg.player = () => Promise.reject(new Error('whatever'));
 
       const handlePromise = handler.handle(cmd, bot, db, pubg);
 
