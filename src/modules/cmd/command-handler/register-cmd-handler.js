@@ -9,8 +9,6 @@ const regionHelper = require('../region-helper');
  */
 class RegisterCommandHandler extends CommandHandler {
   handle(cmd, bot, db, pubg) {
-    const { channelId } = cmd.discordUser;
-
     let playerName = '';
     let pubgPlayerData = {};
     let regionId = '';
@@ -106,10 +104,7 @@ class RegisterCommandHandler extends CommandHandler {
         })
 
         .then(() => {
-          bot.sendMessage({
-            to: channelId,
-            message: `Player "${pubgPlayerData.attributes.name}" successfully registered for region "${regionName}"!`,
-          });
+          this.onSuccess(bot, cmd, `Player "${pubgPlayerData.attributes.name}" successfully registered for region "${regionName}"!`);
         })
 
         .catch((error) => {

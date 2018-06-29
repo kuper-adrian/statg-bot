@@ -180,6 +180,26 @@ describe('RegisterCommandHandler', () => {
       });
     });
 
+    it('should send an success message if player was succesfully registered for specific region', () => {
+      const handler = RegisterCommandHandler.getHandler();
+
+      cmd.arguments = [
+        'to-register-pubg-name',
+        'pc-na',
+      ];
+
+      const handlePromise = handler.handle(cmd, bot, db, pubg);
+
+      return handlePromise.then(() => {
+        sandbox.assert.calledOnce(sendMessageSpy);
+
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
+        expect(passedEmbed.fields[0].value).to.contain(playerByNameData.data[0].attributes.name);
+        expect(passedEmbed.fields[0].value).to.contain('successfully registered');
+        expect(passedEmbed.fields[0].value).to.contain('pc-na');
+      });
+    });
+
     it('should send an error message if the pubg api request fails', () => {
       const handler = RegisterCommandHandler.getHandler();
 
