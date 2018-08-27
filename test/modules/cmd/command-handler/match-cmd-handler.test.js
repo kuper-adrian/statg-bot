@@ -765,5 +765,44 @@ describe('MatchCommandHandler', () => {
         expect(passedEmbed.fields[0].value).to.contain('weird');
       });
     });
+
+    it('should send an error message if no matches are inside the data array', () => {
+      const cmdHandler = MatchCommandHandler.getHandler();
+
+      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([
+        {
+          pubg_id: 'some-pubg-id',
+          pubg_name: 'some-pubg-name'
+        }
+      ]));
+
+      sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
+        {
+          id: 1,
+          region_name: 'pc-eu'
+        }
+      ]));
+
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          relationships: {
+            matches: {
+              data: [] // empty
+            }
+          }
+        }
+      }));
+
+      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
+
+      const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
+
+      return handlePromise.then(() => {
+        sandbox.assert.calledOnce(sendMessageSpy);
+
+        expect(passedTo).to.be.equal(cmd.discordUser.id);
+        expect(passedEmbed.fields[0].value).to.contain('No matches found');
+      });
+    });
   });
 });

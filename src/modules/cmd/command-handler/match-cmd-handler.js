@@ -52,8 +52,13 @@ class MatchCommandHandler extends CommandHandler {
       })
 
       .then((playerData) => {
-        const playerInfo = playerData.data;
-        const latestMatchInfo = playerInfo.relationships.matches.data[0];
+        const { matches } = playerData.data.relationships;
+
+        if (matches.data.length === 0) {
+          return Promise.reject(new Error('No matches found.'));
+        }
+
+        const [latestMatchInfo] = matches.data;
 
         return pubg.match({
           id: latestMatchInfo.id,
