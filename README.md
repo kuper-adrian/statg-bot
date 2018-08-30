@@ -74,6 +74,22 @@ node ./src/bot.js discordToken=TOKEN_HERE pubgApiKey=API_KEY_HERE
 ```
 (replace `TOKEN_HERE` and `API_KEY_HERE` with the respective values)
 
+For easier starting during development you can add a file named `auth.json` to the `src` directory with the following contents:
+```json
+{
+  "pubgApiKey": "API_KEY_HERE",
+  "discordToken": "TOKEN_HERE"
+}
+```
+Since this file will contain your secret tokens and keys **you will have to make sure to keep this file secret too**. Once created you can run the bot with
+```
+node ./src/bot.js runConfig=debug
+```
+or, even easier in case you have `nodemon` installed, with
+```
+npm run debug
+```
+
 ### Running in Docker
 
 Alternatively you can run the bot inside a docker container. For now you will have to build the image by yourself using the `Dockerfile` of this repo. You will also need to get PUBG API key and Discord token as described above.
