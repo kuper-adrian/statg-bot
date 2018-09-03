@@ -151,7 +151,7 @@ class StatsCommandHandler extends CommandHandler {
       gameModeCount += 1;
     });
 
-    result.avgKills = result.kills / result.roundsPlayed;
+    result.avgKills = result.kills / (result.roundsPlayed - result.wins);
     result.avgAssists = result.assists / result.roundsPlayed;
     result.avgDamageDealt = result.damageDealt / result.roundsPlayed;
     result.avgWins = result.wins / result.roundsPlayed;
