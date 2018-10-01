@@ -94,7 +94,7 @@ class MatchCommandHandler extends CommandHandler {
           },
           {
             name: 'Rank',
-            value: teammates[0].attributes.stats.winPlace,
+            value: requestingPlayerRoster.attributes.stats.rank,
             inline: true,
           },
         ];
