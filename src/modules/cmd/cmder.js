@@ -52,7 +52,7 @@ exports.processMessage = function processMessage(
   if (message.length < BASE_CMD.length) return;
 
   // if message starts with '!statg'
-  if (message.substring(0, BASE_CMD.length) === BASE_CMD) {
+  if (message.split(' ')[0] === BASE_CMD) {
     logger.debug('---------------------------------');
 
     const user = new DiscordUser(userId, username, channelId);
