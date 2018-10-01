@@ -11,11 +11,11 @@
   },
   "dependencies": {
     "clean-cache": "^1.0.1",
-    "pubg-royale": "^1.0.0",
-    "discord.io": "^2.5.3",
+    "discord.io": "github:woor/discord.io#gateway_v6",
     "knex": "^0.14.6",
     "moment": "^2.22.2",
     "npm": "^6.1.0",
+    "pubg-royale": "^1.0.0",
     "sqlite3": "^4.0.1",
     "winston": "^3.0.0"
   },
