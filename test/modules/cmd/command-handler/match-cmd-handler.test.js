@@ -225,6 +225,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'pc-eu'
+          },
           relationships: {
             matches: {
               data: [
@@ -273,6 +277,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -322,6 +330,10 @@ describe('MatchCommandHandler', () => {
 
       const playerFromPubgApiStub = sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: pubgId,
+          attributes: {
+            shardId: regionName
+          },
           relationships: {
             matches: {
               data: [
@@ -372,6 +384,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: regionName
+          },
           relationships: {
             matches: {
               data: [
@@ -419,6 +435,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'pc-eu'
+          },
           relationships: {
             matches: {
               data: [
@@ -559,6 +579,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: '1',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -609,6 +633,10 @@ describe('MatchCommandHandler', () => {
 
       const playerByIdStub = sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -659,6 +687,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: '1',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -713,6 +745,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: '1',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -785,6 +821,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'pc-eu'
+          },
           relationships: {
             matches: {
               data: [] // empty
