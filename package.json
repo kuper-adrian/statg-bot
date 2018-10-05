@@ -10,12 +10,12 @@
     "url": "git+https://github.com/kuper-adrian/statg-bot.git"
   },
   "dependencies": {
-    "clean-cache": "^1.0.1",
+    "clean-cache": "1.0.1",
     "discord.io": "github:woor/discord.io#gateway_v6",
     "knex": "^0.14.6",
     "moment": "^2.22.2",
     "npm": "^6.1.0",
-    "pubg-royale": "^1.0.0",
+    "pubg-royale": "1.1.1",
     "sqlite3": "^4.0.1",
     "winston": "^3.0.0"
   },
