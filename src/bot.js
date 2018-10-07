@@ -7,6 +7,8 @@ const cmder = require('./modules/cmd/cmder');
 
 const auth = require('./auth');
 
+const settings = require('../config/settings.json');
+
 let initialized = false;
 
 // initialize auth info from command line parameters
@@ -18,17 +20,31 @@ try {
   process.exit();
 }
 
-// initialize pubg royale
+let defaultRegion = PubgRoyale.REGIONS.PC.EU;
+let cache = {
+  player: 120 * 1000,
+  playerStats: 600 * 1000,
+  status: 60 * 1000,
+  seasons: 3600 * 1000,
+  match: 300 * 1000,
+};
+
+if (settings.defaultRegion) {
+  ({ defaultRegion } = settings);
+}
+
+if (settings.cache) {
+  ({ cache } = settings);
+}
+
+logger.info(`using default region: ${defaultRegion}`);
+logger.info(`using cache timings: ${cache.toString()}`);
+
+// initialize pubg royale api client
 const pubg = new PubgRoyale.Client({
   key: auth.pubgApiKey,
-  defaultRegion: PubgRoyale.REGIONS.PC.EU,
-  cache: {
-    player: 120 * 1000,
-    playerStats: 600 * 1000,
-    status: 60 * 1000,
-    seasons: 3600 * 1000,
-    match: 300 * 1000,
-  },
+  defaultRegion,
+  cache,
 });
 
 // Initialize Discord Bot

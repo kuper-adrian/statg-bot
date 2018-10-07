@@ -23,9 +23,10 @@ const RUN_CONFIGS = [
 ];
 
 function readAuthJson() {
-  logger.warn('trying to read secrets from local json file!');
+  const authFilePath = path.join(__dirname, '../config/auth.json');
+  logger.warn(`trying to read secrets from local json file at ${authFilePath}`);
 
-  const authJson = fs.readFileSync(path.join(__dirname, '/auth.json'));
+  const authJson = fs.readFileSync(authFilePath);
   return JSON.parse(authJson);
 }
 

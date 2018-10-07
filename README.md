@@ -81,7 +81,7 @@ node ./src/bot.js discordToken=TOKEN_HERE pubgApiKey=API_KEY_HERE
 ```
 (replace `TOKEN_HERE` and `API_KEY_HERE` with the respective values)
 
-For easier starting during development you can add a file named `auth.json` to the `src` directory with the following contents:
+For easier starting during development you can add a file named `auth.json` to the `config` directory with the following contents:
 ```json
 {
   "pubgApiKey": "API_KEY_HERE",
