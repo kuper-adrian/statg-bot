@@ -1,6 +1,7 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const math = require('../../math');
 const regionHelper = require('../region-helper');
+const playerHelper = require('../player-helper');
 const pubgOpHelper = require('../pubg-op-helper');
 
 const AVAILABLE_ARGS = [
@@ -20,34 +21,17 @@ class StatsCommandHandler extends CommandHandler {
   handle(cmd, bot, db, pubg) {
     this.logger.info('Handling stats command!');
 
-    const { id: discordId } = cmd.discordUser;
     let pubgId;
     let pubgPlayerName;
     let regionName = '';
 
-    this.logger.debug('checking if player is registered');
+    return playerHelper.getPlayer(pubg, db, cmd.discordUser)
 
-    return db.getRegisteredPlayers({ discord_id: discordId })
+      .then((playerData) => {
+        pubgId = playerData.id;
+        pubgPlayerName = playerData.attributes.name;
+        regionName = playerData.attributes.shardId;
 
-      .then((rows) => {
-        if (rows.length === 0) {
-          return Promise.reject(new Error('Player not registered. Try register command first'));
-        } else if (rows.length > 1) {
-          return Promise.reject(new Error('Something really weird happened.'));
-        }
-
-        pubgId = rows[0].pubg_id;
-        pubgPlayerName = rows[0].pubg_name;
-
-        return db.getRegions({ id: rows[0].region_id });
-      })
-
-      .then((rows) => {
-        if (rows.length !== 1) {
-          return Promise.reject(new Error('Something really weird happened.'));
-        }
-
-        regionName = rows[0].region_name;
         return pubg.seasons({ region: regionName });
       })
 

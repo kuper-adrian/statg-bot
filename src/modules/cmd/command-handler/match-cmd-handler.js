@@ -1,6 +1,7 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const math = require('../../math');
 const regionHelper = require('../region-helper');
+const playerHelper = require('../player-helper');
 const pubgOpHelper = require('../pubg-op-helper');
 
 /**
@@ -24,35 +25,13 @@ class MatchCommandHandler extends CommandHandler {
       return Promise.resolve();
     }
 
-    return db.getRegisteredPlayers({ discord_id: cmd.discordUser.id })
-
-      .then((rows) => {
-        if (rows.length === 0) {
-          return Promise.reject(new Error('Player not registered. Try register command first'));
-        } else if (rows.length > 1) {
-          return Promise.reject(new Error('Something really weird happened.'));
-        }
-
-        const player = rows[0];
-        playerPubgId = player.pubg_id;
-
-        return db.getRegions({ id: player.region_id });
-      })
-
-      .then((rows) => {
-        if (rows.length !== 1) {
-          return Promise.reject(new Error('Something really weird happened.'));
-        }
-
-        regionName = rows[0].region_name;
-        return pubg.player({
-          id: playerPubgId,
-          region: regionName,
-        });
-      })
+    return playerHelper.getPlayer(pubg, db, cmd.discordUser)
 
       .then((playerData) => {
-        const { matches } = playerData.data.relationships;
+        playerPubgId = playerData.id;
+        regionName = playerData.attributes.shardId;
+
+        const { matches } = playerData.relationships;
 
         if (matches.data.length === 0) {
           return Promise.reject(new Error('No matches found.'));
