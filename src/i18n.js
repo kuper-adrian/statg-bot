@@ -6,15 +6,15 @@ const logger = require('./modules/log').getLogger();
 
 const sections = {};
 
-const VARS_FINDER_EXPRESSION_LEFT = /\{\{\s*/;
-const VARS_FINDER_EXPRESSION_RIGHT = /\s*\}\}/;
+const VARS_FINDER_EXPRESSION_LEFT = '\\{\\{\\s*';
+const VARS_FINDER_EXPRESSION_RIGHT = '\\s*\\}\\}';
 
 /**
  * Returns regex expression to find patterns like {{ test }} in a string
  * @param {String} varName Name of variable to find with regex
  */
 function craftRegexExpression(varName) {
-  return VARS_FINDER_EXPRESSION_LEFT + varName + VARS_FINDER_EXPRESSION_RIGHT;
+  return new RegExp(VARS_FINDER_EXPRESSION_LEFT + varName + VARS_FINDER_EXPRESSION_RIGHT, 'g');
 }
 
 /**
