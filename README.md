@@ -1,4 +1,4 @@
-# StatG - PUBG Statistics Discord Bot
+# :video_game: StatG - PUBG Statistics Discord Bot
 
 [![Build Status](https://travis-ci.org/kuper-adrian/statg-bot.svg?branch=master)](https://travis-ci.org/kuper-adrian/statg-bot)
 [![Coverage Status](https://coveralls.io/repos/github/kuper-adrian/statg-bot/badge.svg?branch=master)](https://coveralls.io/github/kuper-adrian/statg-bot?branch=master)
@@ -8,9 +8,15 @@ StatG is an open source, self-hosted discord bot that can post PUBG statistics i
 
 ![Alt text](docs/images/statg-bot-enter-command.gif "Entering Command")
 
-**Disclaimer:** StatG is a hobby project for the purpose of learning JavaScript, Node.js, Docker, CI and CD. While the bot works and I personally use it, I can give no guarantees about reliabilty or further development. So use it with care ;)
+## :star: Features
 
-## Commands
+* Fetch and display your PUBG stats inside your Discord channel
+* Get infos and statistics about your and your teams latest match performance
+* Links to your pubg.op.gg page for all stats
+* Works with any region (PC and XBOX)
+* Open-source and self-hosted
+
+## :blue_book: Commands
 
 * `!statg stats [GAME_MODE]` Shows your current season stats. Per default your Discord name is used to fetch stats. If your Discord name differs from your PUBG name, use the `!statg register` command as described below to manually set your PUBG name for all future commands. 
 The **optional** `GAME_MODE` arguments are:
@@ -50,7 +56,7 @@ The **optional** `GAME_MODE` arguments are:
 * `!statg status`
   Displays the current status of the PUBG api.
 
-## Installation
+## :computer: Installation
 
 To run the bot locally on your machine, you will need:
 
@@ -91,7 +97,7 @@ or, even easier in case you have `nodemon` installed, with
 npm run debug
 ```
 
-### Running in Docker
+### :whale: Running in Docker
 
 Alternatively you can run the bot inside a docker container. For now you will have to build the image by yourself using the `Dockerfile` of this repo. You will also need to get PUBG API key and Discord token as described above.
 
@@ -122,11 +128,12 @@ services:
     - "YOUR_LOGS_VOLUME_HERE:/statg/logs"
 ```
 
-## Contributing
+## :sparkles: Contributing
 
 All contributions are generally welcomed and make me happy ;) Before coding you should get yourself Node.js, npm (which comes with Node.js) and the api keys/discord tokens as described under __Installation__. For code editing I can recommend Visual Studio Code, but feel free to use any code editor you like.
 
 If you want to make doubly sure that your pull request will be accepted, you can run the unit tests inside the ```test``` directory with ```npm t``` or ```npm test```. By running ```npm run lint``` you can also make sure that your code is fulfills the Airbnb js conventions used in this project. Additionally there is the ```npm run coverage``` script that calculates the test coverage.
 
-## License
+## :statue_of_liberty: License
+
 MIT
