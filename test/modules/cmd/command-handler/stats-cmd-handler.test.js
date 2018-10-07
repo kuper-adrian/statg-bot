@@ -1142,63 +1142,6 @@ describe('StatsCommandHandler', () => {
       });
     });
 
-    it('should send an error error message if there is no player id for discord user in db', () => {
-      const cmdHandler = StatsCommandHandler.getHandler();
-
-      const seasonsStub = sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
-        type: 'seasons',
-        data: [
-          {
-            id: 'some-season-id-1',
-            attributes: {
-              isCurrentSeason: false,
-            },
-          },
-          {
-            id: 'some-season-id-2',
-            attributes: {
-              isCurrentSeason: false,
-            },
-          },
-          {
-            id: 'some-season-id-3',
-            attributes: {
-              isCurrentSeason: true,
-            },
-          },
-        ],
-      }));
-
-      const playerStatsStub = sandbox.stub(pubg, 'playerStats').callsFake(() => Promise.resolve({
-        type: 'stats',
-        data: {
-          attributes: {
-            gameModeStats: {
-              solo: {
-                kills: 1,
-                assists: 2,
-                damageDealt: 123.12,
-                wins: 1,
-                winPoints: 1337,
-                roundsPlayed: 321,
-              },
-            },
-          },
-        },
-      }));
-
-      const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
-
-      return handlePromise.then(() => {
-        sandbox.assert.calledOnce(sendMessageSpy);
-
-        expect(passedEmbed.fields[0].value).to.contain('Player not registered');
-
-        sandbox.assert.notCalled(seasonsStub);
-        sandbox.assert.notCalled(playerStatsStub);
-      });
-    });
-
     it('should send an error message if multiple player ids are returned by db query', () => {
       const cmdHandler = StatsCommandHandler.getHandler();
 
