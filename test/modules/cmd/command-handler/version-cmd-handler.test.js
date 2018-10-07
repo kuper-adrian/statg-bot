@@ -5,6 +5,7 @@ const sinon = require('sinon');
 
 const logger = require('../../../../src/modules/log').getLogger();
 const VersionCommandHandler = require('../../../../src/modules/cmd/command-handler/version-cmd-handler');
+const packageInfo = require('../../../../package.json');
 
 describe('VersionCommandHandler.handle()', () => {
   let debugStub = {};
@@ -129,7 +130,7 @@ describe('VersionCommandHandler.handle()', () => {
   it('should send a message containing the version of the bot', () => {
     const handler = VersionCommandHandler.getHandler();
 
-    const version = '1.1.1';
+    const { version } = packageInfo;
     let passedEmbed = '';
 
     const cmd = {
