@@ -31,7 +31,7 @@ class VersionCommandHandler extends CommandHandler {
         value: 'See how I work on [GitHub](https://github.com/kuper-adrian/statg-bot).',
       },
     ];
-    this.onResolved(bot, cmd, fields);
+    this.onResolved(bot, cmd, fields, true);
   }
 }
 

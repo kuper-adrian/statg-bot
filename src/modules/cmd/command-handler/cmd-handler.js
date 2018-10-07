@@ -19,12 +19,13 @@ class CommandHandler {
    * @param {Object} cmd the command object
    * @param {Array} embedFields Array of fields that should be inserted into embed message
    */
-  onResolved(bot, cmd, embedFields) {
+  onResolved(bot, cmd, embedFields, directMessage = false) {
     this.logger.debug('onResolved');
     const data = CommandHandler.createEmbedData(
       cmd,
       this.defaultEmbedColor,
       embedFields,
+      directMessage,
     );
     bot.sendMessage(data);
   }
