@@ -5,7 +5,6 @@ class CommandHandler {
   constructor() {
     /* eslint global-require: "off" */
     this.logger = require('../../log.js').getLogger();
-    this.moment = require('moment');
 
     this.defaultEmbedColor = 1344221; // blue
     this.successEmbedColor = 1365331; // green
@@ -22,7 +21,7 @@ class CommandHandler {
    */
   onResolved(bot, cmd, embedFields) {
     this.logger.debug('onResolved');
-    const data = this.createEmbedData(
+    const data = CommandHandler.createEmbedData(
       cmd,
       this.defaultEmbedColor,
       embedFields,
@@ -38,7 +37,7 @@ class CommandHandler {
    * @param {String} successMessage the success message
    */
   onSuccess(bot, cmd, successMessage) {
-    const data = this.createEmbedData(
+    const data = CommandHandler.createEmbedData(
       cmd,
       this.successEmbedColor,
       [
@@ -66,7 +65,7 @@ class CommandHandler {
       throw new Error('argument "error" must be of type "Error"');
     }
 
-    const data = this.createEmbedData(
+    const data = CommandHandler.createEmbedData(
       cmd,
       this.errorEmbedColor,
       [
@@ -88,12 +87,12 @@ class CommandHandler {
    * @param {Number} color Number of the color of the embed message
    * @param {Array} fields Array of fields in the embed message
    */
-  createEmbedData(cmd, color, fields, directMessage = false) {
+  static createEmbedData(cmd, color, fields, directMessage = false) {
     return {
       to: directMessage ? cmd.discordUser.id : cmd.discordUser.channelId,
       embed: {
         color,
-        timestamp: this.moment().toISOString(),
+        timestamp: (new Date()).toISOString(),
         footer: {
           icon_url: 'https://cdn.discordapp.com/embed/avatars/4.png',
           text: `!statg ${cmd.command}`,
