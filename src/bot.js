@@ -5,16 +5,23 @@ const statgDb = require('./modules/db');
 const logger = require('./modules/log').getLogger();
 const cmder = require('./modules/cmd/cmder');
 
+const i18n = require('./i18n');
 const auth = require('./auth');
-
 const settings = require('../config/settings.json');
 
 let initialized = false;
+
+let language = 'en';
+
+if (settings.language) {
+  ({ language } = settings);
+}
 
 // initialize auth info from command line parameters
 try {
   process.argv.splice(0, 2);
   auth.init(process.argv);
+  i18n.init(language);
 } catch (error) {
   logger.error(error.message);
   process.exit();

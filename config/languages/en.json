@@ -1,0 +1,24 @@
+{
+  "cmder": {
+    "unknownCommand": "Unknown command. Type```!statg help```to get more infos about all commands."
+  },
+  "commandHandler": {
+    "success": "Success",
+    "error": "Error"
+  },
+  "help": {
+    "invalidArguments": "Invalid amount of arguments.",
+    "successMessage": "Click [here]({{ HELP_LINK }}) to get help about all statg commands."
+  },
+  "stats": {
+    "player": "Player",
+    "gameMode": "Game Mode",
+    "currentSeasonStatistics": "Current Season Statistics"
+  },
+  "match": {
+    "gameMode": "Game Mode",
+    "map": "Map",
+    "rank": "Rank",
+    "squad": "Squad"
+  }
+}
