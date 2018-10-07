@@ -4,7 +4,7 @@ const path = require('path');
 const enLanguage = require('../config/languages/en.json');
 const logger = require('./modules/log').getLogger();
 
-const sections = {};
+const scopes = {};
 
 const VARS_FINDER_EXPRESSION_LEFT = '\\{\\{\\s*';
 const VARS_FINDER_EXPRESSION_RIGHT = '\\s*\\}\\}';
@@ -35,14 +35,14 @@ function readLanguageFile(language) {
   }
 }
 
-function addSection(section, targetLanguage) {
-  sections[section] = {};
+function addScope(scopeName, targetLanguage) {
+  scopes[scopeName] = {};
 
-  Object.keys(enLanguage[section]).forEach((key) => {
-    if (targetLanguage[section][key]) {
-      sections[section][key] = targetLanguage[section][key];
+  Object.keys(enLanguage[scopeName]).forEach((key) => {
+    if (targetLanguage[scopeName][key]) {
+      scopes[scopeName][key] = targetLanguage[scopeName][key];
     } else {
-      sections[section][key] = enLanguage[section][key];
+      scopes[scopeName][key] = enLanguage[scopeName][key];
     }
   });
 }
@@ -55,14 +55,14 @@ function addSection(section, targetLanguage) {
 exports.init = (language) => {
   const targetLanguage = readLanguageFile(language);
 
-  addSection('commandHandler', targetLanguage);
-  addSection('help', targetLanguage);
-  addSection('match', targetLanguage);
+  addScope('commandHandler', targetLanguage);
+  addScope('help', targetLanguage);
+  addScope('match', targetLanguage);
 };
 
-exports.getSection = section => ({
+exports.getScope = scope => ({
   t: (key, vars) => {
-    let result = sections[section][key];
+    let result = scopes[scope][key];
 
     // if no variable object was provided, return string as is
     if (!vars) {
