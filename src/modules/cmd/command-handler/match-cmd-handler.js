@@ -1,8 +1,12 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const math = require('../../math');
+
 const regionHelper = require('../region-helper');
 const playerHelper = require('../player-helper');
 const pubgOpHelper = require('../pubg-op-helper');
+
+const i18nCmdHandler = require('../../../i18n').getScope('commandHandler');
+const i18nMatch = require('../../../i18n').getScope('match');
 
 /**
  * Handler for !statg match command. Posts statistics about latest match.
@@ -21,7 +25,7 @@ class MatchCommandHandler extends CommandHandler {
     let regionName = '';
 
     if (cmd.arguments.length !== 0) {
-      this.onError(bot, cmd, new Error('invalid amount of arguments'));
+      this.onError(bot, cmd, new Error(i18nCmdHandler.t('invalidArguments')));
       return Promise.resolve();
     }
 
@@ -34,7 +38,7 @@ class MatchCommandHandler extends CommandHandler {
         const { matches } = playerData.relationships;
 
         if (matches.data.length === 0) {
-          return Promise.reject(new Error('No matches found.'));
+          return Promise.reject(i18nMatch.t('noMatches'));
         }
 
         const [latestMatchInfo] = matches.data;
@@ -62,17 +66,17 @@ class MatchCommandHandler extends CommandHandler {
 
         const fields = [
           {
-            name: 'Game Mode',
+            name: i18nMatch.t('gameMode'),
             value: matchData.data.attributes.gameMode,
             inline: true,
           },
           {
-            name: 'Map',
+            name: i18nMatch.t('map'),
             value: matchData.data.attributes.mapName,
             inline: true,
           },
           {
-            name: 'Rank',
+            name: i18nMatch.t('rank'),
             value: requestingPlayerRoster.attributes.stats.rank,
             inline: true,
           },
@@ -85,7 +89,7 @@ class MatchCommandHandler extends CommandHandler {
         });
 
         fields.push({
-          name: 'Squad',
+          name: i18nMatch.t('squad'),
           value: squadFieldValue,
         });
 
