@@ -1,3 +1,5 @@
+const i18n = require('../../../i18n').getScope('commandHandler');
+
 /**
  * Base class for command handler.
  */
@@ -43,7 +45,7 @@ class CommandHandler {
       this.successEmbedColor,
       [
         {
-          name: 'Success',
+          name: i18n.t('success'),
           value: successMessage,
         },
       ],
@@ -71,7 +73,7 @@ class CommandHandler {
       this.errorEmbedColor,
       [
         {
-          name: 'Error',
+          name: i18n.t('error'),
           value: error.message,
         },
       ],

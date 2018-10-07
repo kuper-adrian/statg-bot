@@ -4,11 +4,11 @@
   },
   "commandHandler": {
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "invalidArguments": "Invalid amount of arguments."
   },
   "help": {
-    "invalidArguments": "Invalid amount of arguments.",
-    "successMessage": "Click [here]({{ HELP_LINK }}) to get help about all statg commands."
+    "helpMessage": "Click [here]({{ HELP_LINK }}) to get help about all statg commands."
   },
   "stats": {
     "player": "Player",
@@ -16,9 +16,14 @@
     "currentSeasonStatistics": "Current Season Statistics"
   },
   "match": {
+    "noMatches": "No matches found.",
     "gameMode": "Game Mode",
     "map": "Map",
     "rank": "Rank",
     "squad": "Squad"
+  },
+  "region": {
+    "unknownRegion": "Unknown region \"{{ region }}\".",
+    "successMessage": "Global region successfully set to \"{{ region }}\"!"
   }
 }

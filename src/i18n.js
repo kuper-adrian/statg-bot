@@ -36,6 +36,8 @@ function readLanguageFile(language) {
 }
 
 function addScope(scopeName, targetLanguage) {
+  logger.debug(`adding scope "${scopeName}"...`);
+
   scopes[scopeName] = {};
 
   Object.keys(enLanguage[scopeName]).forEach((key) => {
@@ -53,11 +55,17 @@ function addScope(scopeName, targetLanguage) {
  * @param {String} language Language abbreviation of desired language
  */
 exports.init = (language) => {
+  logger.debug(`initialising i18n for language "${language}"...`);
+
   const targetLanguage = readLanguageFile(language);
 
+  addScope('cmder', targetLanguage);
   addScope('commandHandler', targetLanguage);
   addScope('help', targetLanguage);
   addScope('match', targetLanguage);
+  addScope('region', targetLanguage);
+
+  logger.debug('i18n init finished!');
 };
 
 exports.getScope = scope => ({
