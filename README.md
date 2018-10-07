@@ -12,18 +12,19 @@ StatG is an open source, self-hosted discord bot that can post PUBG statistics i
 
 ## Commands
 
-* `!statg register PUBG_PLAYER_NAME [REGION_NAME]` 
-  Links your PUBG player name to your Discord account and enables you to fetch your stats.
-  The optional argument `REGION_NAME` specifies the region of the player. If omitted the default region is used which can be set using the `region` command (see below). For a list of available regions, also see `regions` command.
-* `!statg stats [GAME_MODE]` Shows your current season stats (if you have registered yourself). **Optional** `GAME_MODE` arguments are:
+* `!statg stats [GAME_MODE]` Shows your current season stats. Per default your Discord name is used to fetch stats. If your Discord name differs from your PUBG name, use the `!statg register` command as described below to manually set your PUBG name for all future commands. 
+The **optional** `GAME_MODE` arguments are:
     * `solo` Stats from third-person solo matches only.
     * `solo-fpp` Stats from first-person solo matches only.
     * `duo` Stats from third-person duo matches only.
     * `duo-fpp` Stats from first-person duo matches only.
     * `squad` Stats from third-person squad matches only.
     * `squad-fpp` Stats from first-person squad matches only.
+* `!statg register PUBG_PLAYER_NAME [REGION_NAME]` 
+  Links your PUBG player name to your Discord account and enables you to fetch your stats even when your Discord name is different from your PUBG name.
+  The optional argument `REGION_NAME` specifies the region of the player. If omitted the default region is used which can be set using the `!statg region` command (see below). For a list of available regions, also see `!statg region` command.
 * `!statg match`
-  Shows your and your squads latest match info (all game modes combined).
+  Shows your and your squads latest match info (all game modes combined). Similar to the `!statg stats` command your Discord name is used per default unless you registered another PUBG name through `!statg register`.
 * `!statg unregister`
   Undoes `register` command.
 * `!statg region REGION_NAME`

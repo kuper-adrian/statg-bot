@@ -62,6 +62,7 @@ describe('StatsCommandHandler', () => {
     };
 
     pubg = {
+      player: () => Promise.resolve({}),
       seasons: () => Promise.resolve({}),
       playerStats: () => Promise.resolve({}),
     };
@@ -150,52 +151,10 @@ describe('StatsCommandHandler', () => {
         },
       ]));
 
-      sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
-        type: 'seasons',
-        data: [
-          {
-            id: 'some-season-id-1',
-            attributes: {
-              isCurrentSeason: false,
-            },
-          },
-          {
-            id: 'some-season-id-2',
-            attributes: {
-              isCurrentSeason: false,
-            },
-          },
-          {
-            id: 'some-season-id-3',
-            attributes: {
-              isCurrentSeason: true,
-            },
-          },
-        ],
-      }));
-
-      sandbox.stub(pubg, 'playerStats').callsFake(() => Promise.resolve({
-        type: 'stats',
-        data: {
-          attributes: {
-            gameModeStats: {
-              solo: {
-                kills: 1,
-                assists: 2,
-                damageDealt: 123.12,
-                wins: 1,
-                winPoints: 1337,
-                roundsPlayed: 321,
-              },
-            },
-          },
-        },
-      }));
-
       const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
 
       return handlePromise.then(() => {
-        sandbox.assert.calledOnce(getRegionsSpy);
+        sandbox.assert.called(getRegionsSpy);
       });
     });
 
@@ -211,6 +170,16 @@ describe('StatsCommandHandler', () => {
           pubg_name: 'some-pubg-name',
         },
       ]));
+
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: 'some-pubg-id',
+          attributes: {
+            name: 'some-pubg-name',
+            shardId: 'pc-eu',
+          },
+        },
+      }));
 
       const seasonsStub = sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
@@ -280,6 +249,16 @@ describe('StatsCommandHandler', () => {
           pubg_name: 'some-pubg-name',
         },
       ]));
+
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: pubgPlayerId,
+          attributes: {
+            name: 'some-pubg-name',
+            shardId: 'pc-eu',
+          },
+        },
+      }));
 
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
@@ -371,6 +350,16 @@ describe('StatsCommandHandler', () => {
         },
       ]));
 
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: pubgPlayerId,
+          attributes: {
+            name: pubgPlayerName,
+            shardId: 'pc-eu',
+          },
+        },
+      }));
+
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
         data: [
@@ -422,7 +411,7 @@ describe('StatsCommandHandler', () => {
         expect(passedEmbed.fields[2].value).to.contain('Assists');
         expect(passedEmbed.fields[2].value).to.contain(stats.solo.assists + stats.squad.assists);
         expect(passedEmbed.fields[2].value).to.contain((stats.solo.assists + stats.squad.assists) /
-        (stats.solo.roundsPlayed + stats.squad.roundsPlayed));
+          (stats.solo.roundsPlayed + stats.squad.roundsPlayed));
 
         expect(passedEmbed.fields[2].value).to.contain('Wins');
         expect(passedEmbed.fields[2].value).to.contain(stats.solo.wins + stats.squad.wins);
@@ -475,6 +464,16 @@ describe('StatsCommandHandler', () => {
           pubg_name: pubgPlayerName,
         },
       ]));
+
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: pubgPlayerId,
+          attributes: {
+            name: pubgPlayerName,
+            shardId: 'pc-eu',
+          },
+        },
+      }));
 
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
@@ -589,6 +588,16 @@ describe('StatsCommandHandler', () => {
         },
       ]));
 
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: pubgPlayerId,
+          attributes: {
+            name: pubgPlayerName,
+            shardId: 'pc-eu',
+          },
+        },
+      }));
+
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
         data: [
@@ -698,6 +707,16 @@ describe('StatsCommandHandler', () => {
           pubg_name: pubgPlayerName,
         },
       ]));
+
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: pubgPlayerId,
+          attributes: {
+            name: pubgPlayerName,
+            shardId: 'pc-eu',
+          },
+        },
+      }));
 
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
@@ -813,6 +832,16 @@ describe('StatsCommandHandler', () => {
         },
       ]));
 
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: pubgPlayerId,
+          attributes: {
+            name: pubgPlayerName,
+            shardId: 'pc-eu',
+          },
+        },
+      }));
+
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
         data: [
@@ -922,6 +951,16 @@ describe('StatsCommandHandler', () => {
           pubg_name: pubgPlayerName,
         },
       ]));
+
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: pubgPlayerId,
+          attributes: {
+            name: pubgPlayerName,
+            shardId: 'pc-eu',
+          },
+        },
+      }));
 
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
@@ -1036,6 +1075,16 @@ describe('StatsCommandHandler', () => {
         },
       ]));
 
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: pubgPlayerId,
+          attributes: {
+            name: pubgPlayerName,
+            shardId: 'pc-eu',
+          },
+        },
+      }));
+
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
         data: [
@@ -1090,63 +1139,6 @@ describe('StatsCommandHandler', () => {
         expect(passedEmbed.fields[2].value).to.contain('Wins');
         expect(passedEmbed.fields[2].value).to.contain(stats['squad-fpp'].wins);
         expect(passedEmbed.fields[2].value).to.contain((stats['squad-fpp'].wins) / (stats['squad-fpp'].roundsPlayed));
-      });
-    });
-
-    it('should send an error error message if there is no player id for discord user in db', () => {
-      const cmdHandler = StatsCommandHandler.getHandler();
-
-      const seasonsStub = sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
-        type: 'seasons',
-        data: [
-          {
-            id: 'some-season-id-1',
-            attributes: {
-              isCurrentSeason: false,
-            },
-          },
-          {
-            id: 'some-season-id-2',
-            attributes: {
-              isCurrentSeason: false,
-            },
-          },
-          {
-            id: 'some-season-id-3',
-            attributes: {
-              isCurrentSeason: true,
-            },
-          },
-        ],
-      }));
-
-      const playerStatsStub = sandbox.stub(pubg, 'playerStats').callsFake(() => Promise.resolve({
-        type: 'stats',
-        data: {
-          attributes: {
-            gameModeStats: {
-              solo: {
-                kills: 1,
-                assists: 2,
-                damageDealt: 123.12,
-                wins: 1,
-                winPoints: 1337,
-                roundsPlayed: 321,
-              },
-            },
-          },
-        },
-      }));
-
-      const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
-
-      return handlePromise.then(() => {
-        sandbox.assert.calledOnce(sendMessageSpy);
-
-        expect(passedEmbed.fields[0].value).to.contain('Player not registered');
-
-        sandbox.assert.notCalled(seasonsStub);
-        sandbox.assert.notCalled(playerStatsStub);
       });
     });
 
@@ -1236,6 +1228,16 @@ describe('StatsCommandHandler', () => {
         },
       ]));
 
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: 'some-pubg-id1',
+          attributes: {
+            name: 'some-pubg-name1',
+            shardId: 'pc-eu',
+          },
+        },
+      }));
+
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',
         data: [
@@ -1302,6 +1304,16 @@ describe('StatsCommandHandler', () => {
           pubg_name: 'some-pubg-name1',
         },
       ]));
+
+      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
+        data: {
+          id: 'some-pubg-id1',
+          attributes: {
+            name: 'some-pubg-name1',
+            shardId: 'pc-eu',
+          },
+        },
+      }));
 
       sandbox.stub(pubg, 'seasons').callsFake(() => Promise.resolve({
         type: 'seasons',

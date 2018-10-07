@@ -225,6 +225,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'pc-eu'
+          },
           relationships: {
             matches: {
               data: [
@@ -273,6 +277,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -322,6 +330,10 @@ describe('MatchCommandHandler', () => {
 
       const playerFromPubgApiStub = sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: pubgId,
+          attributes: {
+            shardId: regionName
+          },
           relationships: {
             matches: {
               data: [
@@ -372,6 +384,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: regionName
+          },
           relationships: {
             matches: {
               data: [
@@ -419,6 +435,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'pc-eu'
+          },
           relationships: {
             matches: {
               data: [
@@ -452,90 +472,6 @@ describe('MatchCommandHandler', () => {
       });
     });
 
-    it('should send an error message if player is not registered', () => {
-      const cmdHandler = MatchCommandHandler.getHandler();
-
-      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([]));
-
-      sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
-        {
-          id: 1,
-          region_name: 'some-region-name'
-        }
-      ]));
-
-      sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
-        data: {
-          relationships: {
-            matches: {
-              data: [
-                {
-                  type: 'match',
-                  id: 'some-match-id-1'
-                },
-                {
-                  type: 'match',
-                  id: 'some-match-id-2'
-                }
-              ]
-            }
-          }
-        }
-      }));
-
-      sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
-
-      const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
-
-      return handlePromise.then(() => {
-        sandbox.assert.calledOnce(sendMessageSpy);
-
-        expect(passedTo).to.be.equal(cmd.discordUser.id);
-        expect(passedEmbed.fields[0].value).to.contain('Player not registered');
-      });
-    });
-
-    it('should not send api request if player is not registered', () => {
-      const cmdHandler = MatchCommandHandler.getHandler();
-
-      sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve([])); // <-- empty
-
-      sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
-        {
-          id: 1,
-          region_name: 'some-region-name'
-        }
-      ]));
-
-      const playerByIdStub = sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
-        data: {
-          relationships: {
-            matches: {
-              data: [
-                {
-                  type: 'match',
-                  id: 'some-match-id-1'
-                },
-                {
-                  type: 'match',
-                  id: 'some-match-id-2'
-                }
-              ]
-            }
-          }
-        }
-      }));
-
-      const matchByIdStub = sandbox.stub(pubg, 'match').callsFake(() => Promise.resolve(STUB_MATCH_DATA));
-
-      const handlePromise = cmdHandler.handle(cmd, bot, db, pubg);
-
-      return handlePromise.then(() => {
-        sandbox.assert.notCalled(playerByIdStub);
-        sandbox.assert.notCalled(matchByIdStub);
-      });
-    });
-
     it('should not query the database if arguments were passed', () => {
       const cmdHandler = MatchCommandHandler.getHandler();
 
@@ -559,6 +495,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: '1',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -609,6 +549,10 @@ describe('MatchCommandHandler', () => {
 
       const playerByIdStub = sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -659,6 +603,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: '1',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -713,6 +661,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: '1',
+          attributes: {
+            shardId: 'some-region-name'
+          },
           relationships: {
             matches: {
               data: [
@@ -785,6 +737,10 @@ describe('MatchCommandHandler', () => {
 
       sandbox.stub(pubg, 'player').callsFake(() => Promise.resolve({
         data: {
+          id: 'some-pubg-id',
+          attributes: {
+            shardId: 'pc-eu'
+          },
           relationships: {
             matches: {
               data: [] // empty
