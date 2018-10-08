@@ -35,14 +35,14 @@ function readLanguageFile(language) {
   }
 }
 
-function addScope(scopeName, targetLanguage) {
+function addScope(scopeName, scope) {
   logger.debug(`adding scope "${scopeName}"...`);
 
   scopes[scopeName] = {};
 
   Object.keys(enLanguage[scopeName]).forEach((key) => {
-    if (targetLanguage[scopeName][key]) {
-      scopes[scopeName][key] = targetLanguage[scopeName][key];
+    if (scope[key]) {
+      scopes[scopeName][key] = scope[key];
     } else {
       scopes[scopeName][key] = enLanguage[scopeName][key];
     }
@@ -59,11 +59,10 @@ exports.init = (language) => {
 
   const targetLanguage = readLanguageFile(language);
 
-  addScope('cmder', targetLanguage);
-  addScope('commandHandler', targetLanguage);
-  addScope('help', targetLanguage);
-  addScope('match', targetLanguage);
-  addScope('region', targetLanguage);
+  // add scopes from language file
+  Object.keys(enLanguage).forEach((scopeName) => {
+    addScope(scopeName, targetLanguage[scopeName]);
+  });
 
   logger.debug('i18n init finished!');
 };
