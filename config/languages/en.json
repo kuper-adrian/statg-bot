@@ -5,7 +5,8 @@
   "commandHandler": {
     "success": "Success",
     "error": "Error",
-    "invalidArguments": "Invalid amount of arguments."
+    "invalidArguments": "Invalid amount of arguments.",
+    "unforseenError": "Something really strange happened..."
   },
   "help": {
     "helpMessage": "Click [here]({{ HELP_LINK }}) to get help about all statg commands."
@@ -23,7 +24,12 @@
     "squad": "Squad"
   },
   "region": {
-    "unknownRegion": "Unknown region \"{{ region }}\".",
-    "successMessage": "Global region successfully set to \"{{ region }}\"!"
+    "unknownRegion": "Unknown region \"{{ REGION }}\".",
+    "successMessage": "Global region successfully set to \"{{ REGION }}\"!"
+  },
+  "register": {
+    "unknownRegion": "Unknown region \"{{ REGION }}\".",
+    "playerExists": "There already is a player name registered for your discord user. Try using unregister command first.",
+    "successMessage": "Player \"{{ PLAYER_NAME }}\" successfully registered for region \"{{ REGION_NAME }}\"!"
   }
 }

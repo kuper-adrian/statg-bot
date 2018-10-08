@@ -18,13 +18,13 @@ class RegionCommandHandler extends CommandHandler {
       [newRegion] = cmd.arguments;
 
       if (!regionHelper.REGIONS.includes(newRegion)) {
-        this.onError(bot, cmd, new Error(i18nRegion.t('unknownRegion', { region: newRegion })));
+        this.onError(bot, cmd, new Error(i18nRegion.t('unknownRegion', { REGION: newRegion })));
         return Promise.resolve();
       }
 
       return db.setGlobalRegion(newRegion)
         .then(() => {
-          const message = i18nRegion.t('successMessage', { region: newRegion });
+          const message = i18nRegion.t('successMessage', { REGION: newRegion });
           this.onSuccess(bot, cmd, message);
           return Promise.resolve();
         })
