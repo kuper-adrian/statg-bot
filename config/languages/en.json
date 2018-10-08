@@ -45,5 +45,9 @@
   },
   "status": {
     "successMessage": "Looks like the PUBG API is up and ready!"
+  },
+  "unregister": {
+    "playerNotRegistered": "Player not registered.",
+    "successMessage": "Player \"{{ PLAYER_NAME }}\" successfully unregistered!"
   }
 }

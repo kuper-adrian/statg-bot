@@ -1,5 +1,7 @@
 const { CommandHandler } = require('./cmd-handler.js');
 
+const i18nCmdHandler = require('../../../i18n').getScope('commandHandler');
+const i18nUnregister = require('../../../i18n').getScope('unregister');
 
 /**
  * Command for unregistering the pubg player name from the discord user.
@@ -8,7 +10,7 @@ const { CommandHandler } = require('./cmd-handler.js');
 class UnregisterCommandHandler extends CommandHandler {
   handle(cmd, bot, db) {
     if (cmd.arguments.length !== 0) {
-      this.onError(bot, cmd, new Error('invalid amount of arguments'));
+      this.onError(bot, cmd, new Error(i18nCmdHandler.t('invalidArguments')));
       return Promise.resolve();
     }
 
@@ -18,7 +20,7 @@ class UnregisterCommandHandler extends CommandHandler {
 
       .then((rows) => {
         if (rows.length === 0) {
-          return Promise.reject(new Error('player not registered'));
+          return Promise.reject(new Error(i18nUnregister.t('playerNotRegistered')));
         }
 
         [player] = rows;
@@ -27,7 +29,7 @@ class UnregisterCommandHandler extends CommandHandler {
       })
 
       .then(() => {
-        this.onSuccess(bot, cmd, `Player "${player.pubg_name}" successfully unregistered!`);
+        this.onSuccess(bot, cmd, i18nUnregister.t('successMessage', { PLAYER_NAME: player.pubg_name }));
       })
 
       .catch((error) => {
