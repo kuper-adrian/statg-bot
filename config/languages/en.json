@@ -42,5 +42,8 @@
     "currentSeasonStatistics": "Current Season Statistics",
     "invalidGameMode": "Invalid game mode \"{{ GAME_MODE }}\".",
     "averageAbbr": "avg."
+  },
+  "status": {
+    "successMessage": "Looks like the PUBG API is up and ready!"
   }
 }
