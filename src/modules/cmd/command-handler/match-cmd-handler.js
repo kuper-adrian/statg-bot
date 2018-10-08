@@ -4,7 +4,9 @@ const math = require('../../math');
 const regionHelper = require('../region-helper');
 const playerHelper = require('../player-helper');
 const pubgOpHelper = require('../pubg-op-helper');
+const formattingHelper = require('../formatting-helper');
 
+const i18nPubg = require('../../../i18n').getScope('pubg');
 const i18nCmdHandler = require('../../../i18n').getScope('commandHandler');
 const i18nMatch = require('../../../i18n').getScope('match');
 
@@ -38,7 +40,7 @@ class MatchCommandHandler extends CommandHandler {
         const { matches } = playerData.relationships;
 
         if (matches.data.length === 0) {
-          return Promise.reject(i18nMatch.t('noMatches'));
+          return Promise.reject(new Error(i18nMatch.t('noMatches')));
         }
 
         const [latestMatchInfo] = matches.data;
@@ -66,17 +68,17 @@ class MatchCommandHandler extends CommandHandler {
 
         const fields = [
           {
-            name: i18nMatch.t('gameMode'),
+            name: i18nPubg.t('gameMode'),
             value: matchData.data.attributes.gameMode,
             inline: true,
           },
           {
-            name: i18nMatch.t('map'),
+            name: i18nPubg.t('map'),
             value: matchData.data.attributes.mapName,
             inline: true,
           },
           {
-            name: i18nMatch.t('rank'),
+            name: i18nPubg.t('rank'),
             value: requestingPlayerRoster.attributes.stats.rank,
             inline: true,
           },
@@ -89,7 +91,7 @@ class MatchCommandHandler extends CommandHandler {
         });
 
         fields.push({
-          name: i18nMatch.t('squad'),
+          name: i18nPubg.t('squad'),
           value: squadFieldValue,
         });
 
@@ -110,15 +112,44 @@ class MatchCommandHandler extends CommandHandler {
       regionHelper.getAreaPartFromRegion(regionName),
     );
 
+    let killsTranslation = i18nPubg.t('kills');
+    let assistsTranslation = i18nPubg.t('assists');
+    let damageTranslation = i18nPubg.t('damage');
+    let healsTranslation = i18nPubg.t('heals');
+    let revivesTranslation = i18nPubg.t('revives');
+    let winPointsTranslation = i18nPubg.t('winPoints');
+
+    const translations = [
+      killsTranslation,
+      assistsTranslation,
+      damageTranslation,
+      healsTranslation,
+      revivesTranslation,
+      winPointsTranslation,
+    ];
+
+    // sort desc by length of word
+    const maxWordLength = formattingHelper.longestWordLength(translations);
+
+    killsTranslation = formattingHelper.appendWhitespaces(`${killsTranslation}:`, maxWordLength);
+    assistsTranslation = formattingHelper.appendWhitespaces(`${assistsTranslation}:`, maxWordLength);
+    damageTranslation = formattingHelper.appendWhitespaces(`${damageTranslation}:`, maxWordLength);
+    healsTranslation = formattingHelper.appendWhitespaces(`${healsTranslation}:`, maxWordLength);
+    revivesTranslation = formattingHelper.appendWhitespaces(
+      `${revivesTranslation}:`,
+      maxWordLength,
+    );
+    winPointsTranslation = formattingHelper.appendWhitespaces(`${winPointsTranslation}:`, maxWordLength);
+
     return `[${playerName}](${pubgOpLink})
 \`\`\`markdown
-- Kills:      ${stats.kills} (${stats.headshotKills})
-- Assists:    ${stats.assists}
-- Damage:     ${math.round(stats.damageDealt, 2)}
-- Heals:      ${stats.heals}
-- Revives:    ${stats.revives}
+- ${killsTranslation} ${stats.kills} (${stats.headshotKills})
+- ${assistsTranslation} ${stats.assists}
+- ${damageTranslation} ${math.round(stats.damageDealt, 2)}
+- ${healsTranslation} ${stats.heals}
+- ${revivesTranslation} ${stats.revives}
 
-- Win Points: ${stats.winPoints} (${stats.winPointsDelta})
+- ${winPointsTranslation} ${stats.winPoints} (${stats.winPointsDelta})
 \`\`\``;
   }
 }

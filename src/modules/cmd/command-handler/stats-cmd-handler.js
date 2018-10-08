@@ -3,6 +3,11 @@ const math = require('../../math');
 const regionHelper = require('../region-helper');
 const playerHelper = require('../player-helper');
 const pubgOpHelper = require('../pubg-op-helper');
+const formattingHelper = require('../formatting-helper');
+
+const i18nPubg = require('../../../i18n').getScope('pubg');
+const i18nCmdHandler = require('../../../i18n').getScope('commandHandler');
+const i18nStats = require('../../../i18n').getScope('stats');
 
 const AVAILABLE_ARGS = [
   'solo',
@@ -66,7 +71,7 @@ class StatsCommandHandler extends CommandHandler {
           avgStats = StatsCommandHandler.getAverageStats(stats.data.attributes.gameModeStats);
           statMessage = StatsCommandHandler.getStatsAsDiscordFormattedString(avgStats);
         } else if (cmd.arguments.length > 1) {
-          this.onError(bot, cmd, new Error('invalid amount of arguments.'));
+          this.onError(bot, cmd, new Error(i18nCmdHandler.t('invalidArguments')));
           return;
         } else if (AVAILABLE_ARGS.includes(cmd.arguments[0])) {
           [gameMode] = cmd.arguments;
@@ -77,7 +82,7 @@ class StatsCommandHandler extends CommandHandler {
           avgStats = StatsCommandHandler.getAverageStats(filteredStats);
           statMessage = StatsCommandHandler.getStatsAsDiscordFormattedString(avgStats);
         } else {
-          this.onError(bot, cmd, new Error(`invalid game mode "${cmd.arguments[0]}"`));
+          this.onError(bot, cmd, new Error(i18nStats.t('invalidGameMode', { GAME_MODE: cmd.arguments[0] })));
           return;
         }
 
@@ -88,17 +93,17 @@ class StatsCommandHandler extends CommandHandler {
 
         const fields = [
           {
-            name: 'Player',
+            name: i18nPubg.t('player'),
             value: `[${pubgPlayerName}](${pubgOpLink})`,
             inline: true,
           },
           {
-            name: 'Game Mode',
+            name: i18nPubg.t('gameMode'),
             value: gameMode,
             inline: true,
           },
           {
-            name: 'Current Season Statistics',
+            name: i18nStats.t('currentSeasonStatistics'),
             value: statMessage,
           },
         ];
@@ -145,12 +150,40 @@ class StatsCommandHandler extends CommandHandler {
   }
 
   static getStatsAsDiscordFormattedString(avgStats) {
+    let killsTranslation = i18nPubg.t('kills');
+    let assistsTranslation = i18nPubg.t('assists');
+    let damageTranslation = i18nPubg.t('damage');
+    let winsTranslation = i18nPubg.t('wins');
+    let roundsPlayedTranslation = i18nPubg.t('roundsPlayed');
+
+    const translations = [
+      killsTranslation,
+      assistsTranslation,
+      damageTranslation,
+      winsTranslation,
+      roundsPlayedTranslation,
+    ];
+
+    // sort desc by length of word
+    const maxWordLength = formattingHelper.longestWordLength(translations);
+
+    killsTranslation = formattingHelper.appendWhitespaces(`${killsTranslation}:`, maxWordLength);
+    assistsTranslation = formattingHelper.appendWhitespaces(`${assistsTranslation}:`, maxWordLength);
+    damageTranslation = formattingHelper.appendWhitespaces(`${damageTranslation}:`, maxWordLength);
+    winsTranslation = formattingHelper.appendWhitespaces(`${winsTranslation}:`, maxWordLength);
+    roundsPlayedTranslation = formattingHelper.appendWhitespaces(
+      `${roundsPlayedTranslation}:`,
+      maxWordLength,
+    );
+
+    const averageAbbr = i18nStats.t('averageAbbr');
+
     const result = `\`\`\`markdown
-- Kills:           ${avgStats.kills} (avg. ${math.round(avgStats.avgKills, 2)})
-- Assists:         ${avgStats.assists} (avg. ${math.round(avgStats.avgAssists, 2)})
-- Damage:          ${math.round(avgStats.damageDealt, 2)} (avg. ${math.round(avgStats.avgDamageDealt, 2)})
-- Wins:            ${avgStats.wins} (avg. ${math.round(avgStats.avgWins, 4)})
-- Rounds Played:   ${avgStats.roundsPlayed}
+- ${killsTranslation} ${avgStats.kills} (${averageAbbr} ${math.round(avgStats.avgKills, 2)})
+- ${assistsTranslation} ${avgStats.assists} (${averageAbbr} ${math.round(avgStats.avgAssists, 2)})
+- ${damageTranslation} ${math.round(avgStats.damageDealt, 2)} (${averageAbbr} ${math.round(avgStats.avgDamageDealt, 2)})
+- ${winsTranslation} ${avgStats.wins} (${averageAbbr} ${math.round(avgStats.avgWins, 4)})
+- ${roundsPlayedTranslation} ${avgStats.roundsPlayed}
 \`\`\``;
 
     return result;

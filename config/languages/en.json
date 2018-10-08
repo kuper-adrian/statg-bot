@@ -1,4 +1,19 @@
 {
+  "pubg": {
+    "gameMode": "Game Mode",
+    "map": "Map",
+    "rank": "Rank",
+    "squad": "Squad",
+    "player": "Player",
+    "kills": "Kills",
+    "assists": "Assists",
+    "damage": "Damage",
+    "wins": "Wins",
+    "roundsPlayed": "Rounds Played",
+    "heals": "Heals",
+    "revives": "Revives",
+    "winPoints": "Win Points"
+  },
   "cmder": {
     "unknownCommand": "Unknown command. Type```!statg help```to get more infos about all commands."
   },
@@ -11,17 +26,8 @@
   "help": {
     "helpMessage": "Click [here]({{ HELP_LINK }}) to get help about all statg commands."
   },
-  "stats": {
-    "player": "Player",
-    "gameMode": "Game Mode",
-    "currentSeasonStatistics": "Current Season Statistics"
-  },
   "match": {
-    "noMatches": "No matches found.",
-    "gameMode": "Game Mode",
-    "map": "Map",
-    "rank": "Rank",
-    "squad": "Squad"
+    "noMatches": "No matches found."
   },
   "region": {
     "unknownRegion": "Unknown region \"{{ REGION }}\".",
@@ -31,5 +37,10 @@
     "unknownRegion": "Unknown region \"{{ REGION }}\".",
     "playerExists": "There already is a player name registered for your discord user. Try using unregister command first.",
     "successMessage": "Player \"{{ PLAYER_NAME }}\" successfully registered for region \"{{ REGION_NAME }}\"!"
+  },
+  "stats": {
+    "currentSeasonStatistics": "Current Season Statistics",
+    "invalidGameMode": "Invalid game mode \"{{ GAME_MODE }}\".",
+    "averageAbbr": "avg."
   }
 }
