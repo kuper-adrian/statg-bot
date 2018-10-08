@@ -49,5 +49,11 @@
   "unregister": {
     "playerNotRegistered": "Player not registered.",
     "successMessage": "Player \"{{ PLAYER_NAME }}\" successfully unregistered!"
+  },
+  "version": {
+    "version": "Version",
+    "createdBy": "Created By",
+    "sourceCode": "Source Code",
+    "sourceCodeMessage": "See how I work on [GitHub]({{ LINK }})."
   }
 }

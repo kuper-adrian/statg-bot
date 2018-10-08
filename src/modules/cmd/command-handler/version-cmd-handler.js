@@ -3,6 +3,9 @@ const { CommandHandler } = require('./cmd-handler.js');
 const { version } = require('../../../../package.json');
 const { author } = require('../../../../package.json');
 
+const i18nCmdHandler = require('../../../i18n').getScope('commandHandler');
+const i18nVersion = require('../../../i18n').getScope('version');
+
 /**
  * Command handler for the !statg version command. Shows info about version
  * and author of the bot.
@@ -11,24 +14,24 @@ const { author } = require('../../../../package.json');
 class VersionCommandHandler extends CommandHandler {
   handle(cmd, bot) {
     if (cmd.arguments.length !== 0) {
-      this.onError(bot, cmd, new Error('invalid amount of arguments'));
+      this.onError(bot, cmd, new Error(i18nCmdHandler.t('invalidArguments')));
       return;
     }
 
     const fields = [
       {
-        name: 'Version',
+        name: i18nVersion.t('version'),
         value: version,
         inline: true,
       },
       {
-        name: 'Created By',
+        name: i18nVersion.t('createdBy'),
         value: `[${author}](https://github.com/kuper-adrian)`,
         inline: true,
       },
       {
-        name: 'Source Code',
-        value: 'See how I work on [GitHub](https://github.com/kuper-adrian/statg-bot).',
+        name: i18nVersion.t('sourceCode'),
+        value: i18nVersion.t('sourceCodeMessage', { LINK: 'https://github.com/kuper-adrian/statg-bot' }),
       },
     ];
     this.onResolved(bot, cmd, fields, true);
