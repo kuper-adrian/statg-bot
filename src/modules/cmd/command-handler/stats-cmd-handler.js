@@ -117,7 +117,6 @@ class StatsCommandHandler extends CommandHandler {
       assists: 0,
       damageDealt: 0.0,
       wins: 0,
-      winPoints: 0.0,
       roundsPlayed: 0,
     };
 
@@ -129,7 +128,6 @@ class StatsCommandHandler extends CommandHandler {
       result.assists += gameMode.assists;
       result.damageDealt += gameMode.damageDealt;
       result.wins += gameMode.wins;
-      result.winPoints += gameMode.winPoints;
       result.roundsPlayed += gameMode.roundsPlayed;
 
       gameModeCount += 1;
@@ -139,7 +137,6 @@ class StatsCommandHandler extends CommandHandler {
     result.avgAssists = result.assists / result.roundsPlayed;
     result.avgDamageDealt = result.damageDealt / result.roundsPlayed;
     result.avgWins = result.wins / result.roundsPlayed;
-    result.avgWinPoints = result.winPoints / gameModeCount;
 
     return result;
   }

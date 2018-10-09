@@ -114,7 +114,6 @@ class MatchCommandHandler extends CommandHandler {
 - Heals:      ${stats.heals}
 - Revives:    ${stats.revives}
 
-- Win Points: ${stats.winPoints} (${stats.winPointsDelta})
 \`\`\``;
   }
 }

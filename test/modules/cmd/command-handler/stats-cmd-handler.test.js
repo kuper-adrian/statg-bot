@@ -123,7 +123,6 @@ describe('StatsCommandHandler', () => {
                 assists: 2,
                 damageDealt: 123.12,
                 wins: 1,
-                winPoints: 1337,
                 roundsPlayed: 321,
               },
             },
@@ -218,7 +217,6 @@ describe('StatsCommandHandler', () => {
                   assists: 2,
                   damageDealt: 123.12,
                   wins: 1,
-                  winPoints: 1337,
                   roundsPlayed: 321,
                 },
               },
@@ -298,7 +296,6 @@ describe('StatsCommandHandler', () => {
                   assists: 2,
                   damageDealt: 123.12,
                   wins: 1,
-                  winPoints: 1337,
                   roundsPlayed: 321,
                 },
               },
@@ -330,7 +327,6 @@ describe('StatsCommandHandler', () => {
           assists: 1,
           damageDealt: 100.0,
           wins: 1,
-          winPoints: 1500,
           roundsPlayed: 1,
         },
         squad: {
@@ -338,7 +334,6 @@ describe('StatsCommandHandler', () => {
           assists: 1,
           damageDealt: 100.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 1,
         },
       };
@@ -433,7 +428,6 @@ describe('StatsCommandHandler', () => {
           assists: 1,
           damageDealt: 100.0,
           wins: 1,
-          winPoints: 1500,
           roundsPlayed: 1,
         },
         duo: {
@@ -441,7 +435,6 @@ describe('StatsCommandHandler', () => {
           assists: 4,
           damageDealt: 400.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 123,
         },
         squad: {
@@ -449,7 +442,6 @@ describe('StatsCommandHandler', () => {
           assists: 6,
           damageDealt: 3200.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 321,
         },
       };
@@ -548,7 +540,6 @@ describe('StatsCommandHandler', () => {
           assists: 8,
           damageDealt: 4300.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 432,
         },
         'solo-fpp': {
@@ -556,7 +547,6 @@ describe('StatsCommandHandler', () => {
           assists: 1,
           damageDealt: 100.0,
           wins: 1,
-          winPoints: 1500,
           roundsPlayed: 1,
         },
         duo: {
@@ -564,7 +554,6 @@ describe('StatsCommandHandler', () => {
           assists: 4,
           damageDealt: 400.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 123,
         },
         squad: {
@@ -572,7 +561,6 @@ describe('StatsCommandHandler', () => {
           assists: 6,
           damageDealt: 3200.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 321,
         },
       };
@@ -668,7 +656,6 @@ describe('StatsCommandHandler', () => {
           assists: 8,
           damageDealt: 4300.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 432,
         },
         'solo-fpp': {
@@ -676,7 +663,6 @@ describe('StatsCommandHandler', () => {
           assists: 1,
           damageDealt: 100.0,
           wins: 1,
-          winPoints: 1500,
           roundsPlayed: 1,
         },
         duo: {
@@ -684,7 +670,6 @@ describe('StatsCommandHandler', () => {
           assists: 10,
           damageDealt: 400.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 10,
         },
         squad: {
@@ -692,7 +677,6 @@ describe('StatsCommandHandler', () => {
           assists: 6,
           damageDealt: 3200.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 321,
         },
       };
@@ -792,7 +776,6 @@ describe('StatsCommandHandler', () => {
           assists: 8,
           damageDealt: 4300.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 432,
         },
         'duo-fpp': {
@@ -800,7 +783,6 @@ describe('StatsCommandHandler', () => {
           assists: 1,
           damageDealt: 100.0,
           wins: 1,
-          winPoints: 1500,
           roundsPlayed: 1,
         },
         duo: {
@@ -808,7 +790,6 @@ describe('StatsCommandHandler', () => {
           assists: 4,
           damageDealt: 400.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 123,
         },
         squad: {
@@ -816,7 +797,6 @@ describe('StatsCommandHandler', () => {
           assists: 6,
           damageDealt: 3200.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 321,
         },
       };
@@ -912,7 +892,6 @@ describe('StatsCommandHandler', () => {
           assists: 8,
           damageDealt: 4300.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 432,
         },
         'solo-fpp': {
@@ -920,7 +899,6 @@ describe('StatsCommandHandler', () => {
           assists: 1,
           damageDealt: 100.0,
           wins: 1,
-          winPoints: 1500,
           roundsPlayed: 1,
         },
         duo: {
@@ -928,7 +906,6 @@ describe('StatsCommandHandler', () => {
           assists: 4,
           damageDealt: 400.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 123,
         },
         squad: {
@@ -936,7 +913,6 @@ describe('StatsCommandHandler', () => {
           assists: 15,
           damageDealt: 3200.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 10,
         },
       };
@@ -1035,7 +1011,6 @@ describe('StatsCommandHandler', () => {
           assists: 8,
           damageDealt: 4300.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 432,
         },
         'squad-fpp': {
@@ -1043,7 +1018,6 @@ describe('StatsCommandHandler', () => {
           assists: 1,
           damageDealt: 100.0,
           wins: 1,
-          winPoints: 1500,
           roundsPlayed: 1,
         },
         duo: {
@@ -1051,7 +1025,6 @@ describe('StatsCommandHandler', () => {
           assists: 4,
           damageDealt: 400.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 123,
         },
         squad: {
@@ -1059,7 +1032,6 @@ describe('StatsCommandHandler', () => {
           assists: 6,
           damageDealt: 3200.0,
           wins: 0,
-          winPoints: 1500,
           roundsPlayed: 321,
         },
       };
@@ -1190,7 +1162,7 @@ describe('StatsCommandHandler', () => {
                 assists: 2,
                 damageDealt: 123.12,
                 wins: 1,
-                winPoints: 1337,
+    
                 roundsPlayed: 321,
               },
             },
@@ -1272,7 +1244,6 @@ describe('StatsCommandHandler', () => {
                 assists: 2,
                 damageDealt: 123.12,
                 wins: 1,
-                winPoints: 1337,
                 roundsPlayed: 321,
               },
             },
@@ -1349,7 +1320,6 @@ describe('StatsCommandHandler', () => {
                 assists: 2,
                 damageDealt: 123.12,
                 wins: 1,
-                winPoints: 1337,
                 roundsPlayed: 321,
               },
             },
