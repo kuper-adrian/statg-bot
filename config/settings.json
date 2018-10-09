@@ -2,8 +2,8 @@
   "defaultRegion": "pc-eu",
   "cache": {
     "player": 120000,
-    "playerStats": 600000,
-    "status": 60000,
+    "playerStats": 60000,
+    "status": 600000,
     "seasons": 3600000,
     "match": 300000
   }
