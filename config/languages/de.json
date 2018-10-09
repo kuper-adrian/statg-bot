@@ -1,0 +1,59 @@
+{
+  "pubg": {
+    "gameMode": "Spiel-Modus",
+    "map": "Karte",
+    "rank": "Rang",
+    "squad": "Squad",
+    "player": "Spieler",
+    "kills": "Tötungen",
+    "assists": "Unterstützungen",
+    "damage": "Schaden",
+    "wins": "Siege",
+    "roundsPlayed": "Runden gespielt",
+    "heals": "Heilungen",
+    "revives": "Wiederbelebungen",
+    "winPoints": "Siegpunkte"
+  },
+  "cmder": {
+    "unknownCommand": "Unbekannter Befehl. Tippe```!statg help```, um mehr Infos zu allen Befehlen zu erhalten."
+  },
+  "commandHandler": {
+    "success": "Erfolg",
+    "error": "Fehler",
+    "invalidArguments": "Ungültige Anzahl von Argumenten.",
+    "unforseenError": "Irgendwas komisches ist passiert..."
+  },
+  "help": {
+    "helpMessage": "Klicke [hier]({{ HELP_LINK }}), um Hilfe über Befehle zu erhalten."
+  },
+  "match": {
+    "noMatches": "Keine Matches gefunden."
+  },
+  "region": {
+    "unknownRegion": "Unbekannte Region \"{{ REGION }}\".",
+    "successMessage": "Globale Region erfolgreich zu \"{{ REGION }}\" geändert!"
+  },
+  "register": {
+    "unknownRegion": "Unbekannte Region \"{{ REGION }}\".",
+    "playerExists": "Es existiert bereits ein registrierter Nutzer. Versuche zuerst unregister-Befehl.",
+    "successMessage": "Spieler \"{{ PLAYER_NAME }}\" erfolgreich registriert für Region \"{{ REGION_NAME }}\"!"
+  },
+  "stats": {
+    "currentSeasonStatistics": "Aktuelle Saison-Statistiken",
+    "invalidGameMode": "Unbekannter Spiel-Modus \"{{ GAME_MODE }}\".",
+    "averageAbbr": "durchschn."
+  },
+  "status": {
+    "successMessage": "Sieht aus, als ob mit der PUBG-API alles in Ordnung ist!"
+  },
+  "unregister": {
+    "playerNotRegistered": "Kein Spieler registriert.",
+    "successMessage": "Spieler \"{{ PLAYER_NAME }}\" erfolgreich unregistiert!"
+  },
+  "version": {
+    "version": "Version",
+    "createdBy": "Erstellt von",
+    "sourceCode": "Source-Code",
+    "sourceCodeMessage": "Guck dir an, wie ich funktioniere auf [GitHub]({{ LINK }})."
+  }
+}
