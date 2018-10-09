@@ -65,8 +65,6 @@ const STUB_MATCH_DATA = {
           'walkDistance': 1641.45776,
           'weaponsAcquired': 5,
           'winPlace': 8,
-          'winPoints': 1433,
-          'winPointsDelta': 8.605656
         }
       }
     },
@@ -103,8 +101,6 @@ const STUB_MATCH_DATA = {
           'walkDistance': 2209.9082,
           'weaponsAcquired': 10,
           'winPlace': 16,
-          'winPoints': 1501,
-          'winPointsDelta': 1.31905639
         },
         'actor': '',
         'shardId': 'pc-eu'
