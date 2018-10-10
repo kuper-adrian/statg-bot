@@ -136,6 +136,7 @@ If you want to make doubly sure that your pull request will be accepted, you can
 
 ### :heart: Thanks to all contributors
 
+* [trololo151](https://github.com/trololo151)
 * [medusalix](https://github.com/medusalix)
 * [SubashAravindan](https://github.com/SubashAravindan)
 * [dmfj](https://github.com/dmfj)
