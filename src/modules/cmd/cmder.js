@@ -4,6 +4,8 @@ const { DiscordUser } = require('./discord-user.js');
 const { Command } = require('./command.js');
 const { CommandHandler } = require('./command-handler/cmd-handler');
 
+const i18nCmder = require('../../i18n').getScope('cmder');
+
 const BASE_CMD = '!statg';
 const AVAILABLE_COMMANDS = [
   'register',
@@ -77,7 +79,7 @@ exports.processMessage = function processMessage(
       errorHandler.onError(
         bot,
         commandInfo,
-        new Error('Unknown command. Type```!statg help```to get more infos about all commands.'),
+        new Error(i18nCmder.t('unknownCommand')),
       );
     }
   }
