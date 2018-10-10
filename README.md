@@ -134,6 +134,12 @@ All contributions are generally welcomed and make me happy ;) Before coding you 
 
 If you want to make doubly sure that your pull request will be accepted, you can run the unit tests inside the ```test``` directory with ```npm t``` or ```npm test```. By running ```npm run lint``` you can also make sure that your code is fulfills the Airbnb js conventions used in this project.
 
+### :heart: Thanks to all contributors
+
+* [medusalix](https://github.com/medusalix)
+* [SubashAravindan](https://github.com/SubashAravindan)
+* [dmfj](https://github.com/dmfj)
+
 ## :statue_of_liberty: License
 
 MIT
