@@ -12,22 +12,22 @@
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
     "knex": "^0.14.6",
-    "npm": "^6.1.0",
-    "pubg-royale": "1.1.1",
-    "sqlite3": "^4.0.1",
+    "npm": "^6.5.0",
+    "pubg-royale": "2.0.0",
+    "sqlite3": "^4.0.4",
     "winston": "^3.0.0"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "sinon": "^6.0.0",
     "chai": "^4.1.2",
+    "coveralls": "^3.0.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.12.0",
     "istanbul": "^0.4.5",
-    "coveralls": "^3.0.1",
+    "mocha": "^5.2.0",
     "mocha-lcov-reporter": "^1.3.0",
-    "nyc": "^12.0.2"
+    "nyc": "^12.0.2",
+    "sinon": "^6.3.5"
   },
   "scripts": {
     "debug": "nodemon --inspect src/bot.js runConfig=debug",
