@@ -13,7 +13,7 @@ StatG is an open source, self-hosted discord bot that can post PUBG statistics i
 * Fetch and display your PUBG stats inside your Discord channel
 * Get infos and statistics about your and your teams latest match performance
 * Links to your pubg.op.gg page for all stats
-* Works with any region (PC and XBOX)
+* Works with PC regions (XBOX and PS4 might follow later)
 * Open-source and self-hosted
 
 ## :blue_book: Commands
@@ -35,20 +35,8 @@ The **optional** `GAME_MODE` arguments are:
   Undoes `register` command.
 * `!statg region REGION_NAME`
   Sets the default region used by `register` command. Available regions are:
-    * `pc-na`
-    * `pc-eu`
-    * `pc-ru`
-    * `pc-oc`
-    * `pc-kakao`
-    * `pc-sea`
-    * `pc-sa`
-    * `pc-as`
-    * `pc-jp`
-    * `pc-krjp`
-    * `xbox-as`
-    * `xbox-eu`
-    * `xbox-na`
-    * `xbox-oc`
+    * `steam` (for everyone outside of South Korea)
+    * `kakao` (for players in South Korea)
 * `!statg help`
   Displays help about commands.
 * `!statg version`
