@@ -1,5 +1,5 @@
 {
-  "defaultRegion": "pc-eu",
+  "defaultRegion": "steam",
   "cache": {
     "player": 120000,
     "playerStats": 60000,

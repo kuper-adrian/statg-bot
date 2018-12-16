@@ -1,6 +1,5 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const math = require('../../math');
-const regionHelper = require('../region-helper');
 const playerHelper = require('../player-helper');
 const pubgOpHelper = require('../pubg-op-helper');
 
@@ -81,10 +80,7 @@ class StatsCommandHandler extends CommandHandler {
           return;
         }
 
-        const pubgOpLink = pubgOpHelper.getUrlForPlayer(
-          pubgPlayerName,
-          regionHelper.getAreaPartFromRegion(regionName),
-        );
+        const pubgOpLink = pubgOpHelper.getUrlForPlayer(pubgPlayerName);
 
         const fields = [
           {
@@ -120,7 +116,6 @@ class StatsCommandHandler extends CommandHandler {
       roundsPlayed: 0,
     };
 
-    let gameModeCount = 0;
     Object.keys(gameModeStats).forEach((key) => {
       const gameMode = gameModeStats[key];
 
@@ -129,8 +124,6 @@ class StatsCommandHandler extends CommandHandler {
       result.damageDealt += gameMode.damageDealt;
       result.wins += gameMode.wins;
       result.roundsPlayed += gameMode.roundsPlayed;
-
-      gameModeCount += 1;
     });
 
     result.avgKills = result.kills / (result.roundsPlayed - result.wins);

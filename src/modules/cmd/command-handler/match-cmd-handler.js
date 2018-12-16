@@ -1,6 +1,5 @@
 const { CommandHandler } = require('./cmd-handler.js');
 const math = require('../../math');
-const regionHelper = require('../region-helper');
 const playerHelper = require('../player-helper');
 const pubgOpHelper = require('../pubg-op-helper');
 
@@ -81,7 +80,7 @@ class MatchCommandHandler extends CommandHandler {
         let squadFieldValue = '';
 
         teammates.forEach((t) => {
-          squadFieldValue += MatchCommandHandler.getPlayerStatsString(t, regionName);
+          squadFieldValue += MatchCommandHandler.getPlayerStatsString(t);
         });
 
         fields.push({
@@ -97,14 +96,11 @@ class MatchCommandHandler extends CommandHandler {
       });
   }
 
-  static getPlayerStatsString(player, regionName) {
+  static getPlayerStatsString(player) {
     const { stats } = player.attributes;
 
     const playerName = stats.name;
-    const pubgOpLink = pubgOpHelper.getUrlForPlayer(
-      playerName,
-      regionHelper.getAreaPartFromRegion(regionName),
-    );
+    const pubgOpLink = pubgOpHelper.getUrlForPlayer(playerName);
 
     return `[${playerName}](${pubgOpLink})
 \`\`\`markdown
