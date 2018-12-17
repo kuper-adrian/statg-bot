@@ -185,7 +185,7 @@ describe('RegisterCommandHandler', () => {
 
       cmd.arguments = [
         'to-register-pubg-name',
-        'pc-na',
+        'kakao',
       ];
 
       const handlePromise = handler.handle(cmd, bot, db, pubg);
@@ -196,7 +196,7 @@ describe('RegisterCommandHandler', () => {
         expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain(playerByNameData.data[0].attributes.name);
         expect(passedEmbed.fields[0].value).to.contain('successfully registered');
-        expect(passedEmbed.fields[0].value).to.contain('pc-na');
+        expect(passedEmbed.fields[0].value).to.contain('kakao');
       });
     });
 
@@ -243,7 +243,7 @@ describe('RegisterCommandHandler', () => {
 
       cmd.arguments = [
         'to-register-pubg-name',
-        'pc-eu',
+        'kakao',
       ];
 
       sandbox.stub(db, 'getRegisteredPlayers').callsFake(() => Promise.resolve(['some-already-existing-player-name']));
@@ -263,7 +263,7 @@ describe('RegisterCommandHandler', () => {
 
       cmd.arguments = [
         'to-register-pubg-name',
-        'pc-na',
+        'kakao',
       ];
 
       const getRegionsSpy = sandbox.spy(db, 'getRegions');
@@ -271,7 +271,7 @@ describe('RegisterCommandHandler', () => {
 
       return handlePromise.then(() => {
         sandbox.assert.calledOnce(getRegionsSpy);
-        expect(getRegionsSpy.getCall(0).args[0].region_name).to.be.equal('pc-na');
+        expect(getRegionsSpy.getCall(0).args[0].region_name).to.be.equal('kakao');
       });
     });
 
@@ -297,7 +297,7 @@ describe('RegisterCommandHandler', () => {
 
       cmd.arguments = [
         'to-register-player-name',
-        'xbox-invalid',
+        'invalid',
       ];
 
       const handlePromise = handler.handle(cmd, bot, db, pubg);
@@ -307,7 +307,7 @@ describe('RegisterCommandHandler', () => {
 
         expect(passedTo).to.be.equal(cmd.discordUser.id);
         expect(passedEmbed.fields[0].value).to.contain('unknown region');
-        expect(passedEmbed.fields[0].value).to.contain('xbox-invalid');
+        expect(passedEmbed.fields[0].value).to.contain('invalid');
       });
     });
 
@@ -316,7 +316,7 @@ describe('RegisterCommandHandler', () => {
 
       cmd.arguments = [
         'to-register-pubg-name-1',
-        'pc-eu',
+        'kakao',
         'some-third-argument',
       ];
 
@@ -340,12 +340,12 @@ describe('RegisterCommandHandler', () => {
       sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
         {
           id: 1,
-          region_name: 'pc-na',
+          region_name: 'steam',
           is_global_region: true,
         },
         {
           id: 2,
-          region_name: 'pc-eu',
+          region_name: 'kakao',
           is_global_region: true,
         },
       ]));
@@ -363,18 +363,18 @@ describe('RegisterCommandHandler', () => {
 
       cmd.arguments = [
         'to-register-pubg-name',
-        'pc-na',
+        'kakao',
       ];
 
       sandbox.stub(db, 'getRegions').callsFake(() => Promise.resolve([
         {
           id: 1,
-          region_name: 'pc-na',
+          region_name: 'kakao',
           is_global_region: true,
         },
         {
           id: 2,
-          region_name: 'pc-eu',
+          region_name: 'steam',
           is_global_region: true,
         },
       ]));
