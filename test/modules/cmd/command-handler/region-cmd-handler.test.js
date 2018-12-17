@@ -67,7 +67,7 @@ describe('RegionCommandHandler', () => {
     it('should send an success message if region was successfully set', () => {
       const handler = RegionCommandHandler.getHandler();
 
-      const newRegion = 'pc-na';
+      const newRegion = 'kakao';
       cmd.arguments = [
         newRegion,
       ];
@@ -86,7 +86,7 @@ describe('RegionCommandHandler', () => {
     it('should update the global region in database', () => {
       const handler = RegionCommandHandler.getHandler();
 
-      const newRegion = 'pc-na';
+      const newRegion = 'kakao';
       cmd.arguments = [
         newRegion,
       ];
@@ -105,7 +105,7 @@ describe('RegionCommandHandler', () => {
       const handler = RegionCommandHandler.getHandler();
 
       const errorMessage = 'some error';
-      const newRegion = 'pc-na';
+      const newRegion = 'kakao';
       cmd.arguments = [
         newRegion,
       ];
@@ -142,7 +142,7 @@ describe('RegionCommandHandler', () => {
       const handler = RegionCommandHandler.getHandler();
 
       cmd.arguments = [
-        'pc-na',
+        'kakao',
         'second-argument',
       ];
 
@@ -158,9 +158,10 @@ describe('RegionCommandHandler', () => {
 
     it('should send an error message if an invalid region was passed', () => {
       const handler = RegionCommandHandler.getHandler();
+      const invalidRegion = 'invalid';
 
       cmd.arguments = [
-        'pc-invalid',
+        invalidRegion,
       ];
 
       const handlePromise = handler.handle(cmd, bot, db, pubg);
@@ -169,7 +170,7 @@ describe('RegionCommandHandler', () => {
         sandbox.assert.calledOnce(sendMessageSpy);
 
         expect(passedTo).to.be.equal(cmd.discordUser.id);
-        expect(passedEmbed.fields[0].value).to.contain('unknown region "pc-invalid"');
+        expect(passedEmbed.fields[0].value).to.contain(`unknown region "${invalidRegion}"`);
       });
     });
   });
